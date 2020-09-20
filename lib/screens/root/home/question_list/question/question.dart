@@ -38,8 +38,7 @@ class Question extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final questionDoc =
-        FirebaseFirestore.instance.collection('questions').doc(questionId);
+    final questionDoc = FirebaseFirestore.instance.doc('questions/$questionId');
     return FutureBuilder(
       future: questionDoc.get().then((value) => value.data()),
       builder: (context, snapshot) {
