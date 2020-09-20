@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
-import 'package:hackathon_2020_summer/screens/home/home.dart';
+import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/shared/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class App extends StatelessWidget {
         page = Authenticate();
         tweenBegin = Offset(0.0, -1.0);
       } else {
-        page = Home(uid: user.uid);
+        page = Root();
         tweenBegin = Offset(0.0, 1.0);
       }
       navigatorKey.currentState.pushReplacement(
