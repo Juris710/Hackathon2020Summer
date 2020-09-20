@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 class LazyText extends StatelessWidget {
   final Future future;
-  final String Function(AsyncSnapshot) getText;
-  LazyText({this.future, this.getText});
+  final String Function(AsyncSnapshot) getString;
+  final Text Function(String) textBuilder;
+
+  LazyText({this.future, this.textBuilder, this.getString});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -12,7 +15,11 @@ class LazyText extends StatelessWidget {
           if (snapshot.connectionState != ConnectionState.done) {
             return Text('');
           }
-          return Text(getText(snapshot));
+          if (textBuilder != null) {
+            return textBuilder(getString(snapshot));
+          } else {
+            return Text(getString(snapshot));
+          }
         });
   }
 }

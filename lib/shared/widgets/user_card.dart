@@ -13,11 +13,8 @@ class UserCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: LazyText(
-          future: FirebaseFirestore.instance
-              .doc('users/$uid')
-              .get()
-              .then((value) => value.data()),
-          getText: (snapshot) => snapshot.data['name'],
+          future: FirebaseFirestore.instance.doc('users/$uid').get(),
+          getString: (snapshot) => snapshot.data.data()['name'],
         ),
       ),
     );
