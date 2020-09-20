@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
+import 'package:hackathon_2020_summer/shared/widgets/lazy_text.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
@@ -12,23 +11,39 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
-    final uid = Provider.of<User>(context)?.uid;
-    if (uid == null) return Container();
-    // return Container(
-    //   child: Center(
-    //     child: Text('ACCOUNT\n$uid'),
-    //   ),
-    // );
-    return FutureBuilder(
-      future: FirebaseFirestore.instance.doc('users/$uid').get(),
-      builder: (context, snapshot) {
-        final account = UserAccount.fromFireStore(snapshot.data);
-        return Container(
-          child: Column(
-            children: [Text(account.name)],
+    final account = Provider.of<UserAccount>(context);
+    if (account == null) return Container();
+    return Container(
+      child: Column(
+        children: [
+          Text(
+            account.name,
+            style: Theme.of(context).textTheme.headline4,
           ),
-        );
-      },
+          LazyText(
+            future: account.university.get(),
+            getString: (snapshot) => snapshot.data.data()['name'],
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: account.lectures.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: LazyText(
+                      future: account.lectures[index].get(),
+                      getString: (snapshot) => snapshot.data.data()['name'],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
