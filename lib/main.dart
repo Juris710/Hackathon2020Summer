@@ -2,14 +2,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
+import 'package:hackathon_2020_summer/screens/root/home/question_list/question/question.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
-import 'package:hackathon_2020_summer/shared/loading.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(App());
+  //runApp(App());
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text(appName),
+      ),
+      body: Question(
+        questionId: 'R1ZqwzPkRwXk8rEVLmJf',
+      ),
+    ),
+  ));
 }
 
 class App extends StatelessWidget {
