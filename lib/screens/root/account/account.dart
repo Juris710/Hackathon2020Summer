@@ -11,6 +11,9 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     final uid = Provider.of<User>(context)?.uid;
+    if (uid == null) {
+      return Container();
+    }
     return Container(
       child: Center(
         child: Text('ACCOUNT\n$uid'),

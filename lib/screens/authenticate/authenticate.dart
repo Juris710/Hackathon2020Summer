@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
-import 'package:hackathon_2020_summer/shared/loading.dart';
+import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class Authenticate extends StatefulWidget {
   @override
