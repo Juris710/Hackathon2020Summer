@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -68,7 +69,7 @@ class App extends StatelessWidget {
         StreamProvider.value(value: FirebaseAuth.instance.userChanges())
       ],
       child: MaterialApp(
-        title: 'Flutter Firebase Boilerplate',
+        title: appName,
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,

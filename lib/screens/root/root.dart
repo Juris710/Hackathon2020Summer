@@ -66,16 +66,48 @@ class _RootState extends State<Root> {
     final textTheme = Theme.of(context).textTheme;
     final uid = Provider.of<User>(context)?.uid;
     if (uid == null) return Container();
-
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return StreamProvider.value(
       value: FirebaseFirestore.instance
           .doc('users/$uid')
           .snapshots()
           .map((event) => UserAccount.fromFireStore(event)),
       child: Scaffold(
+        key: _scaffoldKey,
+        drawerEdgeDragWidth: 0,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(appName),
+          leading: IconButton(
+            onPressed: () => _scaffoldKey.currentState.openDrawer(),
+            icon: Icon(Icons.menu),
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Text(appName),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              ListTile(
+                title: Text('このアプリについて'),
+                onTap: () {
+                  Navigator.pop(context);
+                  showAboutDialog(
+                    context: context,
+                    applicationVersion: appVersion,
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('ログアウト'),
+                onTap: () => FirebaseAuth.instance.signOut(),
+              )
+            ],
+          ),
         ),
         body: buildPageView(),
         bottomNavigationBar: BottomNavigationBar(
