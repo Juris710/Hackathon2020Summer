@@ -14,7 +14,7 @@ class Root extends StatefulWidget {
 
 class _RootState extends State<Root> {
   int _currentIndex = 0;
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   PageController pageController = PageController(
     initialPage: 0,
     keepPage: true,
@@ -70,14 +70,15 @@ class _RootState extends State<Root> {
       value: FirebaseFirestore.instance
           .doc('users/$uid')
           .snapshots()
-          .map((event) => UserAccount.fromFireStore(event)),
+          .map((event) => UserAccount.fromFirestore(event)),
       child: Scaffold(
+        key: _scaffoldKey,
         drawerEdgeDragWidth: 0,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(appName),
           leading: IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
+            onPressed: () => _scaffoldKey.currentState.openDrawer(),
             icon: Icon(Icons.menu),
           ),
         ),

@@ -10,16 +10,17 @@ class LazyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Text('');
-          }
-          if (textBuilder != null) {
-            return textBuilder(getString(snapshot));
-          } else {
-            return Text(getString(snapshot));
-          }
-        });
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Text('');
+        }
+        if (textBuilder != null) {
+          return textBuilder(getString(snapshot));
+        } else {
+          return Text(getString(snapshot));
+        }
+      },
+    );
   }
 }
