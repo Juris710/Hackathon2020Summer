@@ -2,9 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/answer.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
+import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
-import 'package:intl/intl.dart';
+
+class AnswerCard extends StatelessWidget {
+  final Answer answer;
+
+  AnswerCard({this.answer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(answer.createdBy),
+            Text(answer.content),
+            Text(getDateString(answer.updatedAt.toDate())),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class Question extends StatelessWidget {
   final Model.Question question;
@@ -49,10 +71,7 @@ class Question extends StatelessWidget {
                         SizedBox(
                           height: 8.0,
                         ),
-                        Text(
-                          DateFormat('yyyy年MM月dd日 HH:mm')
-                              .format(question.updateAt.toDate()),
-                        ),
+                        Text(getDateString(question.updateAt.toDate())),
                         SizedBox(
                           height: 16.0,
                         ),
@@ -68,18 +87,7 @@ class Question extends StatelessWidget {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: answers.length,
                           itemBuilder: (context, index) {
-                            final Answer answer = answers[index];
-                            return Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    Text(answer.createdBy),
-                                    Text(answer.content),
-                                  ],
-                                ),
-                              ),
-                            );
+                            return AnswerCard(answer: answers[index]);
                           },
                         )
                       ],
