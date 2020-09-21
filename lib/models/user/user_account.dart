@@ -7,11 +7,13 @@ import 'package:hackathon_2020_summer/shared/utils.dart';
 class UserAccount {
   final String id;
   final String name;
-  final University university;
-  final List<Lecture> lectures;
+  final University university; //TODO：final DocumentReference universityに変更
+  final List<Lecture>
+      lectures; //TODO：final List<DocumentReference> questionTargetsに変更
 
   UserAccount._({this.id, this.name, this.university, this.lectures});
 
+  //TODO：asyncではないfactoryメソッドに
   static Future<UserAccount> fromFirestore(DocumentSnapshot doc) async {
     final data = doc?.data();
     if (data == null) return null;

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//TODO：Firestoreからlectures関連を全て削除
+//TODO：一からつくるためのstatic create()作成
 class University {
   final String id;
   final String name;
-  final CollectionReference lectures;
+  final CollectionReference lectures; //このフィールドを削除
   final CollectionReference groups;
 
   University._({this.id, this.name, this.lectures, this.groups});
