@@ -19,15 +19,16 @@ class _UniversitySearcherState extends State<UniversitySearcher> {
         title: Text('大学検索'),
         actions: [
           FlatButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              label: Text(
-                '新しく大学を登録',
-                style: TextStyle(color: Colors.white),
-              ))
+            onPressed: () {},
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            label: Text(
+              '新しく大学を登録',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ],
       ),
       body: Container(
@@ -91,7 +92,7 @@ class _UniversitySearcherState extends State<UniversitySearcher> {
                   },
                 );
               },
-            )
+            ),
           ],
         ),
       ),
