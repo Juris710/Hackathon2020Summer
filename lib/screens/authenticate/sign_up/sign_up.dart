@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/university_searcher/university_searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -19,8 +20,7 @@ class _SignUpState extends State<SignUp> {
   String password = '';
   String passwordConfirm = '';
   String userName = '';
-  String universityId = '';
-  String universityName = '';
+  University university;
 
   //error state
   String error;
@@ -192,8 +192,7 @@ class _SignUpState extends State<SignUp> {
                           return;
                         }
                         setState(() {
-                          universityId = result['id'];
-                          universityName = result['university'].name;
+                          university = result;
                           errorUniversity = null;
                         });
                       },
@@ -204,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                             width: 10.0,
                           ),
                           Text(
-                            universityName.isEmpty ? '大学を選択*' : universityName,
+                            (university == null) ? '大学を選択*' : university.name,
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ],
@@ -224,7 +223,7 @@ class _SignUpState extends State<SignUp> {
                         if (!_formKey.currentState.validate()) {
                           isValid = false;
                         }
-                        if (universityId.isEmpty) {
+                        if (university == null) {
                           isValid = false;
                           setState(() {
                             errorUniversity = '必須項目です';
@@ -246,7 +245,7 @@ class _SignUpState extends State<SignUp> {
                               (value) => DatabaseService.createNewUser(
                                 value.user.uid,
                                 userName,
-                                universityId,
+                                university.id,
                               ),
                             );
                       },
