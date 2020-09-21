@@ -66,20 +66,18 @@ class _RootState extends State<Root> {
     final textTheme = Theme.of(context).textTheme;
     final uid = Provider.of<User>(context)?.uid;
     if (uid == null) return Container();
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return StreamProvider.value(
       value: FirebaseFirestore.instance
           .doc('users/$uid')
           .snapshots()
           .map((event) => UserAccount.fromFireStore(event)),
       child: Scaffold(
-        key: _scaffoldKey,
         drawerEdgeDragWidth: 0,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(appName),
           leading: IconButton(
-            onPressed: () => _scaffoldKey.currentState.openDrawer(),
+            onPressed: () => Scaffold.of(context).openDrawer(),
             icon: Icon(Icons.menu),
           ),
         ),
