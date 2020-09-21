@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
+import 'package:hackathon_2020_summer/screens/root/account/edit_lecture_list.dart';
 import 'package:hackathon_2020_summer/screens/root/account/lecture/lecture.dart';
 
 class UserData extends StatelessWidget {
@@ -34,7 +35,15 @@ class UserData extends StatelessWidget {
                       if (isMyAccount) ...[
                         Expanded(child: Container()),
                         FlatButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EditLectureList(
+                                  account: account,
+                                ),
+                              ),
+                            );
+                          },
                           icon: Icon(Icons.edit),
                           label: Text('編集'),
                         ),

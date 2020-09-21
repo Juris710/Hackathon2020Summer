@@ -6,8 +6,12 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('universities');
   }
 
+  static DocumentReference getUniversityDocument(String universityId) {
+    return universities.doc(universityId);
+  }
+
   static DocumentReference getUserDocument(String uid) {
-    return FirebaseFirestore.instance.doc('users/$uid');
+    return FirebaseFirestore.instance.collection('users').doc(uid);
   }
 
   static Stream<UserAccount> getAccount(String uid) {
@@ -22,5 +26,9 @@ class DatabaseService {
       'lectures': [],
       'university': universities.doc(universityId),
     });
+  }
+
+  static void updateAccount(UserAccount account) {
+    getUserDocument(account.id).update(account.data());
   }
 }
