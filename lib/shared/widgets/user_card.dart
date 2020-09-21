@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/lazy_text.dart';
 
 class UserCard extends StatelessWidget {
@@ -13,7 +13,7 @@ class UserCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: LazyText(
-          future: FirebaseFirestore.instance.doc('users/$uid').get(),
+          future: DatabaseService.getUserDocument(uid).get(),
           getString: (snapshot) => snapshot.data.data()['name'],
         ),
       ),
