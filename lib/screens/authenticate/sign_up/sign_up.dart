@@ -89,8 +89,7 @@ class _SignUpState extends State<SignUp> {
                         errorText: errorEmail,
                         prefixIcon: Icon(Icons.email),
                       ),
-                      validator: (val) =>
-                          val.isEmpty ? 'メールアドレスを入力してください' : null,
+                      validator: (val) => val.isEmpty ? '必須項目です' : null,
                       onChanged: (val) {
                         setState(() {
                           email = val;
@@ -117,7 +116,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      validator: (val) => val.isEmpty ? 'パスワードを入力してください' : null,
+                      validator: (val) => val.isEmpty ? '必須項目です' : null,
                       obscureText: _obscureText,
                       onChanged: (val) {
                         setState(() {
@@ -136,8 +135,15 @@ class _SignUpState extends State<SignUp> {
                         prefixIcon: Icon(Icons.lock),
                       ),
                       obscureText: true,
-                      validator: (val) =>
-                          val != password ? 'パスワードが異なっています' : null,
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return '必須項目です';
+                        }
+                        if (val != password) {
+                          return 'パスワードが異なっています';
+                        }
+                        return null;
+                      },
                       onChanged: (val) {
                         setState(() {
                           passwordConfirm = val;
