@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
+import 'package:hackathon_2020_summer/screens/root/home/question_list/question_list.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -21,11 +22,26 @@ class _HomeState extends State<Home> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: account.lectures.length,
             itemBuilder: (context, index) {
-              return Card(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(account.lectures[index].name),
+              final lecture = account.lectures[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => QuestionList(lecture: lecture),
+                    ),
+                  );
+                },
+                child: Card(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(child: Center(child: Text(lecture.name))),
+                          Text('${lecture.questions.length}個の質問')
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );

@@ -15,13 +15,15 @@ class Question {
     this.answers,
   });
 
-  factory Question.fromMap(Map<String, dynamic> data) {
+  factory Question.fromFirestore(DocumentSnapshot doc) {
+    final data = doc?.data();
+    if (data == null) return null;
     return Question._(
       title: data['title'],
       content: data['content'],
       createdBy: data['createdBy'],
       updateAt: data['updatedAt'],
-      answers: data['answers'],
+      answers: doc.reference.collection('answers'),
     );
   }
 }

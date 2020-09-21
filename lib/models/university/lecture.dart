@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hackathon_2020_summer/shared/Database_Utils.dart';
+import 'package:hackathon_2020_summer/shared/utils.dart';
 
 class Lecture {
   final String name;
@@ -12,7 +12,7 @@ class Lecture {
     if (data == null) return null;
     return Lecture(
       name: data['name'],
-      questions: castToRefList(data['questions']),
+      questions: castToList<DocumentReference>(data['questions']),
     );
   }
 }

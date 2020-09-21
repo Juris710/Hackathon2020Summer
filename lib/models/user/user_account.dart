@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/models/university/lecture.dart';
-import 'package:hackathon_2020_summer/shared/Database_Utils.dart';
+import 'package:hackathon_2020_summer/shared/utils.dart';
 
 class UserAccount {
   final String name;
@@ -12,7 +12,7 @@ class UserAccount {
   static Future<UserAccount> fromFirestore(DocumentSnapshot doc) async {
     final data = doc?.data();
     if (data == null) return null;
-    final lectureRefs = castToRefList(data['lectures']);
+    final lectureRefs = castToList<DocumentReference>(data['lectures']);
     final lectureFutures = lectureRefs.map(
         (ref) async => ref.get().then((value) => Lecture.fromFirestore(value)));
     final lectures = await Future.wait(lectureFutures);
