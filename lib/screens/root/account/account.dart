@@ -32,10 +32,7 @@ class _AccountState extends State<Account> {
             itemCount: account.lectures.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: LazyText(
-                  future: account.lectures[index].get(),
-                  getString: (snapshot) => snapshot.data.data()['name'],
-                ),
+                title: Text(account.lectures[index].name),
               );
             },
           ),

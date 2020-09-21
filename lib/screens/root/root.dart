@@ -70,7 +70,7 @@ class _RootState extends State<Root> {
       value: FirebaseFirestore.instance
           .doc('users/$uid')
           .snapshots()
-          .map((event) => UserAccount.fromFirestore(event)),
+          .asyncMap((event) => UserAccount.fromFirestore(event)),
       child: Scaffold(
         key: _scaffoldKey,
         drawerEdgeDragWidth: 0,
