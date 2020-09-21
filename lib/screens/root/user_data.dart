@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
 import 'package:hackathon_2020_summer/screens/root/account/lecture/lecture.dart';
@@ -9,6 +10,7 @@ class UserData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMyAccount = account.id == FirebaseAuth.instance.currentUser.uid;
     return Container(
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -22,11 +24,23 @@ class UserData extends StatelessWidget {
           Card(
             elevation: 10,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('授業一覧'),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 8.0),
+                      Text('授業一覧'),
+                      if (isMyAccount) ...[
+                        Expanded(child: Container()),
+                        FlatButton.icon(
+                          onPressed: () {},
+                          icon: Icon(Icons.edit),
+                          label: Text('編集'),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
                 ListView.separated(
                   shrinkWrap: true,
