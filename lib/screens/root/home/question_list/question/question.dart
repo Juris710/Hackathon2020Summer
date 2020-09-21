@@ -54,19 +54,19 @@ class Question extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _questionCard(context, question),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text(question.answers[index])),
-                      ),
-                    );
-                  },
-                  itemCount: question.answers.length,
-                )
+                // ListView.builder(
+                //   shrinkWrap: true,
+                //   physics: NeverScrollableScrollPhysics(),
+                //   itemBuilder: (context, index) {
+                //     return Card(
+                //       child: Padding(
+                //         padding: const EdgeInsets.all(16.0),
+                //         child: Center(child: Text(question.answers[index])),
+                //       ),
+                //     );
+                //   },
+                //   itemCount: question.answers.length,
+                // )
               ],
             ),
           ),

@@ -1,17 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Question {
   final String title;
   final String content;
   final String createdBy;
-  final List<String> answers;
+  final Timestamp updateAt;
+  final CollectionReference answers;
 
-  Question._({this.title, this.content, this.createdBy, this.answers});
+  Question._({
+    this.title,
+    this.content,
+    this.createdBy,
+    this.updateAt,
+    this.answers,
+  });
 
   factory Question.fromMap(Map<String, dynamic> data) {
     return Question._(
       title: data['title'],
       content: data['content'],
       createdBy: data['createdBy'],
-      answers: data['answers'].cast<String>() as List<String>,
+      updateAt: data['updatedAt'],
+      answers: data['answers'],
     );
   }
 }
