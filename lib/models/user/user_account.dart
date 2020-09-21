@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/models/university/lecture.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 
 class UserAccount {
@@ -27,5 +28,16 @@ class UserAccount {
       university: university,
       lectures: lectures,
     );
+  }
+
+  Map<String, dynamic> data() {
+    final universityRef = DatabaseService.getUniversityDocument(university.id);
+    return {
+      'name': name,
+      'university': universityRef,
+      'lectures': lectures
+          .map((e) => universityRef.collection('lectures').doc(e.id))
+          .toList(),
+    };
   }
 }
