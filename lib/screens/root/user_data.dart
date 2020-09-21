@@ -41,7 +41,10 @@ class UserData extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => Lecture(lecture: lecture),
+                            builder: (context) => Lecture(
+                              lecture: lecture,
+                              account: account,
+                            ),
                           ),
                         );
                       },

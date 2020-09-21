@@ -48,6 +48,7 @@ class _RootState extends State<Root> {
 
   Widget buildPageView() {
     return PageView(
+      physics: NeverScrollableScrollPhysics(),
       controller: pageController,
       onPageChanged: (index) {
         pageChanged(index);
