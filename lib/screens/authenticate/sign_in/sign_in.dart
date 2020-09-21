@@ -74,7 +74,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'メールアドレス*',
+                        labelText: 'メールアドレス',
                         errorText: errorEmail,
                         prefixIcon: Icon(Icons.email),
                       ),
@@ -92,7 +92,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'パスワード*',
+                        labelText: 'パスワード',
                         errorText: errorPassword,
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: GestureDetector(
