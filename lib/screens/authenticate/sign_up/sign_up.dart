@@ -70,9 +70,17 @@ class _SignUpState extends State<SignUp> {
         actions: [
           FlatButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              'ログイン',
-              style: TextStyle(color: Colors.white),
+            child: Row(
+              children: [
+                Text(
+                  'ログイン',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.white,
+                ),
+              ],
             ),
           )
         ],
