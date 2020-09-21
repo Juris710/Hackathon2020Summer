@@ -79,10 +79,7 @@ class _UniversitySearcherState extends State<UniversitySearcher> {
                         University.fromFirestore(universitySnapshot);
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop({
-                          'id': universitySnapshot.id,
-                          'university': university
-                        });
+                        Navigator.of(context).pop(university);
                       },
                       child: Card(
                         child: Padding(
