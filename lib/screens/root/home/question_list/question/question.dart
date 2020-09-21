@@ -89,7 +89,8 @@ class Question extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return AnswerCard(answer: answers[index]);
                           },
-                        )
+                        ),
+                        if (answers.length == 0) Text('まだ回答がありません。')
                       ],
                     ),
                   ),
