@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class SignUp extends StatefulWidget {
@@ -16,10 +15,12 @@ class _SignUpState extends State<SignUp> {
   //text field state
   String email;
   String password;
+  String passwordConfirm;
 
   String error;
   String errorEmail;
   String errorPassword;
+  String errorPasswordConfirm;
 
   void handleAuthError(Object e) {
     String newErrorEmail;
@@ -58,7 +59,7 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0.0,
-        title: Text(appName),
+        title: Text('新しいアカウントの登録'),
         actions: [
           FlatButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -98,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                       },
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     TextFormField(
                       decoration: InputDecoration(
@@ -122,6 +123,25 @@ class _SignUpState extends State<SignUp> {
                         setState(() {
                           password = val;
                           errorPassword = null;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'パスワードの再入力*',
+                        errorText: errorPasswordConfirm,
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      obscureText: true,
+                      validator: (val) =>
+                          val != password ? 'パスワードが異なっています' : null,
+                      onChanged: (val) {
+                        setState(() {
+                          passwordConfirm = val;
+                          errorPasswordConfirm = null;
                         });
                       },
                     ),
