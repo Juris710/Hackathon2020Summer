@@ -19,34 +19,42 @@ class UserData extends StatelessWidget {
           ),
           Text(account.university.name),
           SizedBox(height: 32.0),
-          Text('授業一覧'),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: account.lectures.length,
-            itemBuilder: (context, index) {
-              final lecture = account.lectures[index];
-              return ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Lecture(lecture: lecture),
-                    ),
-                  );
-                },
-                title: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Text(
+          Card(
+            elevation: 10,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('授業一覧'),
+                ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  separatorBuilder: (context, index) {
+                    return Divider(color: Colors.black);
+                  },
+                  itemCount: account.lectures.length,
+                  itemBuilder: (context, index) {
+                    final lecture = account.lectures[index];
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Lecture(lecture: lecture),
+                          ),
+                        );
+                      },
+                      title: Text(
                         lecture.name,
                         style: Theme.of(context).textTheme.button,
                       ),
-                    ),
-                  ),
+                      leading: Icon(Icons.school),
+                    );
+                  },
                 ),
-              );
-            },
+              ],
+            ),
           ),
         ],
       ),
