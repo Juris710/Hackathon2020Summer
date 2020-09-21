@@ -24,20 +24,17 @@ class _AccountState extends State<Account> {
             future: account.university.get(),
             getString: (snapshot) => snapshot.data.data()['name'],
           ),
+          SizedBox(height: 32.0),
+          Text('授業一覧'),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: account.lectures.length,
             itemBuilder: (context, index) {
-              return Card(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: LazyText(
-                      future: account.lectures[index].get(),
-                      getString: (snapshot) => snapshot.data.data()['name'],
-                    ),
-                  ),
+              return ListTile(
+                title: LazyText(
+                  future: account.lectures[index].get(),
+                  getString: (snapshot) => snapshot.data.data()['name'],
                 ),
               );
             },
