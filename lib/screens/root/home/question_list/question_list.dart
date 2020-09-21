@@ -37,7 +37,15 @@ class QuestionList extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    child: Text(question.title),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          question.title,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               });
