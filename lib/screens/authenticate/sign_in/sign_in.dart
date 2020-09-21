@@ -145,10 +145,9 @@ class _SignInState extends State<SignIn> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return SignUp();
-                          }));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => SignUp()),
+                          );
                         },
                         child: Text(
                           '新しいアカウントを登録する',
