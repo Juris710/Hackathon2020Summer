@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/user/user_account.dart';
 import 'package:hackathon_2020_summer/screens/root/account/account.dart';
 import 'package:hackathon_2020_summer/screens/root/home/home.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -67,10 +66,14 @@ class _RootState extends State<Root> {
     final uid = Provider.of<User>(context)?.uid;
     if (uid == null) return Container();
     return StreamProvider.value(
-      value: FirebaseFirestore.instance
-          .doc('users/$uid')
-          .snapshots()
-          .asyncMap((event) => UserAccount.fromFirestore(event)),
+      value: DatabaseService.getAccount(uid),
+      catchError: (context, e) {
+        if (e is TypeError) {
+          print(e.stackTrace);
+        } else {
+          print(e);
+        }
+      },
       child: Scaffold(
         key: _scaffoldKey,
         drawerEdgeDragWidth: 0,

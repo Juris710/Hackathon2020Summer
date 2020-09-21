@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
-import 'package:hackathon_2020_summer/shared/widgets/lazy_text.dart';
+import 'package:hackathon_2020_summer/screens/root/account/lecture/lecture.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
@@ -20,10 +20,7 @@ class _AccountState extends State<Account> {
             account.name,
             style: Theme.of(context).textTheme.headline4,
           ),
-          LazyText(
-            future: account.university.get(),
-            getString: (snapshot) => snapshot.data.data()['name'],
-          ),
+          Text(account.university.name),
           SizedBox(height: 32.0),
           Text('授業一覧'),
           ListView.builder(
@@ -31,8 +28,16 @@ class _AccountState extends State<Account> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: account.lectures.length,
             itemBuilder: (context, index) {
+              final lecture = account.lectures[index];
               return ListTile(
-                title: Text(account.lectures[index].name),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Lecture(lecture: lecture),
+                    ),
+                  );
+                },
+                title: Text(lecture.name),
               );
             },
           ),
