@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 
+//TODO：このクラスを削除
 class Lecture {
   final String id;
   final String name;

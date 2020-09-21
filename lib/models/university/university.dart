@@ -4,8 +4,9 @@ class University {
   final String id;
   final String name;
   final CollectionReference lectures;
+  final CollectionReference groups;
 
-  University._({this.id, this.name, this.lectures});
+  University._({this.id, this.name, this.lectures, this.groups});
 
   factory University.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
@@ -14,12 +15,12 @@ class University {
       id: doc.id,
       name: data['name'],
       lectures: doc.reference.collection('lectures'),
+      groups: doc.reference.collection('groups'),
     );
   }
-  Map<String, dynamic> data() {
-    return {
-      'name': name,
-      //'lectures': lectures
-    };
-  }
+  // Map<String, dynamic> data() {
+  //   return {
+  //     'name': name,
+  //   };
+  // }
 }
