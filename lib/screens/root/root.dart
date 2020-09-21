@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +15,55 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   int _currentIndex = 0;
 
+  PageController pageController = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
+
+  List<BottomNavigationBarItem> buildBottomNavBarItems() {
+    return [
+      BottomNavigationBarItem(
+        icon: new Icon(Icons.home),
+        title: new Text('ホーム'),
+      ),
+      BottomNavigationBarItem(
+        icon: new Icon(Icons.person),
+        title: new Text('アカウント'),
+      ),
+    ];
+  }
+
+  void pageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void bottomTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+      pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+
+  Widget buildPageView() {
+    return PageView(
+      controller: pageController,
+      onPageChanged: (index) {
+        pageChanged(index);
+      },
+      children: <Widget>[
+        Home(),
+        Account(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    final bottomNavigationBarItems = <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.home),
-        title: Text('ホーム'),
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.person),
-        title: Text('アカウント'),
-      ),
-    ];
-
-    final widgets = [
-      Home(),
-      Account(),
-    ];
     final uid = Provider.of<User>(context)?.uid;
     if (uid == null) return Container();
 
@@ -49,29 +77,16 @@ class _RootState extends State<Root> {
           automaticallyImplyLeading: false,
           title: Text(appName),
         ),
-        body: Center(
-          child: PageTransitionSwitcher(
-            child: widgets[_currentIndex],
-            transitionBuilder: (child, animation, secondaryAnimation) {
-              return FadeThroughTransition(
-                child: child,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-              );
-            },
-          ),
-        ),
+        body: buildPageView(),
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: true,
-          items: bottomNavigationBarItems,
+          items: buildBottomNavBarItems(),
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           selectedFontSize: textTheme.caption.fontSize,
           unselectedFontSize: textTheme.caption.fontSize,
           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+            bottomTapped(index);
           },
           selectedItemColor: colorScheme.onPrimary,
           unselectedItemColor: colorScheme.onPrimary.withOpacity(0.38),
