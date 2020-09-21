@@ -4,6 +4,7 @@ import 'package:hackathon_2020_summer/models/question/answer.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
+import 'package:intl/intl.dart';
 
 class Question extends StatelessWidget {
   final Model.Question question;
@@ -44,6 +45,13 @@ class Question extends StatelessWidget {
                         ),
                         UserCard(
                           uid: question.createdBy,
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        Text(
+                          DateFormat('yyyy年MM月dd日 HH:mm')
+                              .format(question.updateAt.toDate()),
                         ),
                         SizedBox(
                           height: 16.0,
