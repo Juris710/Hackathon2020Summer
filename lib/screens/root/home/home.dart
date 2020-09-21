@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/user_account.dart';
-import 'package:hackathon_2020_summer/shared/widgets/lazy_text.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -26,10 +25,7 @@ class _HomeState extends State<Home> {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: LazyText(
-                      future: account.lectures[index].get(),
-                      getString: (snapshot) => snapshot.data.data()['name'],
-                    ),
+                    child: Text(account.lectures[index].name),
                   ),
                 ),
               );
