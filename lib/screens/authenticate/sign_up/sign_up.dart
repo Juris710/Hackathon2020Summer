@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/screens/authenticate/sign_up/university_searcher/university_searcher.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class SignUp extends StatefulWidget {
@@ -12,15 +14,20 @@ class _SignUpState extends State<SignUp> {
   bool loading = false;
   bool _obscureText = true;
 
-  //text field state
-  String email;
-  String password;
-  String passwordConfirm;
+  //state
+  String email = '';
+  String password = '';
+  String passwordConfirm = '';
+  String userName = '';
+  String universityId = '';
+  String universityName = '';
 
+  //error state
   String error;
   String errorEmail;
   String errorPassword;
   String errorPasswordConfirm;
+  String errorUniversity;
 
   void handleAuthError(Object e) {
     String newErrorEmail;
@@ -80,9 +87,6 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 20.0,
-                    ),
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'メールアドレス*',
@@ -152,12 +156,73 @@ class _SignUpState extends State<SignUp> {
                       },
                     ),
                     SizedBox(
+                      height: 16.0,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'ユーザー名*',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (val) => val.isEmpty ? '必須項目です' : null,
+                      onChanged: (val) {
+                        setState(() {
+                          userName = val;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    OutlineButton(
+                      onPressed: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UniversitySearcher(),
+                          ),
+                        );
+                        if (result == null) {
+                          return;
+                        }
+                        setState(() {
+                          universityId = result['id'];
+                          universityName = result['university'].name;
+                          errorUniversity = null;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.school),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            universityName.isEmpty ? '大学を選択*' : universityName,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      errorUniversity ?? '',
+                      style: TextStyle(color: Theme.of(context).errorColor),
+                    ),
+                    SizedBox(
                       height: 20.0,
                     ),
                     RaisedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
+                        bool isValid = true;
                         if (!_formKey.currentState.validate()) {
+                          isValid = false;
+                        }
+                        if (universityId.isEmpty) {
+                          isValid = false;
+                          setState(() {
+                            errorUniversity = '必須項目です';
+                          });
+                        }
+                        if (!isValid) {
                           return;
                         }
                         setState(() {
@@ -168,7 +233,14 @@ class _SignUpState extends State<SignUp> {
                               email: email,
                               password: password,
                             )
-                            .catchError(handleAuthError);
+                            .catchError(handleAuthError)
+                            .then(
+                              (value) => DatabaseService.createNewUser(
+                                value.user.uid,
+                                userName,
+                                universityId,
+                              ),
+                            );
                       },
                       child: Text(
                         '登録',
@@ -181,7 +253,7 @@ class _SignUpState extends State<SignUp> {
                     Text(
                       error ?? '',
                       style: TextStyle(color: Theme.of(context).errorColor),
-                    )
+                    ),
                   ],
                 ),
               ),
