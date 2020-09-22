@@ -18,7 +18,7 @@ class UserData extends StatelessWidget {
             account.name,
             style: Theme.of(context).textTheme.headline4,
           ),
-          Text(account.university.name),
+          //Text(account.university.name),
           SizedBox(height: 32.0),
           // Card(
           //   elevation: 10,
