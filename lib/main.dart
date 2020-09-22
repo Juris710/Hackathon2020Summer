@@ -4,11 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/university/university.dart'
+    as Model;
 import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
+import 'package:hackathon_2020_summer/models/user/registered_item.dart'
+    as Model;
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:hackathon_2020_summer/shared/widgets/dependent_multi_provider.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -135,20 +140,36 @@ class App extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp(
-        title: appName,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonColor: Colors.pink,
-        ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text(appName),
+      child: DependentMultiProvider<Model.Account>(
+        providersBuilder: (value) {
+          return [
+            StreamProvider<Model.University>.value(
+              value: (value == null)
+                  ? null
+                  : DatabaseService.getUniversity(value.university),
+            ),
+            StreamProvider<List<Model.RegisteredItem>>.value(
+              value: (value == null)
+                  ? null
+                  : DatabaseService.getRegistered(value.registered),
+            ),
+          ];
+        },
+        child: MaterialApp(
+          title: appName,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            buttonColor: Colors.pink,
           ),
-          body: Loading(),
+          home: Scaffold(
+            appBar: AppBar(
+              title: Text(appName),
+            ),
+            body: Loading(),
+          ),
+          navigatorKey: navigatorKey,
         ),
-        navigatorKey: navigatorKey,
       ),
     );
   }
