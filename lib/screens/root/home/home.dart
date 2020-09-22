@@ -1,12 +1,9 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/question_target.dart'
     as Model;
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/models/user/registered_item.dart';
-import 'package:hackathon_2020_summer/screens/root/home/question_list/question_list.dart';
+import 'package:hackathon_2020_summer/screens/root/home/question_target/question_target.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -28,13 +25,7 @@ class _HomeState extends State<Home> {
       child: Column(
         children: [
           StreamBuilder(
-            stream: account.registered.snapshots().transform(StreamTransformer<
-                QuerySnapshot,
-                List<RegisteredItem>>.fromHandlers(handleData: (value, sink) {
-              return sink.add(value.docs
-                  .map((doc) => RegisteredItem.fromFirestore(doc))
-                  .toList());
-            })),
+            stream: DatabaseService.getRegistered(account.registered),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Loading();
@@ -120,19 +111,25 @@ class RegisteredCardHome extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               itemCount: registeredItem.questionTargets.length,
               itemBuilder: (context, index) {
-                final targetDocument = registeredItem.questionTargets[index];
+                final reference = registeredItem.questionTargets[index];
                 return StreamBuilder(
-                  stream: DatabaseService.getQuestionTarget(targetDocument),
+                  stream: DatabaseService.getQuestionTarget(reference),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Loading();
+                      return CircularProgressIndicator();
                     }
                     final Model.QuestionTarget target = snapshot.data;
                     return ListTile(
                       onTap: () {
-                        navigate(context, QuestionList(), values: [
-                          Provider.of<Account>(context, listen: false),
-                        ]);
+                        navigate(
+                          context,
+                          QuestionTarget(
+                            targetReference: reference,
+                          ),
+                          [
+                            Provider.of<Account>(context, listen: false),
+                          ],
+                        );
                       },
                       title: Text(target.name),
                       trailing: StreamBuilder(

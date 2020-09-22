@@ -7,7 +7,7 @@ class QuestionTarget {
 
   QuestionTarget._({this.id, this.name, this.questions});
 
-  factory QuestionTarget.fromFireStore(DocumentSnapshot doc) {
+  factory QuestionTarget.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data();
     if (data == null) {
       return null;

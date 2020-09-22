@@ -9,7 +9,7 @@ class UniversityGroup {
 
   UniversityGroup._({this.id, this.name, this.questionTargets, this.children});
 
-  factory UniversityGroup.fromFireStore(DocumentSnapshot doc) {
+  factory UniversityGroup.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data();
     if (data == null) {
       return null;
