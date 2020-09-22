@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/answer.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
@@ -30,9 +31,9 @@ class AnswerCard extends StatelessWidget {
 
 //TODO：データが不正だった場合のフェイルセーフ実装
 class Question extends StatelessWidget {
-  final Model.Question question;
+  final DocumentReference questionReference;
 
-  Question({this.question});
+  Question({this.questionReference});
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +41,13 @@ class Question extends StatelessWidget {
       appBar: AppBar(
         title: Text('質問'),
       ),
-      body: FutureBuilder(
-        future: question.answers.get(),
+      body: StreamBuilder(
+        stream: DatabaseService.getQuestion(questionReference),
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          if (!snapshot.hasData) {
             return Loading();
           }
-          final QuerySnapshot answersSnapshot = snapshot.data;
-          final answers =
-              answersSnapshot.docs.map((e) => Answer.fromFirestore(e)).toList();
+          final Model.Question question = snapshot.data;
           return Container(
             margin: EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -83,15 +82,24 @@ class Question extends StatelessWidget {
                         SizedBox(
                           height: 32.0,
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: answers.length,
-                          itemBuilder: (context, index) {
-                            return AnswerCard(answer: answers[index]);
+                        StreamBuilder(
+                          stream: DatabaseService.getAnswers(question.answers),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return CircularProgressIndicator();
+                            }
+                            final List<Answer> answers = snapshot.data;
+                            if (answers.length == 0) return Text('まだ回答がありません。');
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: answers.length,
+                              itemBuilder: (context, index) {
+                                return AnswerCard(answer: answers[index]);
+                              },
+                            );
                           },
                         ),
-                        if (answers.length == 0) Text('まだ回答がありません。')
                       ],
                     ),
                   ),
