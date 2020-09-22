@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/user/user_account.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/screens/root/user_data.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 
@@ -13,7 +13,7 @@ class UserCard extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseService.getUserDocument(uid)
           .get()
-          .then((value) => UserAccount.fromFirestore(value)),
+          .then((value) => Model.AccountSource.fromFirestore(value)),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container();
