@@ -31,13 +31,13 @@ void setUpFirebaseData() async {
     'name': '微積分学I',
   });
   r5.collection('questions').add({
-    'name': '質問1',
+    'title': '質問1',
     'content': content,
     'createdBy': 'sGsQgC6uyDV1GnjCOYIgTL4KWPN2',
     'updatedAt': DateTime(2020, 9, 22, 1, 0),
   });
   r5.collection('questions').add({
-    'name': '質問2',
+    'title': '質問2',
     'content': content,
     'createdBy': '5rnEG09L8mWKi0BILH09bSHPo3V2',
     'updatedAt': DateTime(2020, 9, 22, 2, 0),
@@ -46,13 +46,13 @@ void setUpFirebaseData() async {
     'name': '情報工学演習I',
   });
   r6.collection('questions').add({
-    'name': '質問3',
+    'title': '質問3',
     'content': content,
     'createdBy': 'sGsQgC6uyDV1GnjCOYIgTL4KWPN2',
     'updatedAt': DateTime(2020, 9, 22, 3, 0),
   });
   r6.collection('questions').add({
-    'name': '質問4',
+    'title': '質問4',
     'content': content,
     'createdBy': '5rnEG09L8mWKi0BILH09bSHPo3V2',
     'updatedAt': DateTime(2020, 9, 22, 4, 0),
