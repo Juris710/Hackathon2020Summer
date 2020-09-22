@@ -6,6 +6,8 @@ import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
 import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
 import 'package:hackathon_2020_summer/models/university/question_target.dart'
     as Model;
+import 'package:hackathon_2020_summer/models/university/university.dart'
+    as Model;
 import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/models/user/registered_item.dart'
     as Model;
@@ -36,12 +38,22 @@ class DatabaseService {
     });
   }
 
+  static Stream<Model.University> getUniversity(DocumentReference ref) {
+    return ref.snapshots().transform(
+      StreamTransformer<DocumentSnapshot, Model.University>.fromHandlers(
+        handleData: (value, sink) {
+          sink.add(Model.University.fromFirestore(value));
+        },
+      ),
+    );
+  }
+
   static Stream<Model.UniversityGroup> getUniversityGroup(
       DocumentReference ref) {
     return ref.snapshots().transform(
       StreamTransformer<DocumentSnapshot, Model.UniversityGroup>.fromHandlers(
         handleData: (value, sink) {
-          return sink.add(Model.UniversityGroup.fromFirestore(value));
+          sink.add(Model.UniversityGroup.fromFirestore(value));
         },
       ),
     );
