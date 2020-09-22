@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hackathon_2020_summer/models/user/user_account.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
 
 class DatabaseService {
   static CollectionReference get universities {
@@ -14,10 +14,11 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('users').doc(uid);
   }
 
-  static Stream<UserAccount> getAccount(String uid) {
+  static Stream<Account> getAccount(String uid) {
     return getUserDocument(uid)
         .snapshots()
-        .asyncMap((event) => UserAccount.fromFirestore(event));
+        .map((event) => AccountSource.fromFirestore(event))
+        .asyncMap((event) => Account.create(event));
   }
 
   static void createNewUser(String uid, String useName, String universityId) {
@@ -28,7 +29,7 @@ class DatabaseService {
     });
   }
 
-  static void updateAccount(UserAccount account) {
-    getUserDocument(account.id).update(account.data());
-  }
+  // static void updateAccount(UserAccount account) {
+  //   getUserDocument(account.id).update(account.data());
+  // }
 }
