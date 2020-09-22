@@ -133,7 +133,7 @@ class App extends StatelessWidget {
               },
             ),
           ),
-        )
+        ),
       ],
       child: MaterialApp(
         title: appName,
