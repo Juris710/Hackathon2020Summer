@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/models/user/registered_item.dart';
+import 'package:hackathon_2020_summer/screens/root/home/question_list/question_list.dart';
+import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -14,34 +17,21 @@ class _HomeState extends State<Home> {
     final account = Provider.of<Account>(context);
     if (account == null) return Loading();
 
-    final registeredCards = account.registered.map((item) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Column(
-            children: [
-              Center(child: Text(item.group.name)),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: item.questionTargets.length,
-                  itemBuilder: (context, index) {
-                    final target = item.questionTargets[index];
-                    return ListTile(
-                      title: Text(target.name),
-                      trailing: Text('${target.questions.length}個の質問'),
-                    );
-                  })
-            ],
-          ),
-        ),
-      );
-    }).toList();
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: registeredCards,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: account.registered.length,
+            itemBuilder: (context, index) {
+              return RegisteredCardHome(
+                registeredItem: account.registered[index],
+              );
+            },
+          ),
+        ],
         // children: [
         // ListView.builder(
         //   shrinkWrap: true,
@@ -74,6 +64,55 @@ class _HomeState extends State<Home> {
         //   },
         // ),
         // ],
+      ),
+    );
+  }
+}
+
+class RegisteredCardHome extends StatelessWidget {
+  final RegisteredItem registeredItem;
+
+  RegisteredCardHome({this.registeredItem});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Column(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  registeredItem.group.name,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: registeredItem.questionTargets.length,
+              itemBuilder: (context, index) {
+                final target = registeredItem.questionTargets[index];
+                return ListTile(
+                  onTap: () {
+                    navigate(
+                      context,
+                      QuestionList(
+                        target: target,
+                      ),
+                      [Provider.of<Account>(context, listen: false)],
+                    );
+                  },
+                  title: Text(target.name),
+                  trailing: Text('${target.questions.length}個の質問'),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

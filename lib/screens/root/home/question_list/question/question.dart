@@ -28,6 +28,7 @@ class AnswerCard extends StatelessWidget {
   }
 }
 
+//TODO：データが不正だった場合のフェイルセーフ実装
 class Question extends StatelessWidget {
   final Model.Question question;
 

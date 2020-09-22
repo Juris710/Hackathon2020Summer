@@ -13,7 +13,8 @@ class UserCard extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseService.getUserDocument(uid)
           .get()
-          .then((value) => Model.AccountSource.fromFirestore(value)),
+          .then((value) => Model.AccountSource.fromFirestore(value))
+          .then((value) async => await Model.Account.create(value)),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container();
