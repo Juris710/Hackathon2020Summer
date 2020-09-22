@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //TODO：一からつくるためのstatic create()作成
 class UniversityGroup {
-  final String id;
+  final DocumentReference reference;
   final String name;
   final CollectionReference questionTargets;
   final CollectionReference children;
 
-  UniversityGroup._({this.id, this.name, this.questionTargets, this.children});
+  UniversityGroup._(
+      {this.reference, this.name, this.questionTargets, this.children});
 
   factory UniversityGroup.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data();
@@ -16,7 +17,7 @@ class UniversityGroup {
     }
     final ref = doc.reference;
     return UniversityGroup._(
-      id: doc.id,
+      reference: doc.reference,
       name: data['name'],
       questionTargets: ref.collection('question_targets'),
       children: ref.collection('children'),
