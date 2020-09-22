@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/university/question_target.dart'
+    as Model;
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_list/question_list.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +27,25 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: account.registered.length,
-            itemBuilder: (context, index) {
-              return RegisteredCardHome(
-                registeredItem: account.registered[index],
+          StreamBuilder(
+            stream: account.registered.snapshots().transform(StreamTransformer<
+                QuerySnapshot,
+                List<RegisteredItem>>.fromHandlers(handleData: (value, sink) {
+              return sink.add(value.docs
+                  .map((doc) => RegisteredItem.fromFirestore(doc))
+                  .toList());
+            })),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Loading();
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => RegisteredCardHome(
+                  registeredItem: snapshot.data[index],
+                ),
               );
             },
           ),
@@ -84,9 +102,16 @@ class RegisteredCardHome extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  registeredItem.group.name,
-                  style: Theme.of(context).textTheme.headline6,
+                child: StreamBuilder(
+                  stream:
+                      DatabaseService.getUniversityGroup(registeredItem.group),
+                  builder: (context, snapshot) {
+                    final str = snapshot.hasData ? snapshot.data.name : '';
+                    return Text(
+                      str,
+                      style: Theme.of(context).textTheme.headline6,
+                    );
+                  },
                 ),
               ),
             ),
@@ -95,19 +120,33 @@ class RegisteredCardHome extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               itemCount: registeredItem.questionTargets.length,
               itemBuilder: (context, index) {
-                final target = registeredItem.questionTargets[index];
-                return ListTile(
-                  onTap: () {
-                    navigate(
-                      context,
-                      QuestionList(
-                        target: target,
+                final targetDocument = registeredItem.questionTargets[index];
+                return StreamBuilder(
+                  stream: DatabaseService.getQuestionTarget(targetDocument),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Loading();
+                    }
+                    final Model.QuestionTarget target = snapshot.data;
+                    return ListTile(
+                      onTap: () {
+                        navigate(context, QuestionList(), values: [
+                          Provider.of<Account>(context, listen: false),
+                        ]);
+                      },
+                      title: Text(target.name),
+                      trailing: StreamBuilder(
+                        stream: target.questions.snapshots(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            (snapshot.hasData)
+                                ? '${snapshot.data.docs.length}個の質問'
+                                : '',
+                          );
+                        },
                       ),
-                      [Provider.of<Account>(context, listen: false)],
                     );
                   },
-                  title: Text(target.name),
-                  trailing: Text('${target.questions.length}個の質問'),
                 );
               },
             ),
