@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionTarget {
-  final String id;
+  final DocumentReference reference;
   final String name;
   final CollectionReference questions;
 
-  QuestionTarget._({this.id, this.name, this.questions});
+  QuestionTarget._({this.reference, this.name, this.questions});
 
   factory QuestionTarget.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data();
@@ -14,7 +14,7 @@ class QuestionTarget {
     }
     final ref = doc.reference;
     return QuestionTarget._(
-      id: doc.id,
+      reference: doc.reference,
       name: data['name'],
       questions: ref.collection('questions'),
     );

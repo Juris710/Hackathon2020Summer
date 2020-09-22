@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //TODO：一からつくるためのstatic create()作成
 class Question {
-  final String id;
+  final DocumentReference reference;
   final String title;
   final String content;
   final String createdBy;
@@ -10,7 +10,7 @@ class Question {
   final CollectionReference answers;
 
   Question._({
-    this.id,
+    this.reference,
     this.title,
     this.content,
     this.createdBy,
@@ -22,7 +22,7 @@ class Question {
     final data = doc?.data();
     if (data == null) return null;
     return Question._(
-      id: doc.id,
+      reference: doc.reference,
       title: data['title'],
       content: data['content'],
       createdBy: data['createdBy'],

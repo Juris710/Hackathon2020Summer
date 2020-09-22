@@ -245,7 +245,7 @@ class _SignUpState extends State<SignUp> {
                               (value) => DatabaseService.createNewUser(
                                 value.user.uid,
                                 userName,
-                                university.id,
+                                university.reference,
                               ),
                             );
                       },

@@ -31,10 +31,11 @@ class DatabaseService {
         .map((event) => Model.Account.fromFirestore(event));
   }
 
-  static void createNewUser(String uid, String useName, String universityId) {
+  static void createNewUser(
+      String uid, String useName, DocumentReference university) {
     getUserDocument(uid).set({
       'name': useName,
-      'university': universities.doc(universityId),
+      'university': university,
     });
   }
 
@@ -86,6 +87,16 @@ class DatabaseService {
       StreamTransformer<DocumentSnapshot, Model.QuestionTarget>.fromHandlers(
         handleData: (value, sink) {
           sink.add(Model.QuestionTarget.fromFirestore(value));
+        },
+      ),
+    );
+  }
+
+  static Stream<Model.RegisteredItem> getRegisteredItem(DocumentReference ref) {
+    return ref.snapshots().transform(
+      StreamTransformer<DocumentSnapshot, Model.RegisteredItem>.fromHandlers(
+        handleData: (value, sink) {
+          return sink.add(Model.RegisteredItem.fromFirestore(value));
         },
       ),
     );

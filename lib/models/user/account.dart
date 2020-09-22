@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Account {
-  final String id;
+  final DocumentReference reference;
   final String name;
   final DocumentReference university;
   final CollectionReference registered;
 
   Account._({
-    this.id,
+    this.reference,
     this.name,
     this.university,
     this.registered,
@@ -17,7 +17,7 @@ class Account {
     final data = doc?.data();
     if (data == null) return null;
     return Account._(
-      id: doc.id,
+      reference: doc.reference,
       name: data['name'],
       university: data['university'],
       registered: doc.reference.collection('registered'),
