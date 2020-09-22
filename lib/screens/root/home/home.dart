@@ -5,7 +5,6 @@ import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/question_target.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -121,14 +120,11 @@ class RegisteredCardHome extends StatelessWidget {
                     final Model.QuestionTarget target = snapshot.data;
                     return ListTile(
                       onTap: () {
-                        navigate(
-                          context,
-                          QuestionTarget(
-                            targetReference: reference,
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                QuestionTarget(targetReference: reference),
                           ),
-                          [
-                            Provider.of<Account>(context, listen: false),
-                          ],
                         );
                       },
                       title: Text(target.name),
