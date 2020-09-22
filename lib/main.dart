@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
@@ -117,7 +121,19 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider.value(value: FirebaseAuth.instance.userChanges())
+        StreamProvider<Model.Account>.value(
+          value: FirebaseAuth.instance.userChanges().transform(
+            StreamTransformer<User, Model.Account>.fromHandlers(
+              handleData: (value, sink) async {
+                if (value == null) return;
+                final account = await DatabaseService.getUserDocument(value.uid)
+                    .get()
+                    .then((doc) => Model.Account.fromFirestore(doc));
+                sink.add(account);
+              },
+            ),
+          ),
+        )
       ],
       child: MaterialApp(
         title: appName,
