@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//TODO：Firestoreからlectures関連を全て削除
 //TODO：一からつくるためのstatic create()作成
 
 class University {
