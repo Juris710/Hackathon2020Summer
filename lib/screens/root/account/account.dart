@@ -86,7 +86,6 @@ class Account extends StatelessWidget {
                             RegExp(r'^universities/([^/]+)/.+$')
                                 .firstMatch(registered[index].group.path)
                                 .group(1);
-                        print(universityId);
                         return StreamBuilder<UniversityModel>(
                           stream: DatabaseService.getUniversity(
                               DatabaseService.universities.doc(universityId)),
