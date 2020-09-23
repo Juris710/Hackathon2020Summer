@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
+import 'package:hackathon_2020_summer/shared/widgets/text_input_dialog.dart';
 
 class UniversitySearcher extends StatelessWidget {
   @override
@@ -13,7 +14,20 @@ class UniversitySearcher extends StatelessWidget {
         title: Text('大学検索'),
         actions: [
           FlatButton.icon(
-            onPressed: () {},
+            onPressed: () async {
+              final String name = await showDialog(
+                context: context,
+                builder: (context) {
+                  return TextInputDialog(
+                    title: '新しい大学を追加する',
+                  );
+                },
+              );
+              if (name?.isEmpty ?? true) {
+                return;
+              }
+              DatabaseService.universities.add({'name': name});
+            },
             icon: Icon(
               Icons.add,
               color: Colors.white,
