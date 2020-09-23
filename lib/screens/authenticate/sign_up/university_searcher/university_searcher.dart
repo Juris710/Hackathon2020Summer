@@ -19,7 +19,7 @@ class UniversitySearcher extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return TextInputDialog(
-                    title: '新しい大学を追加する',
+                    title: '大学を追加する',
                   );
                 },
               );
@@ -33,7 +33,7 @@ class UniversitySearcher extends StatelessWidget {
               color: Colors.white,
             ),
             label: Text(
-              '新しく大学を登録',
+              '大学を追加',
               style: TextStyle(color: Colors.white),
             ),
           ),
