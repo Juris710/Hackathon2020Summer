@@ -16,6 +16,7 @@ import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/dependent_multi_provider.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void setUpFirebaseData() async {
   final content =
@@ -69,6 +70,7 @@ void setUpFirebaseData() async {
 }
 
 void main() async {
+  await initializeDateFormatting('ja_JP');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(App());
