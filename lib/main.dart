@@ -162,12 +162,7 @@ class App extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonColor: Colors.pink,
           ),
-          home: Scaffold(
-            appBar: AppBar(
-              title: Text(appName),
-            ),
-            body: Loading(),
-          ),
+          home: LoadingScaffold(),
           navigatorKey: navigatorKey,
         ),
       ),
