@@ -112,6 +112,32 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
           matches: (item, input) => item.name.contains(input),
           appBar: AppBar(
             title: Text('登録の管理'),
+            actions: [
+              FlatButton.icon(
+                onPressed: () async {
+                  final String name = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return TextInputDialog(
+                        title: '追加',
+                      );
+                    },
+                  );
+                  if (name?.isEmpty ?? true) {
+                    return;
+                  }
+                  groupCollection.add({'name': name});
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  '追加する',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
           inputLabelText: '検索',
           notFoundWidgets: [
