@@ -68,7 +68,9 @@ class RegisteredCardHome extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: StreamBuilder<Model.UniversityGroup>(
                       stream: universityGroupStream,
                       builder: (context, snapshot) {
