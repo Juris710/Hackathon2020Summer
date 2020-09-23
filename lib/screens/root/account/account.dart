@@ -71,8 +71,7 @@ class Account extends StatelessWidget {
                     ],
                   ),
                 ),
-                ListView.separated(
-                  separatorBuilder: (context, index) => Divider(),
+                ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: registered.length,
