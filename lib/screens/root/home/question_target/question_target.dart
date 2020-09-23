@@ -28,7 +28,7 @@ class QuestionTarget extends StatelessWidget {
           body: Column(
             children: [
               StreamBuilder<QuerySnapshot>(
-                stream: target.questions.snapshots(),
+                stream: target.questions.orderBy('updatedAt').snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return CircularProgressIndicator();
