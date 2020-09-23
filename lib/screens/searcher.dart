@@ -8,7 +8,7 @@ class Searcher<T> extends StatelessWidget {
   final Stream<List<T>> getSearchTargets;
   final AppBar appBar;
   final String inputLabelText;
-  final Widget notFoundWidget;
+  final List<Widget> notFoundWidgets;
   final bool Function(T, String) matches;
   final Widget Function(T) itemBuilder;
 
@@ -16,7 +16,7 @@ class Searcher<T> extends StatelessWidget {
     this.getSearchTargets,
     this.appBar,
     this.inputLabelText,
-    this.notFoundWidget,
+    this.notFoundWidgets,
     this.matches,
     this.itemBuilder,
   });
@@ -33,7 +33,7 @@ class Searcher<T> extends StatelessWidget {
           searchTargets: snapshot.data,
           appBar: appBar,
           inputLabelText: inputLabelText,
-          notFoundWidget: notFoundWidget,
+          notFoundWidgets: notFoundWidgets,
           matches: matches,
           itemBuilder: itemBuilder,
         );
@@ -46,7 +46,7 @@ class _SearcherImpl<T> extends StatefulWidget {
   final List<T> searchTargets;
   final AppBar appBar;
   final String inputLabelText;
-  final Widget notFoundWidget;
+  final List<Widget> notFoundWidgets;
   final bool Function(T, String) matches;
   final Widget Function(T) itemBuilder;
 
@@ -54,7 +54,7 @@ class _SearcherImpl<T> extends StatefulWidget {
     this.searchTargets,
     this.appBar,
     this.inputLabelText,
-    this.notFoundWidget,
+    this.notFoundWidgets,
     this.matches,
     this.itemBuilder,
   });
@@ -73,38 +73,40 @@ class _SearcherImplState<T> extends State<_SearcherImpl<T>> {
         .toList();
     return Scaffold(
       appBar: widget.appBar,
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-          child: Column(
-            children: [
-              TextField(
-                decoration: textFieldDecoration.copyWith(
-                  prefixIcon: Icon(Icons.search),
-                  labelText: widget.inputLabelText,
-                ),
-                onChanged: (val) {
-                  setState(() {
-                    input = val;
-                  });
-                },
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: textFieldDecoration.copyWith(
+                prefixIcon: Icon(Icons.search),
+                labelText: widget.inputLabelText,
               ),
-              if (filtered.length == 0) widget.notFoundWidget,
-              if (filtered.length > 0) ...[
-                SizedBox(
-                  height: 16.0,
+              onChanged: (val) {
+                setState(() {
+                  input = val;
+                });
+              },
+            ),
+            if (filtered.length == 0) ...widget.notFoundWidgets,
+            if (filtered.length > 0) ...[
+              SizedBox(
+                height: 16.0,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) {
+                      return widget.itemBuilder(filtered[index]);
+                    },
+                  ),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) {
-                    return widget.itemBuilder(filtered[index]);
-                  },
-                ),
-              ]
+              ),
             ],
-          ),
+          ],
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/models/university/university_group.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/models/user/registered_item.dart';
+import 'package:hackathon_2020_summer/screens/root/account/register_university_group.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
@@ -52,11 +53,13 @@ class Account extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: FlatButton.icon(
                           onPressed: () {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ,
-                            //   ),
-                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RegisterUniversityGroup(
+                                  registeredCollection: account.registered,
+                                ),
+                              ),
+                            );
                           },
                           icon: Icon(Icons.add, color: Colors.white),
                           label: Text(

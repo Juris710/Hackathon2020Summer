@@ -40,17 +40,19 @@ class UniversitySearcher extends StatelessWidget {
         ],
       ),
       inputLabelText: '大学名を入力してください',
-      notFoundWidget: Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '大学が見つかりませんでした',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ],
-        ),
-      ),
+      notFoundWidgets: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '大学が見つかりませんでした。',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ],
+          ),
+        )
+      ],
       matches: (item, input) => item.name.contains(input),
       itemBuilder: (item) {
         return GestureDetector(
