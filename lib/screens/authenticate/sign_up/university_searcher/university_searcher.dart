@@ -1,21 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/university/university.dart';
+import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
+import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
+import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
+import 'package:hackathon_2020_summer/models/university/question_target.dart'
+    as Model;
+import 'package:hackathon_2020_summer/models/university/university.dart'
+    as Model;
+import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
+import 'package:hackathon_2020_summer/models/user/registered_item.dart'
+    as Model;
+import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/constants.dart';
-import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
-class UniversitySearcher extends StatefulWidget {
-  @override
-  _UniversitySearcherState createState() => _UniversitySearcherState();
-}
-
-class _UniversitySearcherState extends State<UniversitySearcher> {
-  String inputText = '';
-
+class UniversitySearcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Searcher<Model.University>(
+      getSearchTargets: DatabaseService.universities.snapshots().map((event) =>
+          event.docs
+              .map((doc) => Model.University.fromFirestore(doc))
+              .toList()),
       appBar: AppBar(
         title: Text('大学検索'),
         actions: [
@@ -32,71 +36,32 @@ class _UniversitySearcherState extends State<UniversitySearcher> {
           ),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      inputLabelText: '大学名を入力してください',
+      notFoundWidget: Expanded(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              decoration: textFieldDecoration.copyWith(
-                prefixIcon: Icon(Icons.search),
-                labelText: '大学名を入力してください',
-              ),
-              onChanged: (val) {
-                setState(() {
-                  inputText = val;
-                });
-              },
-            ),
-            FutureBuilder(
-              future: DatabaseService.universities.get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Loading();
-                }
-                final List<QueryDocumentSnapshot> universitiesSnapshot =
-                    snapshot.data.docs
-                        .where((doc) =>
-                            doc.data()['name'].contains(inputText) as bool)
-                        .toList();
-                if (universitiesSnapshot.length == 0) {
-                  return Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '大学が見つかりませんでした',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: universitiesSnapshot.length,
-                  itemBuilder: (context, index) {
-                    final universitySnapshot = universitiesSnapshot[index];
-                    final university =
-                        University.fromFirestore(universitySnapshot);
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(university);
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(child: Text(university.name)),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+            Text(
+              '大学が見つかりませんでした',
+              style: Theme.of(context).textTheme.headline6,
             ),
           ],
         ),
       ),
+      matches: (item, input) => item.name.contains(input),
+      itemBuilder: (item) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(item);
+          },
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(child: Text(item.name)),
+            ),
+          ),
+        );
+      },
     );
   }
 }
