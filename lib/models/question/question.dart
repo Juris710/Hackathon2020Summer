@@ -29,13 +29,4 @@ class QuestionModel {
       answers: doc.reference.collection('answers'),
     );
   }
-  Map<String, dynamic> data() {
-    return {
-      'title': title,
-      'content': content,
-      'createdBy': createdBy,
-      'updateAt': updatedAt,
-      //'answers': answers,
-    };
-  }
 }
