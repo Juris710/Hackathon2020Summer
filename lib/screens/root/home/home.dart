@@ -62,22 +62,25 @@ class RegisteredCardHome extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    child: StreamBuilder<UniversityGroupModel>(
-                      stream: universityGroupStream,
-                      builder: (context, snapshot) {
-                        return Text(
-                          snapshot.hasData ? snapshot.data.name : '',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(color: Colors.white),
-                        );
-                      },
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
+                      child: StreamBuilder<UniversityGroupModel>(
+                        stream: universityGroupStream,
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.hasData ? snapshot.data.name : '',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(color: Colors.white),
+                            overflow: TextOverflow.clip,
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
