@@ -5,7 +5,7 @@ class QuestionModel {
   final String title;
   final String content;
   final DocumentReference createdBy;
-  final Timestamp updateAt;
+  final Timestamp updatedAt;
   final CollectionReference answers;
 
   QuestionModel._({
@@ -13,7 +13,7 @@ class QuestionModel {
     this.title,
     this.content,
     this.createdBy,
-    this.updateAt,
+    this.updatedAt,
     this.answers,
   });
 
@@ -25,7 +25,7 @@ class QuestionModel {
       title: data['title'],
       content: data['content'],
       createdBy: data['createdBy'],
-      updateAt: data['updatedAt'],
+      updatedAt: data['updatedAt'],
       answers: doc.reference.collection('answers'),
     );
   }
@@ -34,7 +34,7 @@ class QuestionModel {
       'title': title,
       'content': content,
       'createdBy': createdBy,
-      'updateAt': updateAt,
+      'updateAt': updatedAt,
       //'answers': answers,
     };
   }
