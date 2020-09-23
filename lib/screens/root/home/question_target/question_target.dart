@@ -18,12 +18,7 @@ class QuestionTarget extends StatelessWidget {
       stream: DatabaseService.getQuestionTarget(targetReference),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(''),
-            ),
-            body: Loading(),
-          );
+          return LoadingScaffold();
         }
         final Model.QuestionTarget target = snapshot.data;
         return Scaffold(

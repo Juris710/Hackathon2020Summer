@@ -46,12 +46,24 @@ class UniversityGroup extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final doc = snapshot.data.docs[index];
                       final target = Model.QuestionTarget.fromFirestore(doc);
+                      final contains = registeredItem.questionTargets
+                          .contains(target.reference);
                       return ListTile(
                         title: Text(target.name),
                         leading: Checkbox(
-                          value: registeredItem.questionTargets
-                              .contains(target.reference),
-                          onChanged: (value) {},
+                          value: contains,
+                          onChanged: (value) {
+                            if (contains) {
+                              registeredItem.questionTargets
+                                  .remove(target.reference);
+                            } else {
+                              registeredItem.questionTargets
+                                  .add(target.reference);
+                            }
+                            registeredItemReference.update({
+                              'question_targets': registeredItem.questionTargets
+                            });
+                          },
                         ),
                       );
                     },
@@ -62,18 +74,6 @@ class UniversityGroup extends StatelessWidget {
           },
         );
       },
-    );
-  }
-}
-
-class LoadingScaffold extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
-      body: Loading(),
     );
   }
 }
