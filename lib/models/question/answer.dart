@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AnswerModel {
   final DocumentReference reference;
   final String content;
-  final String createdBy;
+  final DocumentReference createdBy;
   final Timestamp updatedAt;
 
   AnswerModel._({this.reference, this.content, this.createdBy, this.updatedAt});
