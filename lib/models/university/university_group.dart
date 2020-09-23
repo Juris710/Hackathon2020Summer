@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//TODO：一からつくるためのstatic create()作成
 class UniversityGroupModel {
   final DocumentReference reference;
   final String name;
