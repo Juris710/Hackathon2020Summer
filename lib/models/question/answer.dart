@@ -18,12 +18,4 @@ class AnswerModel {
       updatedAt: data['updatedAt'],
     );
   }
-
-  Map<String, dynamic> data() {
-    return {
-      'content': content,
-      'createdBy': createdBy,
-      'updatedAt': updatedAt,
-    };
-  }
 }
