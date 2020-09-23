@@ -1,7 +1,10 @@
 import 'package:intl/intl.dart';
 
 List<T> castToList<T>(dynamic l) {
-  return l.cast<T>() as List<T>;
+  if (l == null) {
+    return [];
+  }
+  return l.cast<T>() as List<T> ?? [];
 }
 
 String getDateString(DateTime date) {
