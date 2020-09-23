@@ -3,7 +3,7 @@
 //
 // class Lecture extends StatelessWidget {
 //   final UserAccount account;
-//   final Model.Lecture lecture;
+//   final Lecture lecture;
 //
 //   Lecture({this.lecture, this.account});
 //

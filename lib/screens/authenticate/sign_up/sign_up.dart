@@ -21,7 +21,7 @@ class _SignUpState extends State<SignUp> {
   String password = '';
   String passwordConfirm = '';
   String userName = '';
-  University university;
+  UniversityModel university;
 
   //error state
   String error;

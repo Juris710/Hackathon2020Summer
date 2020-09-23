@@ -1,15 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/university/question_target.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -31,8 +23,8 @@ class _NewQuestionState extends State<NewQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final account = Provider.of<Model.Account>(context);
-    return StreamBuilder<Model.QuestionTarget>(
+    final account = Provider.of<AccountModel>(context);
+    return StreamBuilder<QuestionTargetModel>(
         stream:
             DatabaseService.getQuestionTarget(widget.questionTargetReference),
         builder: (context, snapshot) {

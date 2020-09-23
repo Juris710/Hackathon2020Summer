@@ -1,16 +1,13 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/question/answer.dart';
+import 'package:hackathon_2020_summer/models/question/question.dart';
+import 'package:hackathon_2020_summer/models/university/question_target.dart';
+import 'package:hackathon_2020_summer/models/university/university.dart';
+import 'package:hackathon_2020_summer/models/university/university_group.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 
 class DatabaseService {
   static CollectionReference get universities {
@@ -25,10 +22,10 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('users').doc(uid);
   }
 
-  static Stream<Model.Account> getAccount(String uid) {
+  static Stream<AccountModel> getAccount(String uid) {
     return getUserDocument(uid)
         .snapshots()
-        .map((event) => Model.Account.fromFirestore(event));
+        .map((event) => AccountModel.fromFirestore(event));
   }
 
   static void createNewUser(
@@ -39,76 +36,76 @@ class DatabaseService {
     });
   }
 
-  static Stream<Model.University> getUniversity(DocumentReference ref) {
+  static Stream<UniversityModel> getUniversity(DocumentReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<DocumentSnapshot, Model.University>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, UniversityModel>.fromHandlers(
         handleData: (value, sink) {
-          sink.add(Model.University.fromFirestore(value));
+          sink.add(UniversityModel.fromFirestore(value));
         },
       ),
     );
   }
 
-  static Stream<Model.UniversityGroup> getUniversityGroup(
+  static Stream<UniversityGroupModel> getUniversityGroup(
       DocumentReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<DocumentSnapshot, Model.UniversityGroup>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, UniversityGroupModel>.fromHandlers(
         handleData: (value, sink) {
-          sink.add(Model.UniversityGroup.fromFirestore(value));
+          sink.add(UniversityGroupModel.fromFirestore(value));
         },
       ),
     );
   }
 
-  static Stream<Model.Question> getQuestion(DocumentReference ref) {
+  static Stream<QuestionModel> getQuestion(DocumentReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<DocumentSnapshot, Model.Question>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, QuestionModel>.fromHandlers(
         handleData: (value, sink) {
-          sink.add(Model.Question.fromFirestore(value));
+          sink.add(QuestionModel.fromFirestore(value));
         },
       ),
     );
   }
 
-  static Stream<List<Model.Answer>> getAnswers(CollectionReference ref) {
+  static Stream<List<AnswerModel>> getAnswers(CollectionReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<QuerySnapshot, List<Model.Answer>>.fromHandlers(
+      StreamTransformer<QuerySnapshot, List<AnswerModel>>.fromHandlers(
         handleData: (value, sink) {
           sink.add(
-            value.docs.map((doc) => Model.Answer.fromFirestore(doc)).toList(),
+            value.docs.map((doc) => AnswerModel.fromFirestore(doc)).toList(),
           );
         },
       ),
     );
   }
 
-  static Stream<Model.QuestionTarget> getQuestionTarget(DocumentReference ref) {
+  static Stream<QuestionTargetModel> getQuestionTarget(DocumentReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<DocumentSnapshot, Model.QuestionTarget>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, QuestionTargetModel>.fromHandlers(
         handleData: (value, sink) {
-          sink.add(Model.QuestionTarget.fromFirestore(value));
+          sink.add(QuestionTargetModel.fromFirestore(value));
         },
       ),
     );
   }
 
-  static Stream<Model.RegisteredItem> getRegisteredItem(DocumentReference ref) {
+  static Stream<RegisteredItemModel> getRegisteredItem(DocumentReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<DocumentSnapshot, Model.RegisteredItem>.fromHandlers(
+      StreamTransformer<DocumentSnapshot, RegisteredItemModel>.fromHandlers(
         handleData: (value, sink) {
-          return sink.add(Model.RegisteredItem.fromFirestore(value));
+          return sink.add(RegisteredItemModel.fromFirestore(value));
         },
       ),
     );
   }
 
-  static Stream<List<Model.RegisteredItem>> getRegistered(
+  static Stream<List<RegisteredItemModel>> getRegistered(
       CollectionReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<QuerySnapshot, List<Model.RegisteredItem>>.fromHandlers(
+      StreamTransformer<QuerySnapshot, List<RegisteredItemModel>>.fromHandlers(
         handleData: (value, sink) {
           return sink.add(value.docs
-              .map((doc) => Model.RegisteredItem.fromFirestore(doc))
+              .map((doc) => RegisteredItemModel.fromFirestore(doc))
               .toList());
         },
       ),

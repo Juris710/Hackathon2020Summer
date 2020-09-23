@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //TODO：一からつくるためのstatic create()作成
-class Question {
+class QuestionModel {
   final DocumentReference reference;
   final String title;
   final String content;
@@ -9,7 +9,7 @@ class Question {
   final Timestamp updateAt;
   final CollectionReference answers;
 
-  Question._({
+  QuestionModel._({
     this.reference,
     this.title,
     this.content,
@@ -18,10 +18,10 @@ class Question {
     this.answers,
   });
 
-  factory Question.fromFirestore(DocumentSnapshot doc) {
+  factory QuestionModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
     if (data == null) return null;
-    return Question._(
+    return QuestionModel._(
       reference: doc.reference,
       title: data['title'],
       content: data['content'],

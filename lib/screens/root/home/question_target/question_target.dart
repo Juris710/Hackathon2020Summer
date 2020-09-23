@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/question/question.dart';
+import 'package:hackathon_2020_summer/models/university/question_target.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/new_question.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/question/question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
@@ -15,13 +14,13 @@ class QuestionTarget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Model.QuestionTarget>(
+    return StreamBuilder<QuestionTargetModel>(
       stream: DatabaseService.getQuestionTarget(targetReference),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LoadingScaffold();
         }
-        final Model.QuestionTarget target = snapshot.data;
+        final QuestionTargetModel target = snapshot.data;
         return Scaffold(
           appBar: AppBar(
             title: Text(target.name),
@@ -59,8 +58,7 @@ class QuestionTarget extends StatelessWidget {
                     itemCount: query.docs.length,
                     itemBuilder: (context, index) {
                       final questionDoc = query.docs[index];
-                      final question =
-                          Model.Question.fromFirestore(questionDoc);
+                      final question = QuestionModel.fromFirestore(questionDoc);
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(

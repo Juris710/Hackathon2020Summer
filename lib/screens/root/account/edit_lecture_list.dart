@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:hackathon_2020_summer/models/user/account.dart';
-// import 'package:hackathon_2020_summer/models/university/lecture.dart' as Model;
+// import 'package:hackathon_2020_summer/models/university/lecture.dart' ;
 // import 'package:hackathon_2020_summer/screens/root/account/lecture_searcher.dart';
 // import 'package:hackathon_2020_summer/services/database.dart';
 //
@@ -16,7 +16,7 @@
 // }
 //
 // class _EditLectureListState extends State<EditLectureList> {
-//   List<Model.Lecture> lectureList;
+//   List<Lecture> lectureList;
 //
 //   void reloadLectureList() {
 //     setState(() {

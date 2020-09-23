@@ -1,23 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/answer.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/question/question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
 
 class AnswerCard extends StatelessWidget {
-  final Answer answer;
+  final AnswerModel answer;
 
   AnswerCard({this.answer});
 
@@ -50,13 +41,13 @@ class Question extends StatelessWidget {
       appBar: AppBar(
         title: Text('質問'),
       ),
-      body: StreamBuilder<Model.Question>(
+      body: StreamBuilder<QuestionModel>(
         stream: DatabaseService.getQuestion(questionReference),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Loading();
           }
-          final Model.Question question = snapshot.data;
+          final QuestionModel question = snapshot.data;
           return Container(
             margin: EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -91,13 +82,13 @@ class Question extends StatelessWidget {
                         SizedBox(
                           height: 32.0,
                         ),
-                        StreamBuilder<List<Answer>>(
+                        StreamBuilder<List<AnswerModel>>(
                           stream: DatabaseService.getAnswers(question.answers),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return CircularProgressIndicator();
                             }
-                            final List<Answer> answers = snapshot.data;
+                            final List<AnswerModel> answers = snapshot.data;
                             if (answers.length == 0) return Text('まだ回答がありません。');
                             return ListView.builder(
                               shrinkWrap: true,

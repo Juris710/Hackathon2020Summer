@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 
 class UserData extends StatelessWidget {
-  final Account account;
+  final AccountModel account;
 
   UserData({this.account});
 

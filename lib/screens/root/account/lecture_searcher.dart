@@ -1,6 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
-// import 'package:hackathon_2020_summer/models/university/lecture.dart' as Model;
+// import 'package:hackathon_2020_summer/models/university/lecture.dart' ;
 // import 'package:hackathon_2020_summer/models/user/account.dart';
 // import 'package:hackathon_2020_summer/services/database.dart';
 // import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -92,7 +92,7 @@
 //                   physics: NeverScrollableScrollPhysics(),
 //                   itemCount: lecturesSnapshot.length,
 //                   itemBuilder: (context, index) {
-//                     final lecture = Model.Lecture.fromFirestore(
+//                     final lecture = Lecture.fromFirestore(
 //                       lecturesSnapshot[index],
 //                     );
 //                     return GestureDetector(
