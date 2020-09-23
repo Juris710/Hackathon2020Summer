@@ -61,40 +61,49 @@ class RegisteredCardHome extends StatelessWidget {
       child: Card(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: StreamBuilder<Model.UniversityGroup>(
-                    stream: universityGroupStream,
-                    builder: (context, snapshot) {
-                      return Text(
-                        snapshot.hasData ? snapshot.data.name : '',
-                        style: Theme.of(context).textTheme.headline6,
-                      );
-                    },
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: StreamBuilder<Model.UniversityGroup>(
+                      stream: universityGroupStream,
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.hasData ? snapshot.data.name : '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(color: Colors.white),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FlatButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => UniversityGroup(
-                            groupReference: registeredItem.group,
-                            registeredItemReference: registeredItem.reference,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UniversityGroup(
+                              groupReference: registeredItem.group,
+                              registeredItemReference: registeredItem.reference,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.edit),
-                    label: Text('編集'),
+                        );
+                      },
+                      icon: Icon(Icons.edit, color: Colors.white),
+                      label: Text(
+                        '編集',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             ListView.builder(
               shrinkWrap: true,
