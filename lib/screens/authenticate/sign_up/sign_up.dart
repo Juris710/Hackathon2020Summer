@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/university_searcher/university_searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class SignUp extends StatefulWidget {
@@ -96,7 +97,7 @@ class _SignUpState extends State<SignUp> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'メールアドレス*',
                         errorText: errorEmail,
                         prefixIcon: Icon(Icons.email),
@@ -113,7 +114,7 @@ class _SignUpState extends State<SignUp> {
                       height: 10.0,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'パスワード*',
                         errorText: errorPassword,
                         prefixIcon: Icon(Icons.lock),
@@ -141,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                       height: 10.0,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'パスワードの再入力*',
                         errorText: errorPasswordConfirm,
                         prefixIcon: Icon(Icons.lock),
@@ -167,7 +168,7 @@ class _SignUpState extends State<SignUp> {
                       height: 16.0,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'ユーザー名*',
                         prefixIcon: Icon(Icons.person),
                       ),

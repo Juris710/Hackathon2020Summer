@@ -75,7 +75,7 @@ class Question extends StatelessWidget {
                           height: 8.0,
                         ),
                         UserCard(
-                          uid: question.createdBy,
+                          userReference: question.createdBy,
                         ),
                         SizedBox(
                           height: 8.0,

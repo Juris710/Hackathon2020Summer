@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class SignIn extends StatefulWidget {
@@ -73,7 +74,7 @@ class _SignInState extends State<SignIn> {
                       height: 20.0,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'メールアドレス',
                         errorText: errorEmail,
                         prefixIcon: Icon(Icons.email),
@@ -91,7 +92,7 @@ class _SignInState extends State<SignIn> {
                       height: 20.0,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: textFieldDecoration.copyWith(
                         labelText: 'パスワード',
                         errorText: errorPassword,
                         prefixIcon: Icon(Icons.lock),

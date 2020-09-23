@@ -6,6 +6,7 @@ import 'package:hackathon_2020_summer/models/university/question_target.dart'
 import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/models/user/registered_item.dart'
     as Model;
+import 'package:hackathon_2020_summer/screens/root/home/new_question_target.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
@@ -34,6 +35,21 @@ class UniversityGroup extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: Text(group?.name),
+                actions: [
+                  FlatButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NewQuestionTarget(
+                            universityGroupReference: groupReference,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.add, color: Colors.white),
+                    label: Text('追加', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
               ),
               body: StreamBuilder<QuerySnapshot>(
                 stream: group.questionTargets.snapshots(),
