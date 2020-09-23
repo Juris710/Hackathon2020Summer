@@ -6,7 +6,9 @@ import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
+import 'package:hackathon_2020_summer/shared/widgets/never_show_again_dialog.dart';
 import 'package:hackathon_2020_summer/shared/widgets/text_input_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterUniversityGroup extends StatelessWidget {
   final CollectionReference registeredCollection;
@@ -159,21 +161,58 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
             return ListTile(
               title: Text(item.name),
               leading: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (hasRegistered) {
+                    return;
+                  }
+                  final prefs = await SharedPreferences.getInstance();
+                  final showsConfirm = prefs.getBool(
+                          'show_confirm_on_registering_university_group') ??
+                      true;
+                  if (!showsConfirm) {
+                    registeredCollection.add({
+                      'group': item.reference,
+                    });
                     return;
                   }
                   showDialog(
                     context: context,
                     builder: (_) {
-                      return AlertDialog(
+                      return NeverShowAgainDialog(
                         title: Text('確認'),
                         content: Text(
                           '${item.name}を追加しますか？\n追加した場合、アカウント画面で外すことができます。',
                         ),
-                        actions: [
+                        actions: (neverShowAgain) => [
                           FlatButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: Text('注意'),
+                                  content: Text(
+                                      '次回以降、チェックマークをタップすると自動で追加します。\nよろしいですか？'),
+                                  actions: [
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('次回以降も表示する'),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () {
+                                        prefs.setBool(
+                                            'show_confirm_on_registering_university_group',
+                                            false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                             child: Text('キャンセル'),
                           ),
                           FlatButton(
@@ -181,6 +220,11 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                               registeredCollection.add({
                                 'group': item.reference,
                               });
+                              if (neverShowAgain) {
+                                prefs.setBool(
+                                    'show_confirm_on_registering_university_group',
+                                    false);
+                              }
                               Navigator.of(context).pop();
                             },
                             child: Text('追加する'),
@@ -209,17 +253,6 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                 child: Icon(Icons.open_in_new),
               ),
             );
-            // return GestureDetector(
-            //   onTap: () {
-            //     Navigator.of(context).pop(item);
-            //   },
-            //   child: Card(
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(16.0),
-            //       child: Center(child:),
-            //     ),
-            //   ),
-            // );
           },
         );
       },
