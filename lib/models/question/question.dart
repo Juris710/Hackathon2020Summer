@@ -5,7 +5,7 @@ class Question {
   final DocumentReference reference;
   final String title;
   final String content;
-  final String createdBy;
+  final DocumentReference createdBy;
   final Timestamp updateAt;
   final CollectionReference answers;
 

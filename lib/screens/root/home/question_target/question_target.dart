@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
 import 'package:hackathon_2020_summer/models/university/question_target.dart'
     as Model;
+import 'package:hackathon_2020_summer/screens/root/home/question_target/new_question.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/question/question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -24,6 +25,24 @@ class QuestionTarget extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(target.name),
+            actions: [
+              FlatButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NewQuestion(
+                        questionTargetReference: targetReference,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add, color: Colors.white),
+                label: Text(
+                  '追加',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
           body: Column(
             children: [

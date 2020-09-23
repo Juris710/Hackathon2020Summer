@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
 class UniversitySearcher extends StatefulWidget {
@@ -36,7 +37,7 @@ class _UniversitySearcherState extends State<UniversitySearcher> {
         child: Column(
           children: [
             TextField(
-              decoration: InputDecoration(
+              decoration: textFieldDecoration.copyWith(
                 prefixIcon: Icon(Icons.search),
                 labelText: '大学名を入力してください',
               ),

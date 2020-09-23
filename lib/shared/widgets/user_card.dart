@@ -1,17 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/screens/root/user_data.dart';
-import 'package:hackathon_2020_summer/services/database.dart';
 
 class UserCard extends StatelessWidget {
-  final String uid;
+  final DocumentReference userReference;
 
-  UserCard({this.uid});
+  UserCard({this.userReference});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseService.getUserDocument(uid)
+      future: userReference
           .get()
           .then((value) => Model.Account.fromFirestore(value)),
       builder: (context, snapshot) {
