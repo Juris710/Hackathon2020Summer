@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
+import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
+import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
 import 'package:hackathon_2020_summer/models/university/question_target.dart'
+    as Model;
+import 'package:hackathon_2020_summer/models/university/university.dart'
     as Model;
 import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
 import 'package:hackathon_2020_summer/models/user/registered_item.dart'
@@ -61,7 +67,7 @@ class RegisteredCardHome extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 8.0),
-                  child: StreamBuilder(
+                  child: StreamBuilder<Model.UniversityGroup>(
                     stream: universityGroupStream,
                     builder: (context, snapshot) {
                       return Text(
@@ -96,7 +102,7 @@ class RegisteredCardHome extends StatelessWidget {
               itemCount: registeredItem.questionTargets.length,
               itemBuilder: (context, index) {
                 final reference = registeredItem.questionTargets[index];
-                return StreamBuilder(
+                return StreamBuilder<Model.QuestionTarget>(
                   stream: DatabaseService.getQuestionTarget(reference),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -113,7 +119,7 @@ class RegisteredCardHome extends StatelessWidget {
                         );
                       },
                       title: Text(target.name),
-                      trailing: StreamBuilder(
+                      trailing: StreamBuilder<QuerySnapshot>(
                         stream: target.questions.snapshots(),
                         builder: (context, snapshot) {
                           return Text(

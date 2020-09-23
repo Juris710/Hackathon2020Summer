@@ -1,7 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/answer.dart';
+import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
 import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
+import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
+import 'package:hackathon_2020_summer/models/university/question_target.dart'
+    as Model;
+import 'package:hackathon_2020_summer/models/university/university.dart'
+    as Model;
+import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
+import 'package:hackathon_2020_summer/models/user/registered_item.dart'
+    as Model;
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -41,7 +50,7 @@ class Question extends StatelessWidget {
       appBar: AppBar(
         title: Text('質問'),
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<Model.Question>(
         stream: DatabaseService.getQuestion(questionReference),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -82,7 +91,7 @@ class Question extends StatelessWidget {
                         SizedBox(
                           height: 32.0,
                         ),
-                        StreamBuilder(
+                        StreamBuilder<List<Answer>>(
                           stream: DatabaseService.getAnswers(question.answers),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
