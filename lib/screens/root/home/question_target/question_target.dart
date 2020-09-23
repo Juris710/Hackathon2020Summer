@@ -14,7 +14,7 @@ class QuestionTarget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<Model.QuestionTarget>(
       stream: DatabaseService.getQuestionTarget(targetReference),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -32,7 +32,7 @@ class QuestionTarget extends StatelessWidget {
           ),
           body: Column(
             children: [
-              StreamBuilder(
+              StreamBuilder<QuerySnapshot>(
                 stream: target.questions.snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
