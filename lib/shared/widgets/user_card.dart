@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/root/user_data.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 
 class UserCard extends StatelessWidget {
   final DocumentReference userReference;
@@ -10,14 +11,13 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: userReference
-          .get()
-          .then((value) => AccountModel.fromFirestore(value)),
+    return StreamBuilder<AccountModel>(
+      stream: DatabaseService.getAccount(userReference),
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
+        if (!snapshot.hasData) {
           return Container();
         }
+        final account = snapshot.data;
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(
@@ -27,7 +27,7 @@ class UserCard extends StatelessWidget {
                     title: Text('ユーザー詳細'),
                   ),
                   body: UserData(
-                    account: snapshot.data,
+                    account: account,
                   ),
                 ),
               ),
@@ -36,8 +36,12 @@ class UserCard extends StatelessWidget {
           child: Card(
             color: Theme.of(context).primaryColor,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(snapshot.data.name),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Text(
+                account.name,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         );
