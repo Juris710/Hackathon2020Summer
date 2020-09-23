@@ -77,7 +77,10 @@ class _RootState extends State<Root> {
         child: ListView(
           children: [
             DrawerHeader(
-              child: Text(appName),
+              child: Text(
+                appName,
+                style: TextStyle(color: Colors.white),
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
               ),
