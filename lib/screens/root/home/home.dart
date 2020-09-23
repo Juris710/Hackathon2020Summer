@@ -22,19 +22,21 @@ class _HomeState extends State<Home> {
     final registered = Provider.of<List<RegisteredItemModel>>(context);
     if (account == null || registered == null) return Loading();
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: registered.length,
-            itemBuilder: (context, index) => RegisteredCardHome(
-              registeredItem: registered[index],
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: registered.length,
+              itemBuilder: (context, index) => RegisteredCardHome(
+                registeredItem: registered[index],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
