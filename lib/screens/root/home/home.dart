@@ -1,15 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/university/question_target.dart';
+import 'package:hackathon_2020_summer/models/university/university_group.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/question_target.dart';
 import 'package:hackathon_2020_summer/screens/root/home/university_group.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
@@ -24,8 +18,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    final account = Provider.of<Model.Account>(context);
-    final registered = Provider.of<List<Model.RegisteredItem>>(context);
+    final account = Provider.of<AccountModel>(context);
+    final registered = Provider.of<List<RegisteredItemModel>>(context);
     if (account == null || registered == null) return Loading();
 
     return Container(
@@ -47,7 +41,7 @@ class _HomeState extends State<Home> {
 }
 
 class RegisteredCardHome extends StatelessWidget {
-  final Model.RegisteredItem registeredItem;
+  final RegisteredItemModel registeredItem;
 
   RegisteredCardHome({this.registeredItem});
 
@@ -71,7 +65,7 @@ class RegisteredCardHome extends StatelessWidget {
                       horizontal: 16.0,
                       vertical: 8.0,
                     ),
-                    child: StreamBuilder<Model.UniversityGroup>(
+                    child: StreamBuilder<UniversityGroupModel>(
                       stream: universityGroupStream,
                       builder: (context, snapshot) {
                         return Text(
@@ -113,13 +107,13 @@ class RegisteredCardHome extends StatelessWidget {
               itemCount: registeredItem.questionTargets.length,
               itemBuilder: (context, index) {
                 final reference = registeredItem.questionTargets[index];
-                return StreamBuilder<Model.QuestionTarget>(
+                return StreamBuilder<QuestionTargetModel>(
                   stream: DatabaseService.getQuestionTarget(reference),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return CircularProgressIndicator();
                     }
-                    final Model.QuestionTarget target = snapshot.data;
+                    final QuestionTargetModel target = snapshot.data;
                     return ListTile(
                       onTap: () {
                         Navigator.of(context).push(

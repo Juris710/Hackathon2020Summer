@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/university/question_target.dart';
+import 'package:hackathon_2020_summer/models/university/university_group.dart';
+import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/root/home/new_question_target.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -18,14 +15,14 @@ class UniversityGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Model.RegisteredItem>(
+    return StreamBuilder<RegisteredItemModel>(
       stream: DatabaseService.getRegisteredItem(registeredItemReference),
       builder: (context, registeredItemSnapshot) {
         if (!registeredItemSnapshot.hasData) {
           return LoadingScaffold();
         }
         final registeredItem = registeredItemSnapshot.data;
-        return StreamBuilder<Model.UniversityGroup>(
+        return StreamBuilder<UniversityGroupModel>(
           stream: DatabaseService.getUniversityGroup(groupReference),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -61,7 +58,7 @@ class UniversityGroup extends StatelessWidget {
                     itemCount: snapshot.data.docs.length,
                     itemBuilder: (context, index) {
                       final doc = snapshot.data.docs[index];
-                      final target = Model.QuestionTarget.fromFirestore(doc);
+                      final target = QuestionTargetModel.fromFirestore(doc);
                       final contains = registeredItem.questionTargets
                           .contains(target.reference);
                       return ListTile(
@@ -95,13 +92,13 @@ class UniversityGroup extends StatelessWidget {
 }
 
 /*
-  static Stream<List<Model.QuestionTarget>> getQuestionTargets(
+  static Stream<List<QuestionTarget>> getQuestionTargets(
       CollectionReference ref) {
     return ref.snapshots().transform(
-      StreamTransformer<QuerySnapshot, List<Model.QuestionTarget>>.fromHandlers(
+      StreamTransformer<QuerySnapshot, List<QuestionTarget>>.fromHandlers(
         handleData: (value, sink) {
           sink.add(value.docs
-              .map((doc) => Model.QuestionTarget.fromFirestore(doc))
+              .map((doc) => QuestionTarget.fromFirestore(doc))
               .toList());
         },
       ),

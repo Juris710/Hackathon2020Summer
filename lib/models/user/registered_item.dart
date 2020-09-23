@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 
-class RegisteredItem {
+class RegisteredItemModel {
   final DocumentReference reference;
   final DocumentReference group;
   final List<DocumentReference> questionTargets;
 
-  RegisteredItem._({this.reference, this.group, this.questionTargets});
+  RegisteredItemModel._({this.reference, this.group, this.questionTargets});
 
-  factory RegisteredItem.fromFirestore(DocumentSnapshot doc) {
+  factory RegisteredItemModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
     if (data == null) return null;
-    return RegisteredItem._(
+    return RegisteredItemModel._(
       reference: doc.reference,
       group: data['group'],
       questionTargets: castToList<DocumentReference>(data['question_targets']),

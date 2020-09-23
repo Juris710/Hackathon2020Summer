@@ -1,15 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/university/university_group.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
@@ -28,10 +19,10 @@ class _NewQuestionTargetState extends State<NewQuestionTarget> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Model.UniversityGroup>(
+    return StreamBuilder<UniversityGroupModel>(
         stream: widget.universityGroupReference
             .snapshots()
-            .map((doc) => Model.UniversityGroup.fromFirestore(doc)),
+            .map((doc) => UniversityGroupModel.fromFirestore(doc)),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return LoadingScaffold();

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
+    ;
+import 'package:hackathon_2020_summer/models/user/account.dart' ;
 import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+    ;
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final account = Provider.of<Model.Account>(context);
-    final university = Provider.of<Model.University>(context);
-    final registered = Provider.of<List<Model.RegisteredItem>>(context);
+    final account = Provider.of<AccountModel>(context);
+    final university = Provider.of<UniversityModel>(context);
+    final registered = Provider.of<List<RegisteredItemModel>>(context);
     if (account == null || university == null || registered == null) {
       return Loading();
     }

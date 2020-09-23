@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Account {
+class AccountModel {
   final DocumentReference reference;
   final String name;
   final DocumentReference university;
   final CollectionReference registered;
 
-  Account._({
+  AccountModel._({
     this.reference,
     this.name,
     this.university,
     this.registered,
   });
 
-  factory Account.fromFirestore(DocumentSnapshot doc) {
+  factory AccountModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
     if (data == null) return null;
-    return Account._(
+    return AccountModel._(
       reference: doc.reference,
       name: data['name'],
       university: data['university'],

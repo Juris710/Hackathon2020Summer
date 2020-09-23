@@ -1,25 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/question/answer.dart' as Model;
-import 'package:hackathon_2020_summer/models/question/question.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/group.dart' as Model;
-import 'package:hackathon_2020_summer/models/university/question_target.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/university/university.dart'
-    as Model;
-import 'package:hackathon_2020_summer/models/user/account.dart' as Model;
-import 'package:hackathon_2020_summer/models/user/registered_item.dart'
-    as Model;
+import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 
 class UniversitySearcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Searcher<Model.University>(
+    return Searcher<UniversityModel>(
       getSearchTargets: DatabaseService.universities.snapshots().map((event) =>
-          event.docs
-              .map((doc) => Model.University.fromFirestore(doc))
-              .toList()),
+          event.docs.map((doc) => UniversityModel.fromFirestore(doc)).toList()),
       appBar: AppBar(
         title: Text('大学検索'),
         actions: [
