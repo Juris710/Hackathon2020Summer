@@ -45,26 +45,38 @@ class QuestionTarget extends StatelessWidget {
           ),
           body: Column(
             children: [
-              StreamBuilder<QuerySnapshot>(
-                stream: target.questions.orderBy('updatedAt').snapshots(),
+              StreamBuilder<List<QuestionModel>>(
+                stream: target.questions.orderBy('updatedAt').snapshots().map(
+                    (event) => event.docs
+                        .map((doc) => QuestionModel.fromFirestore(doc))
+                        .toList()),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                   }
-                  final QuerySnapshot query = snapshot.data;
+                  final questions = snapshot.data;
+                  if (questions.length == 0) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(
+                          'まだ質問がありません',
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                    );
+                  }
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: query.docs.length,
+                    itemCount: questions.length,
                     itemBuilder: (context, index) {
-                      final questionDoc = query.docs[index];
-                      final question = QuestionModel.fromFirestore(questionDoc);
+                      final question = questions[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => Question(
-                                questionReference: questionDoc.reference,
+                                questionReference: question.reference,
                               ),
                             ),
                           );
