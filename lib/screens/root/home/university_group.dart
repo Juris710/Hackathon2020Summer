@@ -54,32 +54,49 @@ class UniversityGroup extends StatelessWidget {
                   if (!snapshot.hasData) {
                     return Loading();
                   }
-                  return ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context, index) {
-                      final doc = snapshot.data.docs[index];
-                      final target = QuestionTargetModel.fromFirestore(doc);
-                      final contains = registeredItem.questionTargets
-                          .contains(target.reference);
-                      return ListTile(
-                        title: Text(target.name),
-                        leading: Checkbox(
-                          value: contains,
-                          onChanged: (value) {
-                            if (contains) {
-                              registeredItem.questionTargets
-                                  .remove(target.reference);
-                            } else {
-                              registeredItem.questionTargets
-                                  .add(target.reference);
-                            }
-                            registeredItemReference.update({
-                              'question_targets': registeredItem.questionTargets
-                            });
-                          },
-                        ),
-                      );
-                    },
+                  if (snapshot.data.docs.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            '質問リストが存在しません。',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          Text('右上の「追加」ボタンを押すことで追加できます。'),
+                        ],
+                      ),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    child: ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (context, index) {
+                        final doc = snapshot.data.docs[index];
+                        final target = QuestionTargetModel.fromFirestore(doc);
+                        final contains = registeredItem.questionTargets
+                            .contains(target.reference);
+                        return ListTile(
+                          title: Text(target.name),
+                          leading: Checkbox(
+                            value: contains,
+                            onChanged: (value) {
+                              if (contains) {
+                                registeredItem.questionTargets
+                                    .remove(target.reference);
+                              } else {
+                                registeredItem.questionTargets
+                                    .add(target.reference);
+                              }
+                              registeredItemReference.update({
+                                'question_targets':
+                                    registeredItem.questionTargets
+                              });
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
               ),
