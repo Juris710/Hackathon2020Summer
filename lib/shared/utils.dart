@@ -1,3 +1,4 @@
+import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:intl/intl.dart';
 
 List<T> castToList<T>(dynamic l) {
@@ -23,3 +24,7 @@ String getDateString(DateTime date) {
 //     }),
 //   );
 // }
+
+void editUserConfigs<T>(AccountModel account, String key, T value) {
+  account.configs.doc(key).set({'value': value});
+}

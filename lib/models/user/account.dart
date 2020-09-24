@@ -5,12 +5,14 @@ class AccountModel {
   final String name;
   final DocumentReference university;
   final CollectionReference registered;
+  final CollectionReference configs;
 
   AccountModel._({
     this.reference,
     this.name,
     this.university,
     this.registered,
+    this.configs,
   });
 
   factory AccountModel.fromFirestore(DocumentSnapshot doc) {
@@ -21,6 +23,7 @@ class AccountModel {
       name: data['name'],
       university: data['university'],
       registered: doc.reference.collection('registered'),
+      configs: doc.reference.collection('configs'),
     );
   }
 }
