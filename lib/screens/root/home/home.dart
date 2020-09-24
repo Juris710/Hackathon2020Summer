@@ -21,6 +21,21 @@ class _HomeState extends State<Home> {
     final account = Provider.of<AccountModel>(context);
     final registered = Provider.of<List<RegisteredItemModel>>(context);
     if (account == null || registered == null) return Loading();
+    if (registered.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            '質問グループが登録されていません。',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Text(
+            '「アカウント」画面から登録することができます。',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+        ],
+      );
+    }
 
     return SingleChildScrollView(
       child: Container(
@@ -49,9 +64,6 @@ class RegisteredCardHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final universityGroupStream = DatabaseService.getUniversityGroup(
-      registeredItem.group,
-    );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -69,7 +81,9 @@ class RegisteredCardHome extends StatelessWidget {
                         vertical: 8.0,
                       ),
                       child: StreamBuilder<UniversityGroupModel>(
-                        stream: universityGroupStream,
+                        stream: DatabaseService.getUniversityGroup(
+                          registeredItem.group,
+                        ),
                         builder: (context, snapshot) {
                           return Text(
                             snapshot.hasData ? snapshot.data.name : '',
@@ -106,44 +120,55 @@ class RegisteredCardHome extends StatelessWidget {
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: registeredItem.questionTargets.length,
-              itemBuilder: (context, index) {
-                final reference = registeredItem.questionTargets[index];
-                return StreamBuilder<QuestionTargetModel>(
-                  stream: DatabaseService.getQuestionTarget(reference),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return CircularProgressIndicator();
-                    }
-                    final QuestionTargetModel target = snapshot.data;
-                    return ListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                QuestionTarget(targetReference: reference),
-                          ),
-                        );
-                      },
-                      title: Text(target.name),
-                      trailing: StreamBuilder<QuerySnapshot>(
-                        stream: target.questions.snapshots(),
-                        builder: (context, snapshot) {
-                          return Text(
-                            (snapshot.hasData)
-                                ? '${snapshot.data.docs.length}個の質問'
-                                : '',
+            if (registeredItem.questionTargets.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('質問リストが登録されていません。'),
+                    Text('右上の「編集」ボタンを押すと登録できます。'),
+                  ],
+                ),
+              ),
+            if (registeredItem.questionTargets.isNotEmpty)
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: registeredItem.questionTargets.length,
+                itemBuilder: (context, index) {
+                  final reference = registeredItem.questionTargets[index];
+                  return StreamBuilder<QuestionTargetModel>(
+                    stream: DatabaseService.getQuestionTarget(reference),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                      }
+                      final QuestionTargetModel target = snapshot.data;
+                      return ListTile(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  QuestionTarget(targetReference: reference),
+                            ),
                           );
                         },
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+                        title: Text(target.name),
+                        trailing: StreamBuilder<QuerySnapshot>(
+                          stream: target.questions.snapshots(),
+                          builder: (context, snapshot) {
+                            return Text(
+                              (snapshot.hasData)
+                                  ? '${snapshot.data.docs.length}個の質問'
+                                  : '',
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
           ],
         ),
       ),
