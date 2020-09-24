@@ -8,6 +8,7 @@ import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
+import 'package:hackathon_2020_summer/shared/widgets/text_input_dialog.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
 import 'package:provider/provider.dart';
 
@@ -39,13 +40,62 @@ class AnswerCard extends StatelessWidget {
             ),
             if (account.reference == answer.createdBy)
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final result = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return TextInputDialog(
+                              title: '回答の編集',
+                              defaultText: answer.content,
+                            );
+                          });
+                      if (result == null) {
+                        return;
+                      }
+                      answer.reference.update({
+                        'content': result,
+                        'updatedAt': DateTime.now(),
+                      });
+                    },
                     child: Text(
                       '回答を編集する',
                       style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('確認'),
+                            content: Text(
+                                'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
+                            actions: [
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('キャンセル'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  answer.reference.delete();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('削除する'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      '回答を削除する',
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],
