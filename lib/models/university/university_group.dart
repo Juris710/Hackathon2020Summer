@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//日本語名：質問グループ
 class UniversityGroupModel {
   final DocumentReference reference;
   final String name;
