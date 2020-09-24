@@ -89,34 +89,14 @@ class App extends StatelessWidget {
   @override
   StatelessElement createElement() {
     FirebaseAuth.instance.userChanges().listen((user) {
-      Widget page;
-      Offset tweenBegin;
-      if (user == null) {
-        page = Authenticate();
-        tweenBegin = Offset(0.0, -1.0);
-      } else {
-        page = Root();
-        tweenBegin = Offset(0.0, 1.0);
-      }
       navigatorKey.currentState.pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
-            return page;
-          },
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = Tween(
-              begin: tweenBegin,
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.ease));
-
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-          transitionDuration: Duration(milliseconds: 500),
-        ),
+        MaterialPageRoute(builder: (context) {
+          if (user == null) {
+            return Authenticate();
+          } else {
+            return Root();
+          }
+        }),
       );
     });
     return super.createElement();
