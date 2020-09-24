@@ -351,7 +351,7 @@ class _AnswerCardState extends State<AnswerCard> {
                     .toList()),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return LoadingSmall();
               }
               final replies = snapshot.data;
               if (replies.isEmpty) {
@@ -507,7 +507,7 @@ class _QuestionState extends State<Question> {
                                     question.answers),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
-                                    return CircularProgressIndicator();
+                                    return LoadingSmall();
                                   }
                                   final List<AnswerModel> answers =
                                       snapshot.data;

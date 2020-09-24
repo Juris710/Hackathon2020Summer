@@ -18,7 +18,9 @@ class Loading extends StatelessWidget {
 
 class LoadingScaffold extends StatelessWidget {
   final String title;
+
   LoadingScaffold({this.title = appName});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +28,19 @@ class LoadingScaffold extends StatelessWidget {
         title: Text(title),
       ),
       body: Loading(),
+    );
+  }
+}
+
+class LoadingSmall extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 50,
+        height: 50,
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

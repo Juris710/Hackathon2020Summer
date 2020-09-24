@@ -141,7 +141,7 @@ class RegisteredCardHome extends StatelessWidget {
                     stream: DatabaseService.getQuestionTarget(reference),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
+                        return LoadingSmall();
                       }
                       final QuestionTargetModel target = snapshot.data;
                       return ListTile(

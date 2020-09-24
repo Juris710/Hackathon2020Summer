@@ -83,7 +83,7 @@ class UserData extends StatelessWidget {
                                     registered[index].group),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
-                                    return CircularProgressIndicator();
+                                    return LoadingSmall();
                                   }
                                   final group = snapshot.data;
                                   final universityId = RegExp(
@@ -96,7 +96,7 @@ class UserData extends StatelessWidget {
                                             .doc(universityId)),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
-                                        return CircularProgressIndicator();
+                                        return LoadingSmall();
                                       }
                                       final university = snapshot.data;
                                       var titleText = group.name;
