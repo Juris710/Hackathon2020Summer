@@ -58,7 +58,16 @@ class DatabaseService {
     return ref.snapshots().map((doc) => RegisteredItemModel.fromFirestore(doc));
   }
 
-  //TODO：registeredのCollectionが存在しないと読み込みが終わらない問題を修正
+  static Stream<Map<String, dynamic>> getConfigs(CollectionReference ref) {
+    return ref.snapshots().map(
+          (event) => Map.fromIterable(
+            event.docs,
+            key: (doc) => doc.id,
+            value: (doc) => doc.data()['value'],
+          ),
+        );
+  }
+
   static Stream<List<RegisteredItemModel>> getRegistered(
       CollectionReference ref) {
     return ref.snapshots().map((event) => event.docs
