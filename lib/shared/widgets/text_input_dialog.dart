@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 
 class TextInputDialog extends StatefulWidget {
   final String title;
+  final String defaultText;
 
-  TextInputDialog({this.title});
+  TextInputDialog({this.title, this.defaultText = ''});
 
   @override
   _TextInputDialogState createState() => _TextInputDialogState();
 }
 
 class _TextInputDialogState extends State<TextInputDialog> {
-  String text = '';
+  TextEditingController controller;
+
+  @override
+  void initState() {
+    controller = TextEditingController(text: widget.defaultText);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title),
       content: TextField(
+        controller: controller,
         autofocus: true,
-        onChanged: (val) {
-          setState(() {
-            text = val;
-          });
-        },
       ),
       actions: [
         FlatButton(
@@ -33,7 +36,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
         ),
         FlatButton(
           onPressed: () {
-            Navigator.of(context).pop(text);
+            Navigator.of(context).pop(controller.text);
           },
           child: Text('決定'),
         ),
