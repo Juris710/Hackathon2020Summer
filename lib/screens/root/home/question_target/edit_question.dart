@@ -69,7 +69,7 @@ class _EditQuestionState extends State<EditQuestion> {
                     SizedBox(height: 16.0),
                     RaisedButton(
                       child: Text(
-                        '編集',
+                        '決定',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
@@ -77,8 +77,8 @@ class _EditQuestionState extends State<EditQuestion> {
                           return;
                         }
                         widget.questionReference.update({
-                          'title': title,
-                          'content': content,
+                          'title': title ?? question.title,
+                          'content': content ?? question.content,
                         });
                         Navigator.of(context).pop();
                       },
