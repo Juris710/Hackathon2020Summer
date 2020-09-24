@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/answer.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/screens/root/home/question_target/edit_question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/utils.dart';
@@ -71,18 +72,42 @@ class _QuestionState extends State<Question> {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('質問'),
-      ),
-      body: StreamBuilder<QuestionModel>(
-        stream: DatabaseService.getQuestion(widget.questionReference),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Loading();
-          }
-          final QuestionModel question = snapshot.data;
-          return Container(
+    return StreamBuilder<QuestionModel>(
+      stream: DatabaseService.getQuestion(widget.questionReference),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return LoadingScaffold();
+        }
+        final question = snapshot.data;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('質問'),
+            actions: [
+              if (account.reference == question.createdBy)
+                FlatButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return EditQuestion(
+                            questionReference: question.reference,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    '編集',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+            ],
+          ),
+          body: Container(
             margin: EdgeInsets.all(8.0),
             child: Column(
               children: [
@@ -193,9 +218,9 @@ class _QuestionState extends State<Question> {
                 ),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

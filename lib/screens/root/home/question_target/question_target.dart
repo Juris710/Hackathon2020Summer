@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/question/question.dart';
 import 'package:hackathon_2020_summer/models/university/question_target.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/new_question.dart';
 import 'package:hackathon_2020_summer/screens/root/home/question_target/question/question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 class QuestionTarget extends StatelessWidget {
   final DocumentReference targetReference;
@@ -14,6 +16,7 @@ class QuestionTarget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final account = Provider.of<AccountModel>(context);
     return StreamBuilder<QuestionTargetModel>(
       stream: DatabaseService.getQuestionTarget(targetReference),
       builder: (context, snapshot) {
@@ -84,11 +87,59 @@ class QuestionTarget extends StatelessWidget {
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                question.title,
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
+                            child: Stack(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          question.title,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
+                                      ),
+                                    ),
+                                    if (account.reference == question.createdBy)
+                                      IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                title: Text('確認'),
+                                                content: Text(
+                                                    'この質問を削除しますか？\n削除した後、元に戻すことはできません。'),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text('キャンセル'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text('削除する'),
+                                                    onPressed: () {
+                                                      question.reference
+                                                          .delete();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.delete,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
