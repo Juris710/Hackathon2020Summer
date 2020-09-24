@@ -70,6 +70,8 @@ class UniversityGroup extends StatelessWidget {
                   }
                   return SingleChildScrollView(
                     child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
                         final doc = snapshot.data.docs[index];
