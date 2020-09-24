@@ -6,8 +6,9 @@ import 'package:hackathon_2020_summer/services/database.dart';
 
 class UserCard extends StatelessWidget {
   final DocumentReference userReference;
+  final Widget Function(String) builder;
 
-  UserCard({this.userReference});
+  UserCard({this.userReference, this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,9 @@ class UserCard extends StatelessWidget {
           return Container();
         }
         final account = snapshot.data;
+        if (builder != null) {
+          return builder(account.name);
+        }
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(
