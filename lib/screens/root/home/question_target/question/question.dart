@@ -21,87 +21,104 @@ class AnswerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(answer.content),
-            SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Column(
               children: [
-                if (answer.createdBy != null)
-                  UserCard(
-                    userReference: answer.createdBy,
-                  ),
-                if (answer.updatedAt != null)
-                  Text(getDateString(answer.updatedAt.toDate())),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (answer.createdBy != null)
+                      UserCard(
+                        userReference: answer.createdBy,
+                      ),
+                    if (account.reference == answer.createdBy)
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () async {
+                              final result = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return TextInputDialog(
+                                    title: '回答の編集',
+                                    defaultText: answer.content,
+                                  );
+                                },
+                              );
+                              if (result == null) {
+                                return;
+                              }
+                              answer.reference.update({
+                                'content': result,
+                                'updatedAt': DateTime.now(),
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('確認'),
+                                    content: Text(
+                                        'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('キャンセル'),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          answer.reference.delete();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('削除する'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                Text(answer.content),
+                SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (answer.updatedAt != null)
+                      Text(getDateString(answer.updatedAt.toDate())),
+                  ],
+                ),
               ],
             ),
-            if (account.reference == answer.createdBy)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FlatButton(
-                    onPressed: () async {
-                      final result = await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return TextInputDialog(
-                              title: '回答の編集',
-                              defaultText: answer.content,
-                            );
-                          });
-                      if (result == null) {
-                        return;
-                      }
-                      answer.reference.update({
-                        'content': result,
-                        'updatedAt': DateTime.now(),
-                      });
-                    },
-                    child: Text(
-                      '回答を編集する',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('確認'),
-                            content: Text(
-                                'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
-                            actions: [
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('キャンセル'),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  answer.reference.delete();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('削除する'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Text(
-                      '回答を削除する',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ],
-              )
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+            child: Divider(color: Colors.black),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: FlatButton(
+              onPressed: () {},
+              child: Text(
+                '返信する',
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -117,7 +134,7 @@ class Question extends StatefulWidget {
 }
 
 class _QuestionState extends State<Question> {
-  String answerContent = '';
+  final _answerContentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -209,8 +226,9 @@ class _QuestionState extends State<Question> {
                                   }
                                   final List<AnswerModel> answers =
                                       snapshot.data;
-                                  if (answers.length == 0)
+                                  if (answers.length == 0) {
                                     return Text('まだ回答がありません。');
+                                  }
                                   return ListView.builder(
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
@@ -233,28 +251,25 @@ class _QuestionState extends State<Question> {
                   children: [
                     Expanded(
                       child: TextField(
-                        decoration: textFieldDecoration,
-                        onChanged: (val) {
-                          setState(() {
-                            answerContent = val;
-                          });
-                        },
+                        controller: _answerContentController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration:
+                            textFieldDecoration.copyWith(hintText: '回答を入力する'),
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
-                        if (answerContent.isEmpty) {
+                        if (_answerContentController.value.text.isEmpty) {
                           return;
                         }
                         FocusScope.of(context).unfocus();
                         widget.questionReference.collection('answers').add({
-                          'content': answerContent,
+                          'content': _answerContentController.value.text,
                           'createdBy': account.reference,
                           'updatedAt': DateTime.now(),
                         });
-                        setState(() {
-                          answerContent = '';
-                        });
+                        _answerContentController.clear();
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -272,5 +287,11 @@ class _QuestionState extends State<Question> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _answerContentController.dispose();
+    super.dispose();
   }
 }
