@@ -57,7 +57,7 @@ class QuestionTarget extends StatelessWidget {
                           .toList()),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return CircularProgressIndicator();
+                      return LoadingSmall();
                     }
                     final questions = snapshot.data;
                     if (questions.length == 0) {
