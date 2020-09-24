@@ -405,6 +405,48 @@ class Question extends StatefulWidget {
   _QuestionState createState() => _QuestionState();
 }
 
+class QuestionDetail extends StatelessWidget {
+  final QuestionModel question;
+
+  QuestionDetail({this.question});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          question.title,
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            if (question.createdBy != null)
+              UserCard(
+                userReference: question.createdBy,
+              ),
+            if (question.updatedAt != null)
+              Text(getDateString(question.updatedAt.toDate())),
+          ],
+        ),
+        SizedBox(
+          height: 16.0,
+        ),
+        Text(
+          question.content,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+        SizedBox(
+          height: 32.0,
+        ),
+      ],
+    );
+  }
+}
+
 class _QuestionState extends State<Question> {
   final _answerContentController = TextEditingController();
 
@@ -447,7 +489,7 @@ class _QuestionState extends State<Question> {
             ],
           ),
           body: Container(
-            margin: EdgeInsets.all(8.0),
+            margin: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 Expanded(
@@ -456,39 +498,10 @@ class _QuestionState extends State<Question> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Text(
-                                question.title,
-                                style: Theme.of(context).textTheme.headline4,
-                              ),
-                              SizedBox(
-                                height: 8.0,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (question.createdBy != null)
-                                    UserCard(
-                                      userReference: question.createdBy,
-                                    ),
-                                  if (question.updatedAt != null)
-                                    Text(getDateString(
-                                        question.updatedAt.toDate())),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              Text(
-                                question.content,
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              SizedBox(
-                                height: 32.0,
-                              ),
+                              QuestionDetail(question: question),
                               StreamBuilder<List<AnswerModel>>(
                                 stream: DatabaseService.getAnswers(
                                     question.answers),
@@ -501,7 +514,9 @@ class _QuestionState extends State<Question> {
                                   if (answers.length == 0) {
                                     return Text('まだ回答がありません。');
                                   }
-                                  return ListView.builder(
+                                  return ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 32.0),
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     itemCount: answers.length,
@@ -518,40 +533,43 @@ class _QuestionState extends State<Question> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _answerContentController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration:
-                            textFieldDecoration.copyWith(hintText: '回答を入力する'),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (_answerContentController.value.text.isEmpty) {
-                          return;
-                        }
-                        FocusScope.of(context).unfocus();
-                        widget.questionReference.collection('answers').add({
-                          'content': _answerContentController.value.text,
-                          'createdBy': account.reference,
-                          'updatedAt': DateTime.now(),
-                        });
-                        _answerContentController.clear();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.send,
-                          color: Theme.of(context).primaryColor,
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _answerContentController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration:
+                              textFieldDecoration.copyWith(hintText: '回答を入力する'),
                         ),
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          if (_answerContentController.value.text.isEmpty) {
+                            return;
+                          }
+                          FocusScope.of(context).unfocus();
+                          widget.questionReference.collection('answers').add({
+                            'content': _answerContentController.value.text,
+                            'createdBy': account.reference,
+                            'updatedAt': DateTime.now(),
+                          });
+                          _answerContentController.clear();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.send,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

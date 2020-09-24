@@ -46,109 +46,113 @@ class QuestionTarget extends StatelessWidget {
               ),
             ],
           ),
-          body: Column(
-            children: [
-              StreamBuilder<List<QuestionModel>>(
-                stream: target.questions.orderBy('updatedAt').snapshots().map(
-                    (event) => event.docs
-                        .map((doc) => QuestionModel.fromFirestore(doc))
-                        .toList()),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  final questions = snapshot.data;
-                  if (questions.length == 0) {
-                    return Expanded(
-                      child: Center(
-                        child: Text(
-                          'まだ質問がありません',
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: questions.length,
-                    itemBuilder: (context, index) {
-                      final question = questions[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => Question(
-                                questionReference: question.reference,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          question.title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ),
-                                      ),
-                                    ),
-                                    if (account.reference == question.createdBy)
-                                      IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) {
-                                              return AlertDialog(
-                                                title: Text('確認'),
-                                                content: Text(
-                                                    'この質問を削除しますか？\n削除した後、元に戻すことはできません。'),
-                                                actions: [
-                                                  FlatButton(
-                                                    child: Text('キャンセル'),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                  FlatButton(
-                                                    child: Text('削除する'),
-                                                    onPressed: () {
-                                                      question.reference
-                                                          .delete();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
+          body: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                StreamBuilder<List<QuestionModel>>(
+                  stream: target.questions.orderBy('updatedAt').snapshots().map(
+                      (event) => event.docs
+                          .map((doc) => QuestionModel.fromFirestore(doc))
+                          .toList()),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+                    final questions = snapshot.data;
+                    if (questions.length == 0) {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            'まだ質問がありません',
+                            style: Theme.of(context).textTheme.headline5,
                           ),
                         ),
                       );
-                    },
-                  );
-                },
-              ),
-            ],
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        final question = questions[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => Question(
+                                  questionReference: question.reference,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            question.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ),
+                                        ),
+                                      ),
+                                      if (account.reference ==
+                                          question.createdBy)
+                                        IconButton(
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) {
+                                                return AlertDialog(
+                                                  title: Text('確認'),
+                                                  content: Text(
+                                                      'この質問を削除しますか？\n削除した後、元に戻すことはできません。'),
+                                                  actions: [
+                                                    FlatButton(
+                                                      child: Text('キャンセル'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text('削除する'),
+                                                      onPressed: () {
+                                                        question.reference
+                                                            .delete();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

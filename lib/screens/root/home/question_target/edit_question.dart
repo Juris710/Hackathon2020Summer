@@ -34,7 +34,7 @@ class _EditQuestionState extends State<EditQuestion> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
                 child: Column(

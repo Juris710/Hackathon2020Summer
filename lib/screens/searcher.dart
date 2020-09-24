@@ -79,7 +79,7 @@ class _SearcherImplState<T> extends State<_SearcherImpl<T>> {
     return Scaffold(
       appBar: widget.appBar,
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
         child: Column(
           children: [
             TextField(

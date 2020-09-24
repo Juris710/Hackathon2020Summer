@@ -38,6 +38,7 @@ class UserCard extends StatelessWidget {
             );
           },
           child: Card(
+            elevation: null,
             color: Theme.of(context).primaryColor,
             child: Padding(
               padding:
