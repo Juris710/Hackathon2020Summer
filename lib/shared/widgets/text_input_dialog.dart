@@ -11,11 +11,11 @@ class TextInputDialog extends StatefulWidget {
 }
 
 class _TextInputDialogState extends State<TextInputDialog> {
-  final controller = TextEditingController();
+  final _controller = TextEditingController();
 
   @override
   void initState() {
-    controller.text = widget.defaultText;
+    _controller.text = widget.defaultText;
     super.initState();
   }
 
@@ -24,7 +24,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
     return AlertDialog(
       title: Text(widget.title),
       content: TextField(
-        controller: controller,
+        controller: _controller,
         autofocus: true,
       ),
       actions: [
@@ -36,7 +36,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
         ),
         FlatButton(
           onPressed: () {
-            Navigator.of(context).pop(controller.text);
+            Navigator.of(context).pop(_controller.text);
           },
           child: Text('決定'),
         ),
@@ -46,7 +46,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
