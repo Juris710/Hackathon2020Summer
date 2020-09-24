@@ -12,6 +12,15 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
 import 'package:provider/provider.dart';
 
+//TODO：実装
+class WritingStatusNotification extends Notification {
+  final WritingStatus writingStatus;
+
+  WritingStatusNotification({this.writingStatus});
+}
+
+enum WritingStatus { NotWriting, Writing }
+
 class ReplyTile extends StatefulWidget {
   final ReplyModel reply;
 
@@ -268,12 +277,18 @@ class _AnswerCardState extends State<AnswerCard> {
                             icon: Icon(
                                 isAnswerEditing ? Icons.check : Icons.edit),
                             onPressed: () {
-                              if (isAnswerEditing) {
+                              if (isAnswerEditing &&
+                                  _answerContentController.text.isNotEmpty) {
                                 widget.answer.reference.update({
                                   'content': _answerContentController.text,
                                   'updatedAt': DateTime.now(),
                                 });
                               }
+                              WritingStatusNotification(
+                                writingStatus: isAnswerEditing
+                                    ? WritingStatus.NotWriting
+                                    : WritingStatus.Writing,
+                              ).dispatch(context);
                               setState(() {
                                 isAnswerEditing = !isAnswerEditing;
                               });
@@ -396,15 +411,6 @@ class _AnswerCardState extends State<AnswerCard> {
   }
 }
 
-class Question extends StatefulWidget {
-  final DocumentReference questionReference;
-
-  Question({this.questionReference});
-
-  @override
-  _QuestionState createState() => _QuestionState();
-}
-
 class QuestionDetail extends StatelessWidget {
   final QuestionModel question;
 
@@ -447,8 +453,18 @@ class QuestionDetail extends StatelessWidget {
   }
 }
 
+class Question extends StatefulWidget {
+  final DocumentReference questionReference;
+
+  Question({this.questionReference});
+
+  @override
+  _QuestionState createState() => _QuestionState();
+}
+
 class _QuestionState extends State<Question> {
   final _answerContentController = TextEditingController();
+  WritingStatus writingStatus = WritingStatus.NotWriting;
 
   @override
   Widget build(BuildContext context) {
@@ -488,90 +504,107 @@ class _QuestionState extends State<Question> {
                 )
             ],
           ),
-          body: Container(
-            margin: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              QuestionDetail(question: question),
-                              StreamBuilder<List<AnswerModel>>(
-                                stream: DatabaseService.getAnswers(
-                                    question.answers),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return LoadingSmall();
-                                  }
-                                  final List<AnswerModel> answers =
-                                      snapshot.data;
-                                  if (answers.length == 0) {
-                                    return Text('まだ回答がありません。');
-                                  }
-                                  return ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                        SizedBox(height: 32.0),
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: answers.length,
-                                    itemBuilder: (context, index) {
-                                      return AnswerCard(answer: answers[index]);
+          body: NotificationListener<WritingStatusNotification>(
+            onNotification: (notification) {
+              setState(() {
+                writingStatus = notification.writingStatus;
+              });
+              return true;
+            },
+            child: Provider.value(
+              value: writingStatus,
+              child: Container(
+                margin: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                children: [
+                                  QuestionDetail(question: question),
+                                  StreamBuilder<List<AnswerModel>>(
+                                    stream: DatabaseService.getAnswers(
+                                        question.answers),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return LoadingSmall();
+                                      }
+                                      final List<AnswerModel> answers =
+                                          snapshot.data;
+                                      if (answers.length == 0) {
+                                        return Text('まだ回答がありません。');
+                                      }
+                                      return ListView.separated(
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(height: 32.0),
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: answers.length,
+                                        itemBuilder: (context, index) {
+                                          return AnswerCard(
+                                              answer: answers[index]);
+                                        },
+                                      );
                                     },
-                                  );
-                                },
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _answerContentController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          decoration:
-                              textFieldDecoration.copyWith(hintText: '回答を入力する'),
+                    if (writingStatus == WritingStatus.NotWriting)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _answerContentController,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                decoration: textFieldDecoration.copyWith(
+                                    hintText: '回答を入力する'),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                if (_answerContentController
+                                    .value.text.isEmpty) {
+                                  return;
+                                }
+                                FocusScope.of(context).unfocus();
+                                widget.questionReference
+                                    .collection('answers')
+                                    .add({
+                                  'content':
+                                      _answerContentController.value.text,
+                                  'createdBy': account.reference,
+                                  'updatedAt': DateTime.now(),
+                                });
+                                _answerContentController.clear();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.send,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (_answerContentController.value.text.isEmpty) {
-                            return;
-                          }
-                          FocusScope.of(context).unfocus();
-                          widget.questionReference.collection('answers').add({
-                            'content': _answerContentController.value.text,
-                            'createdBy': account.reference,
-                            'updatedAt': DateTime.now(),
-                          });
-                          _answerContentController.clear();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.send,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );
