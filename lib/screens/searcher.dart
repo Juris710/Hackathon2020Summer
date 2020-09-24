@@ -9,6 +9,7 @@ class Searcher<T> extends StatelessWidget {
   final AppBar appBar;
   final String inputLabelText;
   final List<Widget> notFoundWidgets;
+  final List<Widget> searchTargetsEmptyWidgets;
   final bool Function(T, String) matches;
   final Widget Function(T) itemBuilder;
 
@@ -17,6 +18,7 @@ class Searcher<T> extends StatelessWidget {
     this.appBar,
     this.inputLabelText,
     this.notFoundWidgets,
+    this.searchTargetsEmptyWidgets,
     this.matches,
     this.itemBuilder,
   });
@@ -34,6 +36,7 @@ class Searcher<T> extends StatelessWidget {
           appBar: appBar,
           inputLabelText: inputLabelText,
           notFoundWidgets: notFoundWidgets,
+          searchTargetsEmptyWidgets: searchTargetsEmptyWidgets,
           matches: matches,
           itemBuilder: itemBuilder,
         );
@@ -47,6 +50,7 @@ class _SearcherImpl<T> extends StatefulWidget {
   final AppBar appBar;
   final String inputLabelText;
   final List<Widget> notFoundWidgets;
+  final List<Widget> searchTargetsEmptyWidgets;
   final bool Function(T, String) matches;
   final Widget Function(T) itemBuilder;
 
@@ -55,6 +59,7 @@ class _SearcherImpl<T> extends StatefulWidget {
     this.appBar,
     this.inputLabelText,
     this.notFoundWidgets,
+    this.searchTargetsEmptyWidgets,
     this.matches,
     this.itemBuilder,
   });
@@ -88,8 +93,15 @@ class _SearcherImplState<T> extends State<_SearcherImpl<T>> {
                 });
               },
             ),
-            if (filtered.length == 0) ...widget.notFoundWidgets,
-            if (filtered.length > 0) ...[
+            if (widget.searchTargets.isEmpty) ...[
+              if (widget.searchTargetsEmptyWidgets != null)
+                ...widget.searchTargetsEmptyWidgets,
+              if (widget.searchTargetsEmptyWidgets == null)
+                ...widget.notFoundWidgets,
+            ],
+            if (widget.searchTargets.isNotEmpty && filtered.isEmpty)
+              ...widget.notFoundWidgets,
+            if (filtered.isNotEmpty) ...[
               SizedBox(
                 height: 16.0,
               ),

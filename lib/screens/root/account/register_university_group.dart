@@ -20,7 +20,7 @@ class RegisterUniversityGroup extends StatelessWidget {
       getSearchTargets: DatabaseService.universities.snapshots().map((event) =>
           event.docs.map((doc) => UniversityModel.fromFirestore(doc)).toList()),
       appBar: AppBar(
-        title: Text('登録の管理'),
+        title: Text('大学の選択'),
         actions: [
           FlatButton.icon(
             onPressed: () async {
@@ -70,6 +70,7 @@ class RegisterUniversityGroup extends StatelessWidget {
               MaterialPageRoute(builder: (context) {
                 return _RegisterUniversityGroupDescendant(
                   groupCollection: item.groups,
+                  parentName: item.name,
                 );
               }),
             );
@@ -88,9 +89,11 @@ class RegisterUniversityGroup extends StatelessWidget {
 
 class _RegisterUniversityGroupDescendant extends StatelessWidget {
   final CollectionReference groupCollection;
+  final String parentName;
 
   _RegisterUniversityGroupDescendant({
     this.groupCollection,
+    this.parentName,
   });
 
   void register(AccountModel account, UniversityGroupModel group) {
@@ -117,7 +120,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
               .toList()),
           matches: (item, input) => item.name.contains(input),
           appBar: AppBar(
-            title: Text('登録の管理'),
+            title: Text('質問グループ登録'),
             actions: [
               FlatButton.icon(
                 onPressed: () async {
@@ -139,7 +142,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                   color: Colors.white,
                 ),
                 label: Text(
-                  '追加する',
+                  '追加',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -153,6 +156,23 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                 children: [
                   Text(
                     '0件です',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ],
+              ),
+            )
+          ],
+          searchTargetsEmptyWidgets: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    '「$parentName」には質問グループがありません。',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Text(
+                    '右上の「追加」ボタンを押すことで「$parentName」に質問グループを追加することができます。',
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ],
@@ -254,6 +274,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                       builder: (context) {
                         return _RegisterUniversityGroupDescendant(
                           groupCollection: item.children,
+                          parentName: item.name,
                         );
                       },
                     ),
