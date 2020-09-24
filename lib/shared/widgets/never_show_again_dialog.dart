@@ -32,7 +32,13 @@ class _NeverShowAgainDialogState extends State<NeverShowAgainDialog> {
                   });
                 },
               ),
-              Text('次回から表示しない'),
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      neverShowAgain = !neverShowAgain;
+                    });
+                  },
+                  child: Text('次回から表示しない')),
             ],
           ),
         ],
