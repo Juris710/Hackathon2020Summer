@@ -1,39 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/university/question_target.dart';
-import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/models/question/question.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
-import 'package:provider/provider.dart';
 
-class NewQuestion extends StatefulWidget {
-  final DocumentReference questionTargetReference;
+class EditQuestion extends StatefulWidget {
+  final DocumentReference questionReference;
 
-  NewQuestion({this.questionTargetReference});
+  EditQuestion({this.questionReference});
 
   @override
-  _NewQuestionState createState() => _NewQuestionState();
+  _EditQuestionState createState() => _EditQuestionState();
 }
 
-class _NewQuestionState extends State<NewQuestion> {
+class _EditQuestionState extends State<EditQuestion> {
   final _formKey = GlobalKey<FormState>();
   String title;
   String content;
 
   @override
   Widget build(BuildContext context) {
-    final account = Provider.of<AccountModel>(context);
-    return StreamBuilder<QuestionTargetModel>(
-      stream: DatabaseService.getQuestionTarget(widget.questionTargetReference),
+    return StreamBuilder<QuestionModel>(
+      stream: DatabaseService.getQuestion(widget.questionReference),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LoadingScaffold();
         }
-        final universityGroup = snapshot.data;
+        final question = snapshot.data;
         return Scaffold(
           appBar: AppBar(
-            title: Text('${universityGroup.name}に質問を追加'),
+            title: Text('質問を編集'),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -43,6 +40,7 @@ class _NewQuestionState extends State<NewQuestion> {
                 child: Column(
                   children: [
                     TextFormField(
+                      initialValue: question.title,
                       decoration: textFieldDecoration.copyWith(
                         labelText: 'タイトル*',
                       ),
@@ -55,6 +53,7 @@ class _NewQuestionState extends State<NewQuestion> {
                     ),
                     SizedBox(height: 8.0),
                     TextFormField(
+                      initialValue: question.content,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: textFieldDecoration.copyWith(
@@ -70,20 +69,16 @@ class _NewQuestionState extends State<NewQuestion> {
                     SizedBox(height: 16.0),
                     RaisedButton(
                       child: Text(
-                        '作成',
+                        '編集',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        widget.questionTargetReference
-                            .collection('questions')
-                            .add({
+                        widget.questionReference.update({
                           'title': title,
                           'content': content,
-                          'createdBy': account.reference,
-                          'updatedAt': DateTime.now(),
                         });
                         Navigator.of(context).pop();
                       },
