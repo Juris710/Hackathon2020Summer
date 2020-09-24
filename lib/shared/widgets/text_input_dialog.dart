@@ -11,11 +11,11 @@ class TextInputDialog extends StatefulWidget {
 }
 
 class _TextInputDialogState extends State<TextInputDialog> {
-  TextEditingController controller;
+  final controller = TextEditingController();
 
   @override
   void initState() {
-    controller = TextEditingController(text: widget.defaultText);
+    controller.text = widget.defaultText;
     super.initState();
   }
 
@@ -42,5 +42,11 @@ class _TextInputDialogState extends State<TextInputDialog> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
