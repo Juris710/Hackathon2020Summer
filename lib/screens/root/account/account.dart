@@ -12,9 +12,9 @@ class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
-    final university = Provider.of<UniversityModel>(context);
+    final myUniversity = Provider.of<UniversityModel>(context);
     final registered = Provider.of<List<RegisteredItemModel>>(context);
-    if (account == null || university == null || registered == null) {
+    if (account == null || myUniversity == null || registered == null) {
       return Loading();
     }
 
@@ -27,7 +27,7 @@ class Account extends StatelessWidget {
               account.name,
               style: Theme.of(context).textTheme.headline4,
             ),
-            Text(university.name),
+            Text(myUniversity.name),
             SizedBox(height: 32.0),
             Card(
               child: Column(
@@ -96,9 +96,13 @@ class Account extends StatelessWidget {
                                 return CircularProgressIndicator();
                               }
                               final university = snapshot.data;
+                              var titleText = group.name;
+                              if (myUniversity.reference !=
+                                  university.reference) {
+                                titleText += '(${university.name})';
+                              }
                               return ListTile(
-                                title:
-                                    Text('${group.name} (${university.name})'),
+                                title: Text(titleText),
                                 trailing: GestureDetector(
                                   child: Icon(Icons.delete),
                                   onTap: () {
