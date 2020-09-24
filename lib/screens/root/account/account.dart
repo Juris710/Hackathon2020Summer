@@ -56,9 +56,8 @@ class Account extends StatelessWidget {
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => RegisterUniversityGroup(
-                                    registeredCollection: account.registered,
-                                  ),
+                                  builder: (context) =>
+                                      RegisterUniversityGroup(),
                                 ),
                               );
                             },
