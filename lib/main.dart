@@ -141,6 +141,9 @@ class App extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonColor: Colors.pink,
+            cardTheme: CardTheme(
+              elevation: 2.0,
+            ),
           ),
           home: LoadingScaffold(),
           navigatorKey: navigatorKey,

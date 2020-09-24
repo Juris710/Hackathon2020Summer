@@ -11,7 +11,7 @@ class UserData extends StatelessWidget {
   Widget build(BuildContext context) {
     //final isMyAccount = account.id == FirebaseAuth.instance.currentUser.uid;
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           Text(

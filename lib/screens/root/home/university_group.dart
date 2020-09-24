@@ -55,16 +55,19 @@ class UniversityGroup extends StatelessWidget {
                     return Loading();
                   }
                   if (snapshot.data.docs.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            '質問リストが存在しません。',
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Text('右上の「追加」ボタンを押すことで追加できます。'),
-                        ],
+                    return Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              '質問リストが存在しません。',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            Text('右上の「追加」ボタンを押すことで追加できます。'),
+                          ],
+                        ),
                       ),
                     );
                   }
