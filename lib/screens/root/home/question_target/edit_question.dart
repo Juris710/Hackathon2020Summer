@@ -79,6 +79,7 @@ class _EditQuestionState extends State<EditQuestion> {
                         widget.questionReference.update({
                           'title': title ?? question.title,
                           'content': content ?? question.content,
+                          'updatedAt': DateTime.now(),
                         });
                         Navigator.of(context).pop();
                       },
