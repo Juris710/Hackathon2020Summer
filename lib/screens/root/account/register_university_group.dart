@@ -96,10 +96,14 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
     this.parentName,
   });
 
-  void register(AccountModel account, UniversityGroupModel group) {
+  void register(
+      BuildContext context, AccountModel account, UniversityGroupModel group) {
     account.registered.add({
       'group': group.reference,
     });
+    Scaffold.of(context).showSnackBar(
+      SnackBar(content: Text('質問グループ「${group.name}」を登録しました。')),
+    );
   }
 
   @override
@@ -195,101 +199,105 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
           itemBuilder: (item) {
             final hasRegistered =
                 registered.any((element) => element.group == item.reference);
-            return ListTile(
-              title: Text(item.name),
-              leading: GestureDetector(
-                onTap: () async {
-                  if (hasRegistered) {
-                    return;
-                  }
-                  final neverShowAgain = configs[UserSettings
-                          .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP] ??
-                      false;
-                  if (neverShowAgain) {
-                    register(account, item);
-                    return;
-                  }
-                  showDialog(
-                    context: context,
-                    builder: (_) {
-                      return NeverShowAgainDialog(
-                        title: Text('確認'),
-                        content: Text(
-                          '${item.name}を登録しますか？\n登録した場合、アカウント画面で外すことができます。',
-                        ),
-                        actions: (neverShowAgain) => [
-                          FlatButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              if (!neverShowAgain) {
-                                return;
-                              }
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text('注意'),
-                                  content: Text(
-                                      '次回以降、チェックマークをタップすると自動で登録します。\nよろしいですか？'),
-                                  actions: [
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('次回以降も表示する'),
+            return Builder(
+              builder: (context) {
+                return ListTile(
+                  title: Text(item.name),
+                  leading: GestureDetector(
+                    onTap: () async {
+                      if (hasRegistered) {
+                        return;
+                      }
+                      final neverShowAgain = configs[UserSettings
+                              .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP] ??
+                          false;
+                      if (neverShowAgain) {
+                        register(context, account, item);
+                        return;
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return NeverShowAgainDialog(
+                            title: Text('確認'),
+                            content: Text(
+                              '${item.name}を登録しますか？\n登録した場合、アカウント画面で外すことができます。',
+                            ),
+                            actions: (neverShowAgain) => [
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  if (!neverShowAgain) {
+                                    return;
+                                  }
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text('注意'),
+                                      content: Text(
+                                          '次回以降、チェックマークをタップすると自動で登録します。\nよろしいですか？'),
+                                      actions: [
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('次回以降も表示する'),
+                                        ),
+                                        FlatButton(
+                                          onPressed: () {
+                                            editUserConfigs(
+                                              account,
+                                              UserSettings
+                                                  .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP,
+                                              true,
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
                                     ),
-                                    FlatButton(
-                                      onPressed: () {
-                                        editUserConfigs(
-                                          account,
-                                          UserSettings
-                                              .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP,
-                                          true,
-                                        );
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Text('キャンセル'),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              register(account, item);
-                              if (neverShowAgain) {
-                                editUserConfigs(
-                                  account,
-                                  UserSettings
-                                      .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP,
-                                  true,
-                                );
-                              }
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('追加する'),
-                          ),
-                        ],
+                                  );
+                                },
+                                child: Text('キャンセル'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  register(context, account, item);
+                                  if (neverShowAgain) {
+                                    editUserConfigs(
+                                      account,
+                                      UserSettings
+                                          .KEY_NEVER_SHOW_AGAIN_CONFIRM_REGISTER_UNIVERSITY_GROUP,
+                                      true,
+                                    );
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('追加する'),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                child: Icon(
-                  Icons.check_circle,
-                  color: hasRegistered ? Colors.lightGreen : Colors.grey,
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return _RegisterUniversityGroupDescendant(
-                        groupCollection: item.children,
-                        parentName: item.name,
-                      );
-                    },
+                    child: Icon(
+                      Icons.check_circle,
+                      color: hasRegistered ? Colors.lightGreen : Colors.grey,
+                    ),
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return _RegisterUniversityGroupDescendant(
+                            groupCollection: item.children,
+                            parentName: item.name,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             );
