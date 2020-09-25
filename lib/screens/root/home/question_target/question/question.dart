@@ -498,9 +498,15 @@ class Question extends StatefulWidget {
   _QuestionState createState() => _QuestionState();
 }
 
-class _QuestionState extends State<Question> {
+class _QuestionState extends State<Question>
+    with SingleTickerProviderStateMixin {
   final _answerContentController = TextEditingController();
   WritingStatus writingStatus = WritingStatus.NotWriting;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -591,13 +597,21 @@ class _QuestionState extends State<Question> {
                                 ],
                               ),
                             ),
+                            // SizedBox(
+                            //   height: 100,
+                            // ),
                           ],
                         ),
                       ),
                     ),
-                    if (writingStatus == WritingStatus.NotWriting)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                    AnimatedSize(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn,
+                      vsync: this,
+                      child: Container(
+                        constraints: (writingStatus == WritingStatus.Writing)
+                            ? BoxConstraints(maxHeight: 0.0)
+                            : BoxConstraints(maxHeight: double.infinity),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -638,6 +652,7 @@ class _QuestionState extends State<Question> {
                           ],
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
