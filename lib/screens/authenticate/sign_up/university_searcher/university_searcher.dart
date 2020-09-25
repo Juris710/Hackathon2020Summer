@@ -61,7 +61,6 @@ class UniversitySearcher extends StatelessWidget {
                           textColor: Theme.of(context).primaryColor,
                           onPressed: () async {
                             final url = item.url;
-                            print(url);
                             if (await canLaunch(url)) {
                               await launch(item.url);
                             }
