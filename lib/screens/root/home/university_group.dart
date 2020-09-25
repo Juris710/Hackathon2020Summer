@@ -31,7 +31,21 @@ class UniversityGroup extends StatelessWidget {
             final group = snapshot.data;
             return Scaffold(
               appBar: AppBar(
-                title: Text(group?.name),
+                title: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: "質問リスト登録",
+                      style: TextStyle(fontSize: 20),
+                      children: <TextSpan>[
+                        if (group?.name != null)
+                          TextSpan(
+                            text: '\n${group?.name}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                      ]),
+                ),
                 actions: [
                   FlatButton.icon(
                     onPressed: () {
@@ -72,18 +86,21 @@ class UniversityGroup extends StatelessWidget {
                     );
                   }
                   return SingleChildScrollView(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        final doc = snapshot.data.docs[index];
-                        final target = QuestionTargetModel.fromFirestore(doc);
-                        final contains = registeredItem.questionTargets
-                            .contains(target.reference);
-                        return ListTile(
-                          title: Text(target.name),
-                          leading: Checkbox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => Divider(),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          final doc = snapshot.data.docs[index];
+                          final target = QuestionTargetModel.fromFirestore(doc);
+                          final contains = registeredItem.questionTargets
+                              .contains(target.reference);
+                          return CheckboxListTile(
+                            title: Text(target.name),
+                            controlAffinity: ListTileControlAffinity.leading,
                             value: contains,
                             onChanged: (value) {
                               if (contains) {
@@ -98,9 +115,9 @@ class UniversityGroup extends StatelessWidget {
                                     registeredItem.questionTargets
                               });
                             },
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   );
                 },
