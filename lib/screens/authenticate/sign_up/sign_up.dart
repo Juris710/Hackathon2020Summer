@@ -185,6 +185,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     OutlineButton(
                       onPressed: () async {
+                        FocusScope.of(context).unfocus();
                         final result = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => UniversitySearcher(),
