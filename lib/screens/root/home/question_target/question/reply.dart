@@ -22,11 +22,17 @@ class _CreateReplyTileState extends State<CreateReplyTile>
   AnimationController _animationController;
   final _replyContentController = TextEditingController();
   bool isCreating = false;
+  final focus = FocusNode();
 
   @override
   void initState() {
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              FocusScope.of(context).requestFocus(focus);
+            }
+          });
     super.initState();
   }
 
@@ -47,6 +53,7 @@ class _CreateReplyTileState extends State<CreateReplyTile>
     if (isCreating) {
       _animationController.forward();
     } else {
+      FocusScope.of(context).unfocus();
       _animationController.reverse();
     }
   }
@@ -71,6 +78,7 @@ class _CreateReplyTileState extends State<CreateReplyTile>
                   ),
                 ),
             child: TextField(
+              focusNode: focus,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: textFieldDecoration.copyWith(
