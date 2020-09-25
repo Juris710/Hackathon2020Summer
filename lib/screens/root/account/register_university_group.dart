@@ -12,6 +12,9 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/never_show_again_dialog.dart';
 import 'package:hackathon_2020_summer/shared/widgets/text_input_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../new_university.dart';
 
 class RegisterUniversityGroup extends StatelessWidget {
   @override
@@ -23,19 +26,12 @@ class RegisterUniversityGroup extends StatelessWidget {
         title: Text('大学の選択'),
         actions: [
           FlatButton.icon(
-            onPressed: () async {
-              final String name = await showDialog(
-                context: context,
-                builder: (context) {
-                  return TextInputDialog(
-                    title: '追加',
-                  );
-                },
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NewUniversity(),
+                ),
               );
-              if (name?.isEmpty ?? true) {
-                return;
-              }
-              DatabaseService.universities.add({'name': name});
             },
             icon: Icon(
               Icons.add,
@@ -65,6 +61,32 @@ class RegisterUniversityGroup extends StatelessWidget {
       matches: (item, input) => item.name.contains(input),
       itemBuilder: (item) {
         return GestureDetector(
+          onLongPress: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(item.name),
+                  content: (item.url?.isNotEmpty ?? false)
+                      ? FlatButton(
+                          onPressed: () async {
+                            await launch(item.url);
+                          },
+                          child: Text(item.url),
+                        )
+                      : Container(),
+                  actions: [
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('閉じる'),
+                    )
+                  ],
+                );
+              },
+            );
+          },
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) {

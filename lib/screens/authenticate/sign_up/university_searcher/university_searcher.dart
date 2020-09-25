@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/university/university.dart';
+import 'package:hackathon_2020_summer/screens/new_university.dart';
 import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/widgets/text_input_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UniversitySearcher extends StatelessWidget {
   @override
@@ -14,19 +15,12 @@ class UniversitySearcher extends StatelessWidget {
         title: Text('大学検索'),
         actions: [
           FlatButton.icon(
-            onPressed: () async {
-              final String name = await showDialog(
-                context: context,
-                builder: (context) {
-                  return TextInputDialog(
-                    title: '大学を追加する',
-                  );
-                },
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NewUniversity(),
+                ),
               );
-              if (name?.isEmpty ?? true) {
-                return;
-              }
-              DatabaseService.universities.add({'name': name});
             },
             icon: Icon(
               Icons.add,
@@ -56,6 +50,37 @@ class UniversitySearcher extends StatelessWidget {
       matches: (item, input) => item.name.contains(input),
       itemBuilder: (item) {
         return GestureDetector(
+          onLongPress: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(item.name),
+                  content: (item.url?.isNotEmpty ?? false)
+                      ? FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          onPressed: () async {
+                            final url = item.url;
+                            print(url);
+                            if (await canLaunch(url)) {
+                              await launch(item.url);
+                            }
+                          },
+                          child: Text(item.url),
+                        )
+                      : Container(),
+                  actions: [
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('閉じる'),
+                    )
+                  ],
+                );
+              },
+            );
+          },
           onTap: () {
             Navigator.of(context).pop(item);
           },
