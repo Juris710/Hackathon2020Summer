@@ -12,7 +12,6 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:hackathon_2020_summer/shared/widgets/user_card.dart';
 import 'package:provider/provider.dart';
 
-//TODO：実装
 class WritingStatusNotification extends Notification {
   final WritingStatus writingStatus;
 
@@ -49,6 +48,7 @@ class _ReplyTileState extends State<ReplyTile> {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
+    final writingStatus = Provider.of<WritingStatus>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -65,21 +65,32 @@ class _ReplyTileState extends State<ReplyTile> {
                   children: [
                     IconButton(
                       icon: Icon(isReplyEditing ? Icons.check : Icons.edit),
-                      onPressed: () {
-                        if (isReplyEditing) {
-                          widget.reply.reference.update({
-                            'content': _replyContentController.text,
-                          });
-                        }
-                        setState(() {
-                          isReplyEditing = !isReplyEditing;
-                        });
-                      },
+                      onPressed: (writingStatus == WritingStatus.Writing &&
+                              !isReplyEditing)
+                          ? null
+                          : () {
+                              if (isReplyEditing) {
+                                widget.reply.reference.update({
+                                  'content': _replyContentController.text,
+                                });
+                              }
+                              WritingStatusNotification(
+                                writingStatus: isReplyEditing
+                                    ? WritingStatus.NotWriting
+                                    : WritingStatus.Writing,
+                              ).dispatch(context);
+                              setState(() {
+                                isReplyEditing = !isReplyEditing;
+                              });
+                            },
                     ),
                     if (isReplyEditing)
                       FlatButton(
                         child: Text('キャンセル'),
                         onPressed: () {
+                          WritingStatusNotification(
+                            writingStatus: WritingStatus.NotWriting,
+                          ).dispatch(context);
                           setState(() {
                             isReplyEditing = false;
                           });
@@ -88,33 +99,35 @@ class _ReplyTileState extends State<ReplyTile> {
                     if (!isReplyEditing)
                       IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('確認'),
-                                content: Text(
-                                    'この返信を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
-                                actions: [
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('キャンセル'),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      widget.reply.reference.delete();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('削除する'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
+                        onPressed: writingStatus == WritingStatus.Writing
+                            ? null
+                            : () async {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('確認'),
+                                      content: Text(
+                                          'この返信を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
+                                      actions: [
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('キャンセル'),
+                                        ),
+                                        FlatButton(
+                                          onPressed: () {
+                                            widget.reply.reference.delete();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('削除する'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                       ),
                   ],
                 ),
@@ -166,6 +179,7 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
+    final writingStatus = Provider.of<WritingStatus>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -184,17 +198,21 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FlatButton(
+                  textColor: Theme.of(context).primaryColor,
                   onPressed: () {
+                    WritingStatusNotification(
+                      writingStatus: WritingStatus.NotWriting,
+                    ).dispatch(context);
                     setState(() {
                       isCreating = false;
                     });
                   },
                   child: Text(
                     'キャンセル',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
                 FlatButton(
+                  textColor: Theme.of(context).primaryColor,
                   onPressed: () {
                     if (_replyContentController.text.isNotEmpty) {
                       widget.answerReference.collection('replies').add({
@@ -204,6 +222,9 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
                       });
                       _replyContentController.clear();
                     }
+                    WritingStatusNotification(
+                      writingStatus: WritingStatus.NotWriting,
+                    ).dispatch(context);
 
                     setState(() {
                       isCreating = false;
@@ -211,21 +232,26 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
                   },
                   child: Text(
                     '決定',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
               ],
             ),
           if (!isCreating)
             FlatButton(
-              onPressed: () {
-                setState(() {
-                  isCreating = true;
-                });
-              },
+              textColor: Theme.of(context).primaryColor,
+              disabledTextColor: Colors.grey,
+              onPressed: writingStatus == WritingStatus.Writing
+                  ? null
+                  : () {
+                      WritingStatusNotification(
+                        writingStatus: WritingStatus.Writing,
+                      ).dispatch(context);
+                      setState(() {
+                        isCreating = true;
+                      });
+                    },
               child: Text(
                 '返信する',
-                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
         ],
@@ -256,6 +282,7 @@ class _AnswerCardState extends State<AnswerCard> {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
+    final writingStatus = Provider.of<WritingStatus>(context);
     return Card(
       child: Column(
         children: [
@@ -276,28 +303,37 @@ class _AnswerCardState extends State<AnswerCard> {
                           IconButton(
                             icon: Icon(
                                 isAnswerEditing ? Icons.check : Icons.edit),
-                            onPressed: () {
-                              if (isAnswerEditing &&
-                                  _answerContentController.text.isNotEmpty) {
-                                widget.answer.reference.update({
-                                  'content': _answerContentController.text,
-                                  'updatedAt': DateTime.now(),
-                                });
-                              }
-                              WritingStatusNotification(
-                                writingStatus: isAnswerEditing
-                                    ? WritingStatus.NotWriting
-                                    : WritingStatus.Writing,
-                              ).dispatch(context);
-                              setState(() {
-                                isAnswerEditing = !isAnswerEditing;
-                              });
-                            },
+                            onPressed:
+                                (writingStatus == WritingStatus.Writing &&
+                                        !isAnswerEditing)
+                                    ? null
+                                    : () {
+                                        if (isAnswerEditing &&
+                                            _answerContentController
+                                                .text.isNotEmpty) {
+                                          widget.answer.reference.update({
+                                            'content':
+                                                _answerContentController.text,
+                                            'updatedAt': DateTime.now(),
+                                          });
+                                        }
+                                        WritingStatusNotification(
+                                          writingStatus: isAnswerEditing
+                                              ? WritingStatus.NotWriting
+                                              : WritingStatus.Writing,
+                                        ).dispatch(context);
+                                        setState(() {
+                                          isAnswerEditing = !isAnswerEditing;
+                                        });
+                                      },
                           ),
                           if (isAnswerEditing)
                             FlatButton(
                               child: Text('キャンセル'),
                               onPressed: () {
+                                WritingStatusNotification(
+                                  writingStatus: WritingStatus.NotWriting,
+                                ).dispatch(context);
                                 setState(() {
                                   isAnswerEditing = false;
                                 });
@@ -306,33 +342,36 @@ class _AnswerCardState extends State<AnswerCard> {
                           if (!isAnswerEditing)
                             IconButton(
                               icon: Icon(Icons.delete),
-                              onPressed: () async {
-                                await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text('確認'),
-                                      content: Text(
-                                          'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
-                                      actions: [
-                                        FlatButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('キャンセル'),
-                                        ),
-                                        FlatButton(
-                                          onPressed: () {
-                                            widget.answer.reference.delete();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('削除する'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
+                              onPressed: writingStatus == WritingStatus.Writing
+                                  ? null
+                                  : () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('確認'),
+                                            content: Text(
+                                                'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
+                                            actions: [
+                                              FlatButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('キャンセル'),
+                                              ),
+                                              FlatButton(
+                                                onPressed: () {
+                                                  widget.answer.reference
+                                                      .delete();
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('削除する'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
                             ),
                         ],
                       ),
