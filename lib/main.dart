@@ -138,7 +138,11 @@ class App extends StatelessWidget {
         child: MaterialApp(
           title: appName,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primaryColor: Colors.blue,
+            colorScheme: ColorScheme.light(
+              primary: Colors
+                  .blue, // -------> This will be your FlatButton's text color
+            ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonColor: Colors.pink,
             cardTheme: CardTheme(
