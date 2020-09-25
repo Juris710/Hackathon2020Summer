@@ -226,53 +226,50 @@ class _CreateReplyTileState extends State<CreateReplyTile>
               controller: _replyContentController,
             ),
           ),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
-            child: isCreating
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FlatButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          setIsCreating(false);
-                        },
-                        child: Text(
-                          'キャンセル',
-                        ),
+          isCreating
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        setIsCreating(false);
+                      },
+                      child: Text(
+                        'キャンセル',
                       ),
-                      FlatButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          if (_replyContentController.text.isNotEmpty) {
-                            widget.answerReference.collection('replies').add({
-                              'content': _replyContentController.text,
-                              'createdBy': account.reference,
-                              'createdAt': DateTime.now(),
-                            });
-                            _replyContentController.clear();
-                          }
-                          setIsCreating(false);
-                        },
-                        child: Text(
-                          '決定',
-                        ),
-                      ),
-                    ],
-                  )
-                : FlatButton(
-                    textColor: Theme.of(context).primaryColor,
-                    disabledTextColor: Colors.grey,
-                    onPressed: writingStatus == WritingStatus.Writing
-                        ? null
-                        : () {
-                            setIsCreating(true);
-                          },
-                    child: Text(
-                      '返信する',
                     ),
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        if (_replyContentController.text.isNotEmpty) {
+                          widget.answerReference.collection('replies').add({
+                            'content': _replyContentController.text,
+                            'createdBy': account.reference,
+                            'createdAt': DateTime.now(),
+                          });
+                          _replyContentController.clear();
+                        }
+                        setIsCreating(false);
+                      },
+                      child: Text(
+                        '決定',
+                      ),
+                    ),
+                  ],
+                )
+              : FlatButton(
+                  textColor: Theme.of(context).primaryColor,
+                  disabledTextColor: Colors.grey,
+                  onPressed: writingStatus == WritingStatus.Writing
+                      ? null
+                      : () {
+                          setIsCreating(true);
+                        },
+                  child: Text(
+                    '返信する',
                   ),
-          ),
+                ),
         ],
       ),
     );
@@ -296,6 +293,16 @@ class _AnswerCardState extends State<AnswerCard> {
   void initState() {
     _answerContentController.text = widget.answer.content;
     super.initState();
+  }
+
+  void setIsAnswerEditing(bool isAnswerEditing) {
+    setState(() {
+      this.isAnswerEditing = isAnswerEditing;
+    });
+    WritingStatusNotification(
+      writingStatus:
+          isAnswerEditing ? WritingStatus.NotWriting : WritingStatus.Writing,
+    ).dispatch(context);
   }
 
   @override
@@ -336,14 +343,7 @@ class _AnswerCardState extends State<AnswerCard> {
                                             'updatedAt': DateTime.now(),
                                           });
                                         }
-                                        WritingStatusNotification(
-                                          writingStatus: isAnswerEditing
-                                              ? WritingStatus.NotWriting
-                                              : WritingStatus.Writing,
-                                        ).dispatch(context);
-                                        setState(() {
-                                          isAnswerEditing = !isAnswerEditing;
-                                        });
+                                        setIsAnswerEditing(!isAnswerEditing);
                                       },
                           ),
                           if (isAnswerEditing)
