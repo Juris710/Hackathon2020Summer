@@ -83,24 +83,42 @@ void main() async {
   // ));
 }
 
-class App extends StatelessWidget {
-  final navigatorKey = GlobalKey<NavigatorState>();
+class App extends StatefulWidget {
+  // static bool isFirstTime = true;
 
   @override
-  StatelessElement createElement() {
-    FirebaseAuth.instance.userChanges().listen((user) {
-      navigatorKey.currentState.pushReplacement(
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  // final accountStreamController = StreamController<AccountModel>();
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.userChanges().listen((user) async {
+      // if (user != null && !App.isFirstTime) {
+      //   return;
+      // }
+      navigatorKey.currentState.pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
           if (user == null) {
             return Authenticate();
-          } else {
-            return Root();
           }
+          return Root();
         }),
+        (_) => false,
       );
     });
-    return super.createElement();
+    super.initState();
   }
+
+  // @override
+  // void dispose() {
+  //   accountStreamController.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
