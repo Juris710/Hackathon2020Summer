@@ -410,10 +410,10 @@ class _AnswerCardState extends State<AnswerCard> {
               }
               return Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 0),
-                    child: Divider(color: Colors.black),
+                  Divider(
+                    color: Colors.black,
+                    indent: 8.0,
+                    endIndent: 8.0,
                   ),
                   ListView.separated(
                     shrinkWrap: true,
@@ -430,9 +430,10 @@ class _AnswerCardState extends State<AnswerCard> {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-            child: Divider(color: Colors.black),
+          Divider(
+            color: Colors.black,
+            indent: 8.0,
+            endIndent: 8.0,
           ),
           CreateReplyTile(answerReference: widget.answer.reference),
         ],
