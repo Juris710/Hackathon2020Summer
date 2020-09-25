@@ -120,7 +120,20 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
               .toList()),
           matches: (item, input) => item.name.contains(input),
           appBar: AppBar(
-            title: Text('質問グループ登録'),
+            title: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  text: "質問グループ登録",
+                  style: TextStyle(fontSize: 20),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '\n「$parentName」内',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ]),
+            ),
             actions: [
               FlatButton.icon(
                 onPressed: () async {
@@ -267,21 +280,18 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                   color: hasRegistered ? Colors.lightGreen : Colors.grey,
                 ),
               ),
-              trailing: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return _RegisterUniversityGroupDescendant(
-                          groupCollection: item.children,
-                          parentName: item.name,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: Icon(Icons.open_in_new),
-              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return _RegisterUniversityGroupDescendant(
+                        groupCollection: item.children,
+                        parentName: item.name,
+                      );
+                    },
+                  ),
+                );
+              },
             );
           },
         );
