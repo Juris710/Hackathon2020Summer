@@ -164,14 +164,38 @@ class CreateReplyTile extends StatefulWidget {
   _CreateReplyTileState createState() => _CreateReplyTileState();
 }
 
-class _CreateReplyTileState extends State<CreateReplyTile> {
+class _CreateReplyTileState extends State<CreateReplyTile>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
   final _replyContentController = TextEditingController();
   bool isCreating = false;
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    super.initState();
+  }
 
   @override
   void dispose() {
     _replyContentController.dispose();
     super.dispose();
+  }
+
+  void setIsCreating(bool isCreating) {
+    setState(() {
+      this.isCreating = isCreating;
+    });
+    WritingStatusNotification(
+      writingStatus:
+          isCreating ? WritingStatus.Writing : WritingStatus.NotWriting,
+    ).dispatch(context);
+    if (isCreating) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
   }
 
   @override
@@ -182,8 +206,18 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         children: [
-          if (isCreating)
-            TextField(
+          SizeTransition(
+            sizeFactor: _animationController
+                .drive(
+                  CurveTween(curve: Curves.fastOutSlowIn),
+                )
+                .drive(
+                  Tween<double>(
+                    begin: 0,
+                    end: 1,
+                  ),
+                ),
+            child: TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: textFieldDecoration.copyWith(
@@ -191,67 +225,54 @@ class _CreateReplyTileState extends State<CreateReplyTile> {
               ),
               controller: _replyContentController,
             ),
-          if (isCreating)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FlatButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    WritingStatusNotification(
-                      writingStatus: WritingStatus.NotWriting,
-                    ).dispatch(context);
-                    setState(() {
-                      isCreating = false;
-                    });
-                  },
-                  child: Text(
-                    'キャンセル',
+          ),
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: isCreating
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FlatButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          setIsCreating(false);
+                        },
+                        child: Text(
+                          'キャンセル',
+                        ),
+                      ),
+                      FlatButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          if (_replyContentController.text.isNotEmpty) {
+                            widget.answerReference.collection('replies').add({
+                              'content': _replyContentController.text,
+                              'createdBy': account.reference,
+                              'createdAt': DateTime.now(),
+                            });
+                            _replyContentController.clear();
+                          }
+                          setIsCreating(false);
+                        },
+                        child: Text(
+                          '決定',
+                        ),
+                      ),
+                    ],
+                  )
+                : FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    disabledTextColor: Colors.grey,
+                    onPressed: writingStatus == WritingStatus.Writing
+                        ? null
+                        : () {
+                            setIsCreating(true);
+                          },
+                    child: Text(
+                      '返信する',
+                    ),
                   ),
-                ),
-                FlatButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    if (_replyContentController.text.isNotEmpty) {
-                      widget.answerReference.collection('replies').add({
-                        'content': _replyContentController.text,
-                        'createdBy': account.reference,
-                        'createdAt': DateTime.now(),
-                      });
-                      _replyContentController.clear();
-                    }
-                    WritingStatusNotification(
-                      writingStatus: WritingStatus.NotWriting,
-                    ).dispatch(context);
-
-                    setState(() {
-                      isCreating = false;
-                    });
-                  },
-                  child: Text(
-                    '決定',
-                  ),
-                ),
-              ],
-            ),
-          if (!isCreating)
-            FlatButton(
-              textColor: Theme.of(context).primaryColor,
-              disabledTextColor: Colors.grey,
-              onPressed: writingStatus == WritingStatus.Writing
-                  ? null
-                  : () {
-                      WritingStatusNotification(
-                        writingStatus: WritingStatus.Writing,
-                      ).dispatch(context);
-                      setState(() {
-                        isCreating = true;
-                      });
-                    },
-              child: Text(
-                '返信する',
-              ),
-            ),
+          ),
         ],
       ),
     );
