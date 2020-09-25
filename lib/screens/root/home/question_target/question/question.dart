@@ -45,6 +45,16 @@ class _ReplyTileState extends State<ReplyTile> {
     super.dispose();
   }
 
+  void setIsReplyEditing(isReplyEditing) {
+    setState(() {
+      this.isReplyEditing = isReplyEditing;
+    });
+    WritingStatusNotification(
+      writingStatus:
+          isReplyEditing ? WritingStatus.Writing : WritingStatus.NotWriting,
+    ).dispatch(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
@@ -74,14 +84,7 @@ class _ReplyTileState extends State<ReplyTile> {
                                   'content': _replyContentController.text,
                                 });
                               }
-                              WritingStatusNotification(
-                                writingStatus: isReplyEditing
-                                    ? WritingStatus.NotWriting
-                                    : WritingStatus.Writing,
-                              ).dispatch(context);
-                              setState(() {
-                                isReplyEditing = !isReplyEditing;
-                              });
+                              setIsReplyEditing(!isReplyEditing);
                             },
                     ),
                     if (isReplyEditing)
@@ -301,7 +304,7 @@ class _AnswerCardState extends State<AnswerCard> {
     });
     WritingStatusNotification(
       writingStatus:
-          isAnswerEditing ? WritingStatus.NotWriting : WritingStatus.Writing,
+          isAnswerEditing ? WritingStatus.Writing : WritingStatus.NotWriting,
     ).dispatch(context);
   }
 
