@@ -146,6 +146,7 @@ class _AnswerCardState extends State<AnswerCard> {
                   duration: Duration(milliseconds: 500),
                   child: (isAnswerEditing)
                       ? TextField(
+                          autofocus: true,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: textFieldDecoration.copyWith(
