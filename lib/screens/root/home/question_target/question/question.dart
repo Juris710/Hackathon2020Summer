@@ -144,13 +144,11 @@ class _ReplyTileState extends State<ReplyTile> {
             ),
           if (!isReplyEditing) Text(_replyContentController.text),
           SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (widget.reply.createdAt != null)
-                Text(getDateString(widget.reply.createdAt.toDate())),
-            ],
-          ),
+          if (widget.reply.createdAt != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(getDateString(widget.reply.createdAt.toDate())),
+            )
         ],
       ),
     );
@@ -388,13 +386,12 @@ class _AnswerCardState extends State<AnswerCard> {
                   ),
                 if (!isAnswerEditing) Text(_answerContentController.text),
                 SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (widget.answer.updatedAt != null)
-                      Text(getDateString(widget.answer.updatedAt.toDate())),
-                  ],
-                ),
+                if (widget.answer.updatedAt != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child:
+                        Text(getDateString(widget.answer.updatedAt.toDate())),
+                  ),
               ],
             ),
           ),
