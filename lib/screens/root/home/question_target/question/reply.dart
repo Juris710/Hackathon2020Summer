@@ -268,7 +268,7 @@ class _ReplyTileState extends State<ReplyTile> {
                     ),
                     controller: _replyContentController,
                   )
-                : Text(_replyContentController.text),
+                : SelectableText(_replyContentController.text),
           ),
           SizedBox(height: 16.0),
           if (widget.reply.createdAt != null)

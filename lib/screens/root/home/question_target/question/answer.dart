@@ -154,7 +154,7 @@ class _AnswerCardState extends State<AnswerCard> {
                           ),
                           controller: _answerContentController,
                         )
-                      : Text(_answerContentController.text),
+                      : SelectableText(_answerContentController.text),
                 ),
                 SizedBox(height: 16.0),
                 if (widget.answer.updatedAt != null)

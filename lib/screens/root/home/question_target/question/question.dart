@@ -23,7 +23,7 @@ class QuestionDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        SelectableText(
           question.title,
           style: Theme.of(context).textTheme.headline4,
         ),
@@ -44,7 +44,7 @@ class QuestionDetail extends StatelessWidget {
         SizedBox(
           height: 16.0,
         ),
-        Text(
+        SelectableText(
           question.content,
           style: Theme.of(context).textTheme.bodyText1,
         ),
