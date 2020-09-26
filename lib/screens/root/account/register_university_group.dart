@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../new_university.dart';
 
+//TODO：Webで登録ボタンが押せない
 class RegisterUniversityGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -237,7 +238,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                 return ListTile(
                   title: Text(item.name),
                   leading: GestureDetector(
-                    onTap: () async {
+                    onTap: () {
                       if (hasRegistered) {
                         return;
                       }
@@ -311,7 +312,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                                   }
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('追加する'),
+                                child: Text('登録する'),
                               ),
                             ],
                           );
