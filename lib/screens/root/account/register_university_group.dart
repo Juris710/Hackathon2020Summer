@@ -66,14 +66,17 @@ class RegisterUniversityGroup extends StatelessWidget {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text(item.name),
+                  title: SelectableText(item.name),
                   content: (item.url?.isNotEmpty ?? false)
                       ? FlatButton(
                           textColor: Colors.blue,
                           onPressed: () async {
-                            await launch(item.url);
+                            final url = item.url;
+                            if (await canLaunch(url)) {
+                              await launch(item.url);
+                            }
                           },
-                          child: Text(item.url),
+                          child: SelectableText(item.url),
                         )
                       : Container(),
                   actions: [
