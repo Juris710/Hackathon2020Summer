@@ -82,13 +82,12 @@ class _AppState extends State<App> {
         child: MaterialApp(
           title: appName,
           theme: ThemeData(
-            primaryColor: Colors.blue,
+            primaryColor: Colors.deepOrange,
             colorScheme: ColorScheme.light(
-              primary: Colors
-                  .blue, // -------> This will be your FlatButton's text color
+              primary: Colors.deepOrange,
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            buttonColor: Colors.pink,
+            buttonColor: Colors.blue,
             cardTheme: CardTheme(
               elevation: 2.0,
             ),

@@ -156,7 +156,7 @@ class _SignInState extends State<SignIn> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyText2
-                              .copyWith(color: Theme.of(context).primaryColor),
+                              .copyWith(color: Colors.blue),
                         ),
                       ),
                     ),

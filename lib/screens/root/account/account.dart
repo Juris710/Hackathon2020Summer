@@ -126,11 +126,13 @@ class Account extends StatelessWidget {
                                                 '削除すると、登録内容が削除されます。再度追加した際は登録しなおす必要があります。\n削除してもよろしいですか？'),
                                             actions: [
                                               FlatButton(
+                                                textColor: Colors.blue,
                                                 onPressed: () =>
                                                     Navigator.of(context).pop(),
                                                 child: Text('キャンセル'),
                                               ),
                                               FlatButton(
+                                                textColor: Colors.blue,
                                                 onPressed: () {
                                                   registered[index]
                                                       .reference

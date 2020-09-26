@@ -92,7 +92,7 @@ class _CreateReplyTileState extends State<CreateReplyTile>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FlatButton(
-                      textColor: Theme.of(context).primaryColor,
+                      textColor: Colors.blue,
                       onPressed: () {
                         setIsCreating(false);
                       },
@@ -101,7 +101,7 @@ class _CreateReplyTileState extends State<CreateReplyTile>
                       ),
                     ),
                     FlatButton(
-                      textColor: Theme.of(context).primaryColor,
+                      textColor: Colors.blue,
                       onPressed: () {
                         if (_replyContentController.text.isNotEmpty) {
                           widget.answerReference.collection('replies').add({
@@ -120,7 +120,7 @@ class _CreateReplyTileState extends State<CreateReplyTile>
                   ],
                 )
               : FlatButton(
-                  textColor: Theme.of(context).primaryColor,
+                  textColor: Colors.blue,
                   disabledTextColor: Colors.grey,
                   onPressed: writingStatus == WritingStatus.Writing
                       ? null
@@ -206,6 +206,7 @@ class _ReplyTileState extends State<ReplyTile> {
                             },
                           ),
                           FlatButton(
+                            textColor: Colors.blue,
                             child: Text('キャンセル'),
                             onPressed: () {
                               WritingStatusNotification(
@@ -243,12 +244,14 @@ class _ReplyTileState extends State<ReplyTile> {
                                               'この返信を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
                                           actions: [
                                             FlatButton(
+                                              textColor: Colors.blue,
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
                                               child: Text('キャンセル'),
                                             ),
                                             FlatButton(
+                                              textColor: Colors.blue,
                                               onPressed: () {
                                                 widget.reply.reference.delete();
                                                 Navigator.of(context).pop();

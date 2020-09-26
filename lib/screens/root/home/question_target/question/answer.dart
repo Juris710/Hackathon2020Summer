@@ -78,6 +78,7 @@ class _AnswerCardState extends State<AnswerCard> {
                                   },
                                 ),
                                 FlatButton(
+                                  textColor: Colors.blue,
                                   child: Text('キャンセル'),
                                   onPressed: () {
                                     WritingStatusNotification(
@@ -117,6 +118,7 @@ class _AnswerCardState extends State<AnswerCard> {
                                                     'この回答を削除してもよろしいですか？\n削除した場合、元に戻すことはできません。'),
                                                 actions: [
                                                   FlatButton(
+                                                    textColor: Colors.blue,
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
@@ -124,6 +126,7 @@ class _AnswerCardState extends State<AnswerCard> {
                                                     child: Text('キャンセル'),
                                                   ),
                                                   FlatButton(
+                                                    textColor: Colors.blue,
                                                     onPressed: () {
                                                       widget.answer.reference
                                                           .delete();

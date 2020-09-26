@@ -116,6 +116,7 @@ class QuestionTarget extends StatelessWidget {
                                                       'この質問を削除しますか？\n削除した後、元に戻すことはできません。'),
                                                   actions: [
                                                     FlatButton(
+                                                      textColor: Colors.blue,
                                                       child: Text('キャンセル'),
                                                       onPressed: () {
                                                         Navigator.of(context)
@@ -123,6 +124,7 @@ class QuestionTarget extends StatelessWidget {
                                                       },
                                                     ),
                                                     FlatButton(
+                                                      textColor: Colors.blue,
                                                       child: Text('削除する'),
                                                       onPressed: () {
                                                         question.reference
