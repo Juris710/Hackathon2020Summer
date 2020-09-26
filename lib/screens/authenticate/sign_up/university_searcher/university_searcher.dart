@@ -57,15 +57,20 @@ class UniversitySearcher extends StatelessWidget {
                 return AlertDialog(
                   title: SelectableText(item.name),
                   content: (item.url?.isNotEmpty ?? false)
-                      ? FlatButton(
-                          textColor: Colors.blue,
-                          onPressed: () async {
+                      ? GestureDetector(
+                          onTap: () async {
                             final url = item.url;
                             if (await canLaunch(url)) {
                               await launch(item.url);
                             }
                           },
-                          child: SelectableText(item.url),
+                          child: Text(
+                            item.url,
+                            style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
                         )
                       : Container(),
                   actions: [
