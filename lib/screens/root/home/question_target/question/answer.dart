@@ -78,7 +78,6 @@ class _AnswerCardState extends State<AnswerCard> {
                                   },
                                 ),
                                 FlatButton(
-                                  textColor: Colors.blue,
                                   child: Text('キャンセル'),
                                   onPressed: () {
                                     WritingStatusNotification(
@@ -186,7 +185,8 @@ class _AnswerCardState extends State<AnswerCard> {
               return Column(
                 children: [
                   Divider(
-                    color: Colors.black,
+                    color: Colors.grey[500],
+                    thickness: 1.0,
                     indent: 8.0,
                     endIndent: 8.0,
                   ),
@@ -197,7 +197,8 @@ class _AnswerCardState extends State<AnswerCard> {
                       reply: replies[index],
                     ),
                     separatorBuilder: (context, index) => Divider(
-                      color: Colors.black,
+                      color: Colors.grey[500],
+                      thickness: 1.0,
                     ),
                     itemCount: replies.length,
                   ),
@@ -206,7 +207,8 @@ class _AnswerCardState extends State<AnswerCard> {
             },
           ),
           Divider(
-            color: Colors.black,
+            color: Colors.grey[500],
+            thickness: 1.0,
             indent: 8.0,
             endIndent: 8.0,
           ),
