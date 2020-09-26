@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const appName = 'Hackathon 2020 Summer';
+const appName = 'Nior(ニアー)';
 const appVersion = '1.0.0';
 
 final textFieldDecoration = InputDecoration(
