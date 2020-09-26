@@ -55,7 +55,7 @@ class UniversitySearcher extends StatelessWidget {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text(item.name),
+                  title: SelectableText(item.name),
                   content: (item.url?.isNotEmpty ?? false)
                       ? FlatButton(
                           textColor: Colors.blue,
@@ -65,7 +65,7 @@ class UniversitySearcher extends StatelessWidget {
                               await launch(item.url);
                             }
                           },
-                          child: Text(item.url),
+                          child: SelectableText(item.url),
                         )
                       : Container(),
                   actions: [
