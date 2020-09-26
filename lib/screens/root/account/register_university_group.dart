@@ -236,6 +236,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
             return Builder(
               builder: (context) {
                 return ListTile(
+                  key: ValueKey(item.name),
                   title: Text(item.name),
                   leading: GestureDetector(
                     onTap: () {
