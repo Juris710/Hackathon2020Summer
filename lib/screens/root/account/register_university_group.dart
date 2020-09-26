@@ -160,12 +160,13 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
               textAlign: TextAlign.center,
               text: TextSpan(
                   text: "質問グループ登録",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                   children: <TextSpan>[
                     TextSpan(
                       text: '\n「$parentName」内',
                       style: TextStyle(
                         fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ]),
