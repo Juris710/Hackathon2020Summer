@@ -16,11 +16,31 @@
 
   <title>hackathon_2020_summer</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    .splash-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .splash-image {
+      display: block;
+      max-width: 40%;
+    }
+  </style>
 </head>
 <body>
+  <div class="splash-container">
+    <img src="icons/Icon-512.png" class="splash-image">
+  </div>
+
   <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
+     application. For more information, see:
+     https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
