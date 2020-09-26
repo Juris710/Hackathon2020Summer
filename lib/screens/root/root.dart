@@ -20,12 +20,12 @@ class _RootState extends State<Root> {
   List<BottomNavigationBarItem> buildBottomNavBarItems() {
     return [
       BottomNavigationBarItem(
-        icon: new Icon(Icons.home),
-        title: new Text('ホーム'),
+        icon: Icon(Icons.home),
+        label: 'ホーム',
       ),
       BottomNavigationBarItem(
-        icon: new Icon(Icons.person),
-        title: new Text('アカウント'),
+        icon: Icon(Icons.person),
+        label: 'アカウント',
       ),
     ];
   }
