@@ -80,6 +80,7 @@ class _AppState extends State<App> {
           ];
         },
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: appName,
           theme: ThemeData(
             primaryColor: Colors.deepOrange,
