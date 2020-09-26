@@ -69,6 +69,7 @@ class RegisterUniversityGroup extends StatelessWidget {
                   title: Text(item.name),
                   content: (item.url?.isNotEmpty ?? false)
                       ? FlatButton(
+                          textColor: Colors.blue,
                           onPressed: () async {
                             await launch(item.url);
                           },
@@ -77,6 +78,7 @@ class RegisterUniversityGroup extends StatelessWidget {
                       : Container(),
                   actions: [
                     FlatButton(
+                      textColor: Colors.blue,
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -247,6 +249,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                             ),
                             actions: (neverShowAgain) => [
                               FlatButton(
+                                textColor: Colors.blue,
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                   if (!neverShowAgain) {
@@ -260,12 +263,14 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                                           '次回以降、チェックマークをタップすると自動で登録します。\nよろしいですか？'),
                                       actions: [
                                         FlatButton(
+                                          textColor: Colors.blue,
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text('次回以降も表示する'),
                                         ),
                                         FlatButton(
+                                          textColor: Colors.blue,
                                           onPressed: () {
                                             editUserConfigs(
                                               account,
@@ -284,6 +289,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
                                 child: Text('キャンセル'),
                               ),
                               FlatButton(
+                                textColor: Colors.blue,
                                 onPressed: () {
                                   register(context, account, item);
                                   if (neverShowAgain) {

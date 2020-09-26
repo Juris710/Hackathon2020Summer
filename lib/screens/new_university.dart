@@ -11,6 +11,7 @@ class _NewUniversityState extends State<NewUniversity> {
   final _formKey = GlobalKey<FormState>();
   String name = '';
   String url = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

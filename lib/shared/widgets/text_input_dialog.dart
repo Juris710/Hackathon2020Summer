@@ -29,12 +29,14 @@ class _TextInputDialogState extends State<TextInputDialog> {
       ),
       actions: [
         FlatButton(
+          textColor: Colors.blue,
           onPressed: () {
             Navigator.of(context).pop();
           },
           child: Text('キャンセル'),
         ),
         FlatButton(
+          textColor: Colors.blue,
           onPressed: () {
             Navigator.of(context).pop(_controller.text);
           },

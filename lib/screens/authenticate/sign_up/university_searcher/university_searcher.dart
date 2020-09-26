@@ -58,7 +58,7 @@ class UniversitySearcher extends StatelessWidget {
                   title: Text(item.name),
                   content: (item.url?.isNotEmpty ?? false)
                       ? FlatButton(
-                          textColor: Theme.of(context).primaryColor,
+                          textColor: Colors.blue,
                           onPressed: () async {
                             final url = item.url;
                             if (await canLaunch(url)) {
@@ -70,6 +70,7 @@ class UniversitySearcher extends StatelessWidget {
                       : Container(),
                   actions: [
                     FlatButton(
+                      textColor: Colors.blue,
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
