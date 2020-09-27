@@ -206,7 +206,6 @@ class _ReplyTileState extends State<ReplyTile> {
                             },
                           ),
                           FlatButton(
-                            textColor: Colors.blue,
                             child: Text('キャンセル'),
                             onPressed: () {
                               WritingStatusNotification(
