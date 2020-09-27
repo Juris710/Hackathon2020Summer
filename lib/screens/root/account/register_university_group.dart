@@ -16,38 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../new_university.dart';
 
-/*TODO：Webで登録ボタンが押せない
-════════ Exception caught by gesture ═══════════════════════════════════════════════════════════════
-The following JSNoSuchMethodError was thrown while handling a gesture:
-NoSuchMethodError: invalid member on null: '_get'
-
-When the exception was thrown, this was the stack:
-packages/hackathon_2020_summer/screens/root/account/register_university_group.dart 247:53                              <fn>
-packages/flutter/src/gestures/recognizer.dart 183:24                                                                   invokeCallback
-packages/flutter/src/gestures/tap.dart 598:11                                                                          handleTapUp
-packages/flutter/src/gestures/tap.dart 287:5                                                                           [_checkUp]
-packages/flutter/src/gestures/tap.dart 222:7                                                                           handlePrimaryPointer
-...
-Handler: "onTap"
-Recognizer: TapGestureRecognizer#75ffa
-  debugOwner: GestureDetector
-  state: possible
-  won arena
-  finalPosition: Offset(43.0, 168.0)
-  finalLocalPosition: Offset(11.0, 15.0)
-  button: 1
-  sent tap down
-════════════════════════════════════════════════════════════════════════════════════════════════════
-
-════════ Exception caught by gesture ═══════════════════════════════════════════════════════════════
-NoSuchMethodError: invalid member on null: '_get'
-════════════════════════════════════════════════════════════════════════════════════════════════════
-
-════════ Exception caught by gesture ═══════════════════════════════════════════════════════════════
-NoSuchMethodError: invalid member on null: '_get'
-════════════════════════════════════════════════════════════════════════════════════════════════════
-
-*/
 class RegisterUniversityGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -180,7 +148,7 @@ class _RegisterUniversityGroupDescendant extends StatelessWidget {
     return StreamBuilder<Map<String, dynamic>>(
       stream: DatabaseService.getConfigs(account.configs),
       builder: (context, snapshot) {
-        final configs = snapshot.data;
+        final configs = snapshot.data ?? {};
         return Searcher<UniversityGroupModel>(
           getSearchTargets: groupCollection.snapshots().map((event) => event
               .docs
