@@ -56,16 +56,16 @@ class QuestionDetail extends StatelessWidget {
   }
 }
 
-class Question extends StatefulWidget {
+class QuestionScreen extends StatefulWidget {
   final DocumentReference questionReference;
 
-  Question({this.questionReference});
+  QuestionScreen({this.questionReference});
 
   @override
-  _QuestionState createState() => _QuestionState();
+  _QuestionScreenState createState() => _QuestionScreenState();
 }
 
-class _QuestionState extends State<Question>
+class _QuestionScreenState extends State<QuestionScreen>
     with SingleTickerProviderStateMixin {
   final _answerContentController = TextEditingController();
   WritingStatus writingStatus = WritingStatus.NotWriting;

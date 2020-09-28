@@ -53,7 +53,7 @@ class _RootState extends State<Root> {
       },
       children: <Widget>[
         Home(),
-        Account(),
+        AccountScreen(),
       ],
     );
   }

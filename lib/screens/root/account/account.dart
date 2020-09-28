@@ -8,7 +8,7 @@ import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
-class Account extends StatelessWidget {
+class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final account = Provider.of<AccountModel>(context);
