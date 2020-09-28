@@ -103,7 +103,7 @@ class RegisteredCardHome extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => UniversityGroup(
+                            builder: (context) => UniversityGroupScreen(
                               groupReference: registeredItem.group,
                               registeredItemReference: registeredItem.reference,
                             ),
@@ -148,8 +148,8 @@ class RegisteredCardHome extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  QuestionTarget(targetReference: reference),
+                              builder: (context) => QuestionTargetScreen(
+                                  targetReference: reference),
                             ),
                           );
                         },

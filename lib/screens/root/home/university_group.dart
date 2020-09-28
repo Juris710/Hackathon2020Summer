@@ -8,11 +8,11 @@ import 'package:hackathon_2020_summer/screens/searcher.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
-class UniversityGroup extends StatelessWidget {
+class UniversityGroupScreen extends StatelessWidget {
   final DocumentReference groupReference;
   final DocumentReference registeredItemReference;
 
-  UniversityGroup({this.groupReference, this.registeredItemReference});
+  UniversityGroupScreen({this.groupReference, this.registeredItemReference});
 
   @override
   Widget build(BuildContext context) {

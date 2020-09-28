@@ -9,10 +9,10 @@ import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
-class QuestionTarget extends StatelessWidget {
+class QuestionTargetScreen extends StatelessWidget {
   final DocumentReference targetReference;
 
-  QuestionTarget({this.targetReference});
+  QuestionTargetScreen({this.targetReference});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class QuestionTarget extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => Question(
+                                builder: (context) => QuestionScreen(
                                   questionReference: question.reference,
                                 ),
                               ),
