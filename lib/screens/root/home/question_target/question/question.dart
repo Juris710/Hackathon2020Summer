@@ -175,54 +175,56 @@ class _QuestionScreenState extends State<QuestionScreen>
                         ),
                       ),
                     ),
-                    AnimatedSize(
+                    AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
-                      curve: Curves.fastOutSlowIn,
-                      vsync: this,
-                      child: Container(
-                        constraints: (writingStatus == WritingStatus.Writing)
-                            ? BoxConstraints(maxHeight: 0.0)
-                            : BoxConstraints(maxHeight: double.infinity),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _answerContentController,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                decoration: textFieldDecoration.copyWith(
-                                    hintText: '回答を入力する'),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (_answerContentController
-                                    .value.text.isEmpty) {
-                                  return;
-                                }
-                                FocusScope.of(context).unfocus();
-                                widget.questionReference
-                                    .collection('answers')
-                                    .add({
-                                  'content':
-                                      _answerContentController.value.text,
-                                  'createdBy': account.reference,
-                                  'updatedAt': DateTime.now(),
-                                });
-                                _answerContentController.clear();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.send,
-                                  color: Theme.of(context).primaryColor,
+                      transitionBuilder: (child, animation) {
+                        return SlideTransition(
+                          position: animation.drive(
+                              Tween(begin: Offset(0, 1), end: Offset.zero)),
+                          child: child,
+                        );
+                      },
+                      child: (writingStatus == WritingStatus.Writing)
+                          ? Container()
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _answerContentController,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    decoration: textFieldDecoration.copyWith(
+                                        hintText: '回答を入力する'),
+                                  ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_answerContentController
+                                        .value.text.isEmpty) {
+                                      return;
+                                    }
+                                    FocusScope.of(context).unfocus();
+                                    widget.questionReference
+                                        .collection('answers')
+                                        .add({
+                                      'content':
+                                          _answerContentController.value.text,
+                                      'createdBy': account.reference,
+                                      'updatedAt': DateTime.now(),
+                                    });
+                                    _answerContentController.clear();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
