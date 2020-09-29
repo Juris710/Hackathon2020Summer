@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/university/university.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
-import 'package:hackathon_2020_summer/models/user/registered_item.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
-import 'package:hackathon_2020_summer/shared/widgets/dependent_multi_provider.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -64,38 +61,22 @@ class _AppState extends State<App> {
           ),
         ),
       ],
-      child: DependentMultiProvider<AccountModel>(
-        providersBuilder: (value) {
-          return [
-            StreamProvider<UniversityModel>.value(
-              value: (value == null)
-                  ? null
-                  : DatabaseService.getUniversity(value.university),
-            ),
-            StreamProvider<List<RegisteredItemModel>>.value(
-              value: (value == null)
-                  ? null
-                  : DatabaseService.getRegistered(value.registered),
-            ),
-          ];
-        },
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: appName,
-          theme: ThemeData(
-            primaryColor: Colors.deepOrange,
-            colorScheme: ColorScheme.light(
-              primary: Colors.deepOrange,
-            ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            buttonColor: Colors.blue,
-            cardTheme: CardTheme(
-              elevation: 2.0,
-            ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: appName,
+        theme: ThemeData(
+          primaryColor: Colors.deepOrange,
+          colorScheme: ColorScheme.light(
+            primary: Colors.deepOrange,
           ),
-          home: LoadingScaffold(),
-          navigatorKey: navigatorKey,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          buttonColor: Colors.blue,
+          cardTheme: CardTheme(
+            elevation: 2.0,
+          ),
         ),
+        home: LoadingScaffold(),
+        navigatorKey: navigatorKey,
       ),
     );
   }

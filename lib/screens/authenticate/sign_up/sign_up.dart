@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/university/university.dart';
-import 'package:hackathon_2020_summer/screens/authenticate/sign_up/university_searcher/university_searcher.dart';
-import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
@@ -21,7 +18,6 @@ class _SignUpState extends State<SignUp> {
   String password = '';
   String passwordConfirm = '';
   String userName = '';
-  UniversityModel university;
 
   //error state
   String error;
@@ -183,39 +179,6 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 16.0,
                     ),
-                    OutlineButton(
-                      onPressed: () async {
-                        FocusScope.of(context).unfocus();
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => UniversitySearcher(),
-                          ),
-                        );
-                        if (result == null) {
-                          return;
-                        }
-                        setState(() {
-                          university = result;
-                          errorUniversity = null;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.school),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            (university == null) ? '大学を選択*' : university.name,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      errorUniversity ?? '',
-                      style: TextStyle(color: Theme.of(context).errorColor),
-                    ),
                     SizedBox(
                       height: 20.0,
                     ),
@@ -225,12 +188,6 @@ class _SignUpState extends State<SignUp> {
                         bool isValid = true;
                         if (!_formKey.currentState.validate()) {
                           isValid = false;
-                        }
-                        if (university == null) {
-                          isValid = false;
-                          setState(() {
-                            errorUniversity = '必須項目です';
-                          });
                         }
                         if (!isValid) {
                           return;
@@ -243,14 +200,14 @@ class _SignUpState extends State<SignUp> {
                               email: email,
                               password: password,
                             )
-                            .catchError(handleAuthError)
-                            .then(
-                              (value) => DatabaseService.createNewUser(
-                                value.user.uid,
-                                userName,
-                                university.reference,
-                              ),
-                            );
+                            .catchError(handleAuthError);
+                        // .then(
+                        //   (value) => DatabaseService.createNewUser(
+                        //     value.user.uid,
+                        //     userName,
+                        //     university.reference,
+                        //   ),
+                        // );
                       },
                       child: Text(
                         '登録',
