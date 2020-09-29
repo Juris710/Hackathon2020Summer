@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,18 +26,32 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    FirebaseAuth.instance.userChanges().listen((event) {});
-  }
+  static int beforeUserChanged;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        StreamProvider<UidModel>.value(
+          initialData: UidModel(),
+          value: FirebaseAuth.instance.userChanges().transform(
+            StreamTransformer<User, UidModel>.fromHandlers(
+              handleData: (value, sink) {
+                final now = DateTime.now().millisecondsSinceEpoch;
+                final before = beforeUserChanged ?? 0;
+                if (now - before > 500) {
+                  sink.add(UidModel(initialUid: value.uid));
+                }
+                beforeUserChanged = now;
+              },
+            ),
+          ),
+        ),
         ChangeNotifierProxyProvider<UidModel, AccountModel>(
           create: (context) => AccountModel(create: (uidModel) {
+            if (uidModel?.uid == null) {
+              return null;
+            }
             return DatabaseService.getAccount(uidModel.uid);
           }),
           update: (context, uidModel, accountModel) {

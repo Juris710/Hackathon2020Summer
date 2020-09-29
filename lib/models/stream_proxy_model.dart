@@ -11,7 +11,7 @@ class StreamProxyModel<T, R> extends ChangeNotifier {
 
   void update(T otherModelValue) {
     subscription?.cancel();
-    subscription = create(otherModelValue).listen((event) {
+    subscription = create(otherModelValue)?.listen((event) {
       value = event;
       notifyListeners();
     });
