@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hackathon_2020_summer/models/stream_proxy_model.dart';
+import 'package:hackathon_2020_summer/models/user/uid.dart';
 
-class AccountModel {
+class Account {
   final DocumentReference reference;
   final String name;
   final DocumentReference university;
   final CollectionReference registered;
   final CollectionReference configs;
 
-  AccountModel._({
+  Account._({
     this.reference,
     this.name,
     this.university,
@@ -15,10 +17,10 @@ class AccountModel {
     this.configs,
   });
 
-  factory AccountModel.fromFirestore(DocumentSnapshot doc) {
+  factory Account.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
     if (data == null) return null;
-    return AccountModel._(
+    return Account._(
       reference: doc.reference,
       name: data['name'],
       university: data['university'],
@@ -26,4 +28,9 @@ class AccountModel {
       configs: doc.reference.collection('configs'),
     );
   }
+}
+
+class AccountModel extends StreamProxyModel<UidModel, Account> {
+  AccountModel({Stream<Account> Function(UidModel) create})
+      : super(create: create);
 }

@@ -20,9 +20,17 @@ class DatabaseService {
   //   });
   // }
 
-  static Stream<AccountModel> getAccount(DocumentReference ref) {
-    return ref.snapshots().map((event) => AccountModel.fromFirestore(event));
+  static Stream<Account> getAccount(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .map((event) => Account.fromFirestore(event));
   }
+
+  // static Stream<Account> getAccount(DocumentReference ref) {
+  //   return ref.snapshots().map((event) => Account.fromFirestore(event));
+  // }
 
   static Stream<Map<String, dynamic>> getConfigs(CollectionReference ref) {
     return ref.snapshots().map(

@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/models/user/uid.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
@@ -16,7 +15,7 @@ void main() async {
   await initializeDateFormatting('ja_JP');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(App());
+  runApp(ChangeNotifierProvider(create: (context) => UidModel(), child: App()));
 }
 
 class App extends StatefulWidget {
@@ -25,59 +24,66 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final navigatorKey = GlobalKey<NavigatorState>();
-
   @override
-  void initState() {
-    FirebaseAuth.instance.userChanges().listen((user) async {
-      navigatorKey.currentState.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) {
-          if (user == null) {
-            return Authenticate();
-          }
-          return Root();
-        }),
-        (_) => false,
-      );
-    });
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    FirebaseAuth.instance.userChanges().listen((event) {});
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<AccountModel>.value(
-          value: FirebaseAuth.instance.userChanges().transform(
-            StreamTransformer<User, AccountModel>.fromHandlers(
-              handleData: (value, sink) async {
-                if (value == null) return;
-                final account = await DatabaseService.getUserDocument(value.uid)
-                    .get()
-                    .then((doc) => AccountModel.fromFirestore(doc));
-                sink.add(account);
-              },
-            ),
-          ),
+        ChangeNotifierProxyProvider<UidModel, AccountModel>(
+          create: (context) => AccountModel(create: (uidModel) {
+            return DatabaseService.getAccount(uidModel.uid);
+          }),
+          update: (context, uidModel, accountModel) {
+            accountModel.update(uidModel);
+            return accountModel;
+          },
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: appName,
-        theme: ThemeData(
-          primaryColor: Colors.deepOrange,
-          colorScheme: ColorScheme.light(
-            primary: Colors.deepOrange,
-          ),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonColor: Colors.blue,
-          cardTheme: CardTheme(
-            elevation: 2.0,
-          ),
+      child: Test(),
+    );
+  }
+}
+
+class Test extends StatelessWidget {
+  void navigate(BuildContext context, bool hasUser) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) {
+        if (hasUser) {
+          return Root();
+        } else {
+          return Authenticate();
+        }
+      }),
+      (route) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final accountModel = Provider.of<AccountModel>(context);
+    accountModel.addListener(() {
+      navigate(context, accountModel.value != null);
+    });
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: appName,
+      theme: ThemeData(
+        primaryColor: Colors.deepOrange,
+        colorScheme: ColorScheme.light(
+          primary: Colors.deepOrange,
         ),
-        home: LoadingScaffold(),
-        navigatorKey: navigatorKey,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        buttonColor: Colors.blue,
+        cardTheme: CardTheme(
+          elevation: 2.0,
+        ),
       ),
+      home: LoadingScaffold(),
     );
   }
 }

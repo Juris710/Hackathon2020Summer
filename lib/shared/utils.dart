@@ -25,6 +25,6 @@ String getDateString(DateTime date) {
 //   );
 // }
 
-void editUserConfigs<T>(AccountModel account, String key, T value) {
+void editUserConfigs<T>(Account account, String key, T value) {
   account.configs.doc(key).set({'value': value});
 }
