@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class StreamProxyModel<T, R> extends ChangeNotifier {
   final Stream<R> Function(T) create;
+
   StreamProxyModel({this.create});
 
   R value;
@@ -11,10 +12,16 @@ class StreamProxyModel<T, R> extends ChangeNotifier {
 
   void update(T otherModelValue) {
     subscription?.cancel();
-    subscription = create(otherModelValue)?.listen((event) {
-      value = event;
+    final newStream = create(otherModelValue);
+    if (newStream == null) {
+      value = null;
       notifyListeners();
-    });
+    } else {
+      subscription = newStream.listen((event) {
+        value = event;
+        notifyListeners();
+      });
+    }
   }
 
   @override
