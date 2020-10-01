@@ -60,30 +60,27 @@ class InitialLoading extends StatefulWidget {
 
 class _InitialLoadingState extends State<InitialLoading> {
   StreamSubscription initialLoadingSubscription;
+  Widget page;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    page = LoadingScaffold();
     initialLoadingSubscription = context.read<AuthService>().userChanges.listen(
       (user) {
         initialLoadingSubscription.cancel();
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) {
-              if (user == null) {
-                return Authenticate();
-              }
-              return Root();
-            },
-          ),
-          (_) => false,
-        );
+        setState(() {
+          if (user == null) {
+            page = Authenticate();
+          }
+          page = Root();
+        });
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return LoadingScaffold();
+    return page;
   }
 }
