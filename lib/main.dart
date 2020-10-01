@@ -20,12 +20,7 @@ void main() async {
   runApp(App());
 }
 
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -92,87 +87,3 @@ class _InitialLoadingState extends State<InitialLoading> {
     return LoadingScaffold();
   }
 }
-
-// class App extends StatefulWidget {
-//   @override
-//   _AppState createState() => _AppState();
-// }
-//
-// class _AppState extends State<App> {
-//   static int beforeUserChanged;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MultiProvider(
-//       providers: [
-//         StreamProvider<UidModel>.value(
-//           initialData: UidModel(),
-//           value: FirebaseAuth.instance.userChanges().transform(
-//             StreamTransformer<User, UidModel>.fromHandlers(
-//               handleData: (value, sink) {
-//                 final now = DateTime.now().millisecondsSinceEpoch;
-//                 final before = beforeUserChanged ?? 0;
-//                 if (now - before > 500) {
-//                   sink.add(UidModel(initialUid: value.uid));
-//                 }
-//                 beforeUserChanged = now;
-//               },
-//             ),
-//           ),
-//         ),
-//         ChangeNotifierProxyProvider<UidModel, AccountModel>(
-//           create: (context) => AccountModel(create: (uidModel) {
-//             if (uidModel?.uid == null) {
-//               return null;
-//             }
-//             return DatabaseService.getAccount(uidModel.uid);
-//           }),
-//           update: (context, uidModel, accountModel) {
-//             accountModel.update(uidModel);
-//             return accountModel;
-//           },
-//         ),
-//       ],
-//       child: Test(),
-//     );
-//   }
-// }
-//
-// class Test extends StatelessWidget {
-//   void navigate(BuildContext context, bool hasUser) {
-//     Navigator.of(context).pushAndRemoveUntil(
-//       MaterialPageRoute(builder: (context) {
-//         if (hasUser) {
-//           return Root();
-//         } else {
-//           return Authenticate();
-//         }
-//       }),
-//       (route) => false,
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final accountModel = Provider.of<AccountModel>(context);
-//     accountModel.addListener(() {
-//       navigate(context, accountModel.value != null);
-//     });
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: appName,
-//       theme: ThemeData(
-//         primaryColor: Colors.deepOrange,
-//         colorScheme: ColorScheme.light(
-//           primary: Colors.deepOrange,
-//         ),
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//         buttonColor: Colors.blue,
-//         cardTheme: CardTheme(
-//           elevation: 2.0,
-//         ),
-//       ),
-//       home: LoadingScaffold(),
-//     );
-//   }
-// }
