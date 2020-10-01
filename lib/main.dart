@@ -53,8 +53,17 @@ class App extends StatelessWidget {
                   ),
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 500),
-                    transitionBuilder:
-                        getTransition(Theme.of(context).platform),
+                    transitionBuilder: (child, animation) {
+                      //参考：https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/about.dart
+                      return FadeUpwardsPageTransitionsBuilder()
+                          .buildTransitions<void>(
+                        null,
+                        null,
+                        animation,
+                        null,
+                        child,
+                      );
+                    },
                     child: (user != null) ? Root() : Authenticate(),
                   ),
                 ],
@@ -65,29 +74,4 @@ class App extends StatelessWidget {
       ),
     );
   }
-}
-
-AnimatedSwitcherTransitionBuilder getTransition(TargetPlatform platform) {
-  /*
-  参考
-  https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/about.dart
-  https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/page_transitions_theme.dart
-  */
-  const Map<TargetPlatform, PageTransitionsBuilder> defaultBuilders =
-      <TargetPlatform, PageTransitionsBuilder>{
-    TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-    TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-    TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-    TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-  };
-  return (child, animation) {
-    return defaultBuilders[platform].buildTransitions<void>(
-      null,
-      null,
-      animation,
-      null,
-      child,
-    );
-  };
 }
