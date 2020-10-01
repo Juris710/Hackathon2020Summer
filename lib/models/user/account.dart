@@ -31,5 +31,6 @@ class Account {
 }
 
 class AccountModel extends StreamProxyModel<User, Account> {
-  AccountModel({Stream<Account> Function(User) create}) : super(create: create);
+  AccountModel({Stream<Account> Function(User) create})
+      : super(create: create, notifyOnStreamIsNull: true);
 }

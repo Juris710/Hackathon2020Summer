@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class StreamProxyModel<T, R> extends ChangeNotifier {
   final Stream<R> Function(T) create;
+  final bool notifyOnStreamIsNull;
 
-  StreamProxyModel({this.create});
+  StreamProxyModel({this.create, this.notifyOnStreamIsNull});
 
   R value;
   StreamSubscription subscription;
@@ -14,8 +15,10 @@ class StreamProxyModel<T, R> extends ChangeNotifier {
     subscription?.cancel();
     final newStream = create(otherModelValue);
     if (newStream == null) {
-      value = null;
-      notifyListeners();
+      if (notifyOnStreamIsNull == true) {
+        value = null;
+        notifyListeners();
+      }
     } else {
       subscription = newStream.listen((event) {
         value = event;
