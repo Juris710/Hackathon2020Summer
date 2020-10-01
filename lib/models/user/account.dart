@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hackathon_2020_summer/models/stream_proxy_model.dart';
 
 class Account {
   final DocumentReference reference;
@@ -28,9 +26,4 @@ class Account {
       configs: doc.reference.collection('configs'),
     );
   }
-}
-
-class AccountModel extends StreamProxyModel<User, Account> {
-  AccountModel({Stream<Account> Function(User) create})
-      : super(create: create, notifyOnStreamIsNull: true);
 }

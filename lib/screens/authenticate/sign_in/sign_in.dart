@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
-import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 
@@ -130,24 +129,12 @@ class _SignInState extends State<SignIn> {
                         setState(() {
                           loading = true;
                         });
-                        try {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
-                        } catch (e) {
-                          handleAuthError(e);
-                          return;
-                        }
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Root();
-                            },
-                          ),
-                          (_) => false,
-                        );
+                        FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                              email: email,
+                              password: password,
+                            )
+                            .catchError(handleAuthError);
                       },
                       child: Text(
                         'ログイン',

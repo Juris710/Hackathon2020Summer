@@ -4,12 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 
 class DatabaseService {
-  static CollectionReference get universities {
-    return FirebaseFirestore.instance.collection('universities');
+  final FirebaseFirestore firestore;
+
+  DatabaseService(this.firestore);
+
+  CollectionReference get universities {
+    return firestore.collection('universities');
   }
 
-  static DocumentReference getUserDocument(String uid) {
-    return FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference getUserDocument(String uid) {
+    return firestore.collection('users').doc(uid);
   }
 
   // static void createNewUser(
@@ -20,8 +24,11 @@ class DatabaseService {
   //   });
   // }
 
-  static Stream<Account> getAccount(String uid) {
-    return FirebaseFirestore.instance
+  Stream<Account> getAccount(String uid) {
+    if (uid == null) {
+      return Stream.empty();
+    }
+    return firestore
         .collection('users')
         .doc(uid)
         .snapshots()
@@ -32,7 +39,7 @@ class DatabaseService {
   //   return ref.snapshots().map((event) => Account.fromFirestore(event));
   // }
 
-  static Stream<Map<String, dynamic>> getConfigs(CollectionReference ref) {
+  Stream<Map<String, dynamic>> getConfigs(CollectionReference ref) {
     return ref.snapshots().map(
           (event) => Map.fromIterable(
             event.docs,
