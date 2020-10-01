@@ -16,7 +16,6 @@ class AuthService {
         AuthService.isFirstTime = false;
         return false;
       }
-      print('DEBUG_PRINT ${user?.uid ?? 'NULL'}');
       return true;
     });
   }
