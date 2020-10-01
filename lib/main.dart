@@ -44,10 +44,20 @@ class App extends StatelessWidget {
             ],
             child: MaterialApp(
               title: appName,
-              home: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                transitionBuilder: getTransition(Theme.of(context).platform),
-                child: (user != null) ? Root() : Authenticate(),
+              home: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500),
+                    transitionBuilder:
+                        getTransition(Theme.of(context).platform),
+                    child: (user != null) ? Root() : Authenticate(),
+                  ),
+                ],
               ),
             ),
           );

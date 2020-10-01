@@ -12,6 +12,11 @@ class Root extends StatelessWidget {
     if (account == null) {
       return LoadingScaffold();
     }
+    if (!account.dataExists) {
+      // Navigator.of(context).push(
+      //
+      // );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),

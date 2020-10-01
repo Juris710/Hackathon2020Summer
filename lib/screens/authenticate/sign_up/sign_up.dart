@@ -95,7 +95,7 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     TextFormField(
                       decoration: textFieldDecoration.copyWith(
-                        labelText: 'メールアドレス*',
+                        labelText: 'メールアドレス',
                         errorText: errorEmail,
                         prefixIcon: Icon(Icons.email),
                       ),
@@ -112,7 +112,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       decoration: textFieldDecoration.copyWith(
-                        labelText: 'パスワード*',
+                        labelText: 'パスワード',
                         errorText: errorPassword,
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: GestureDetector(
@@ -140,7 +140,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       decoration: textFieldDecoration.copyWith(
-                        labelText: 'パスワードの再入力*',
+                        labelText: 'パスワードの再入力',
                         errorText: errorPasswordConfirm,
                         prefixIcon: Icon(Icons.lock),
                       ),
@@ -161,37 +161,13 @@ class _SignUpState extends State<SignUp> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    TextFormField(
-                      decoration: textFieldDecoration.copyWith(
-                        labelText: 'ユーザー名*',
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                      validator: (val) => val.isEmpty ? '必須項目です' : null,
-                      onChanged: (val) {
-                        setState(() {
-                          userName = val;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
                     RaisedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        bool isValid = true;
                         if (!_formKey.currentState.validate()) {
-                          isValid = false;
-                        }
-                        if (!isValid) {
                           return;
                         }
+
                         setState(() {
                           loading = true;
                         });
@@ -201,13 +177,6 @@ class _SignUpState extends State<SignUp> {
                               password: password,
                             )
                             .catchError(handleAuthError);
-                        // .then(
-                        //   (value) => DatabaseService.createNewUser(
-                        //     value.user.uid,
-                        //     userName,
-                        //     university.reference,
-                        //   ),
-                        // );
                       },
                       child: Text(
                         '登録',

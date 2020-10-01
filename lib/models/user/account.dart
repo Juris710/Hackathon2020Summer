@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Account {
   final DocumentReference reference;
+  final bool dataExists;
   final String name;
   final DocumentReference university;
   final CollectionReference registered;
@@ -9,6 +10,7 @@ class Account {
 
   Account._({
     this.reference,
+    this.dataExists,
     this.name,
     this.university,
     this.registered,
@@ -17,9 +19,15 @@ class Account {
 
   factory Account.fromFirestore(DocumentSnapshot doc) {
     final data = doc?.data();
-    if (data == null) return null;
+    if (!doc.exists || data == null) {
+      return Account._(
+        reference: doc.reference,
+        dataExists: false,
+      );
+    }
     return Account._(
       reference: doc.reference,
+      dataExists: true,
       name: data['name'],
       university: data['university'],
       registered: doc.reference.collection('registered'),
