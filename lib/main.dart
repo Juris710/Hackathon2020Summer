@@ -17,11 +17,18 @@ void main() async {
   await initializeDateFormatting('ja_JP');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // runApp(ChangeNotifierProvider(create: (context) => UidModel(), child: App()));
-  //runApp(App());
+  runApp(App());
+}
 
-  runApp(
-    MultiProvider(
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
         Provider<AuthService>(
             create: (_) => AuthService(FirebaseAuth.instance)),
@@ -43,68 +50,10 @@ void main() async {
           },
         ),
       ],
-      child: App(),
-    ),
-  );
-}
-
-// class Test extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text(appName),
-//         ),
-//         body: StreamBuilder<Account>(
-//           stream: DatabaseService.getAccount('pIRJcK9KzdPqVMCsRzOw421rX053'),
-//           builder: (context, snapshot) {
-//             if (!snapshot.hasData) {
-//               return Loading();
-//             }
-//             final account = snapshot.data;
-//             return Text(account.name);
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-// class Test extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     FirebaseAuth.instance.userChanges().listen((event) {
-//       print('DEBUG_PRINT User Changes:$event');
-//     });
-//     FirebaseAuth.instance.authStateChanges().listen((event) {
-//       print('DEBUG_PRINT AuthState Changes:$event');
-//     });
-//     FirebaseAuth.instance.idTokenChanges().listen((event) {
-//       print('DEBUG_PRINT IdToken Changes:$event');
-//     });
-//
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text(appName),
-//         ),
-//         body: Container(),
-//       ),
-//     );
-//   }
-// }
-
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: appName,
-      home: InitialLoading(),
+      child: MaterialApp(
+        title: appName,
+        home: InitialLoading(),
+      ),
     );
   }
 }
