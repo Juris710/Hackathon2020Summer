@@ -20,6 +20,12 @@ class AuthService {
     });
   }
 
+  Future<User> signUp({String email, String password}) {
+    return _auth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) => value.user);
+  }
+
   Future<User> signIn({String email, String password}) {
     return _auth
         .signInWithEmailAndPassword(email: email, password: password)

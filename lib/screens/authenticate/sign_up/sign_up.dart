@@ -174,7 +174,7 @@ class _SignUpState extends State<SignUp> {
                           loading = true;
                         });
                         try {
-                          final user = await context.read<AuthService>().signIn(
+                          final user = await context.read<AuthService>().signUp(
                                 email: email,
                                 password: password,
                               );
