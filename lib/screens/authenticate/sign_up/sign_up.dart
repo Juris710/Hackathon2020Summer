@@ -7,6 +7,8 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
+  SignUp({Key key}) : super(key: key);
+
   @override
   _SignUpState createState() => _SignUpState();
 }

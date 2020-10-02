@@ -3,6 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 
 class Loading extends StatelessWidget {
+  Loading({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +21,7 @@ class Loading extends StatelessWidget {
 class LoadingScaffold extends StatelessWidget {
   final String title;
 
-  LoadingScaffold({this.title = appName});
+  LoadingScaffold({Key key, this.title = appName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,8 @@ class LoadingScaffold extends StatelessWidget {
 }
 
 class LoadingSmall extends StatelessWidget {
+  LoadingSmall({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(

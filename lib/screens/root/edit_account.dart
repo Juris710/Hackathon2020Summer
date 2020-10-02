@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class EditAccount extends StatefulWidget {
   final Account account;
 
-  EditAccount({this.account});
+  EditAccount({Key key, this.account}) : super(key: key);
 
   @override
   _EditAccountState createState() => _EditAccountState();

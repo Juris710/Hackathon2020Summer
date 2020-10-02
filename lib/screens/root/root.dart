@@ -8,6 +8,8 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatelessWidget {
+  Root({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final account = context.watch<Account>();
