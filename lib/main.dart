@@ -44,30 +44,7 @@ class App extends StatelessWidget {
             ],
             child: MaterialApp(
               title: appName,
-              home: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500),
-                    transitionBuilder: (child, animation) {
-                      //参考：https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/about.dart
-                      return FadeUpwardsPageTransitionsBuilder()
-                          .buildTransitions<void>(
-                        null,
-                        null,
-                        animation,
-                        null,
-                        child,
-                      );
-                    },
-                    child: (user != null) ? Root() : Authenticate(),
-                  ),
-                ],
-              ),
+              home: (user != null) ? Root() : Authenticate(),
             ),
           );
         },

@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -167,16 +170,29 @@ class _SignUpState extends State<SignUp> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-
                         setState(() {
                           loading = true;
                         });
-                        FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                            )
-                            .catchError(handleAuthError);
+                        try {
+                          final user = await context.read<AuthService>().signIn(
+                                email: email,
+                                password: password,
+                              );
+                          if (user != null) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) {
+                                /* TODO
+                                    アカウント情報登録画面に遷移
+                                    アカウント情報登録後にRootへ遷移
+                                */
+                                return Root();
+                              }),
+                              (route) => false,
+                            );
+                          }
+                        } catch (e) {
+                          handleAuthError(e);
+                        }
                       },
                       child: Text(
                         '登録',

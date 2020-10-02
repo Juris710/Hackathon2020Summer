@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
+import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -129,12 +132,22 @@ class _SignInState extends State<SignIn> {
                         setState(() {
                           loading = true;
                         });
-                        FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                            )
-                            .catchError(handleAuthError);
+                        try {
+                          final user = await context.read<AuthService>().signIn(
+                                email: email,
+                                password: password,
+                              );
+                          if (user != null) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) {
+                                return Root();
+                              }),
+                              (route) => false,
+                            );
+                          }
+                        } catch (e) {
+                          handleAuthError(e);
+                        }
                       },
                       child: Text(
                         'ログイン',

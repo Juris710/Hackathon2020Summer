@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/root/edit_account.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
@@ -20,6 +21,12 @@ class Root extends StatelessWidget {
           FlatButton.icon(
             onPressed: () {
               context.read<AuthService>().signOut();
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) {
+                  return Authenticate();
+                }),
+                (route) => false,
+              );
             },
             icon: Icon(Icons.logout),
             label: Text('ログアウト'),
