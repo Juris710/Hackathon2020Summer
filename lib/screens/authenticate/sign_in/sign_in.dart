@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
@@ -186,13 +187,16 @@ class _SignInState extends State<SignIn> {
                       height: 20.0,
                     ),
                     RaisedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         try {
-                          final user =
-                              context.read<AuthService>().googleSignIn();
-                          if (user != null) {
+                          final result =
+                              await context.read<AuthService>().googleSignIn();
+                          if (result != null) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) {
+                                if (result['isNewUser']) {
+                                  return NewAccount();
+                                }
                                 return Root();
                               }),
                               (route) => false,

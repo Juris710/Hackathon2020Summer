@@ -26,15 +26,18 @@ class DatabaseService {
 
   Stream<Account> getAccount(String uid) {
     if (uid == null) {
+      print("DEBUG_PRINT Account Empty");
       return Stream.empty();
     }
-    return firestore
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((event) => Account.fromFirestore(event));
+    return firestore.collection('users').doc(uid).snapshots().map((event) {
+      print("DEBUG_PRINT Account");
+      return Account.fromFirestore(event);
+    });
   }
 
+  Future<void> updateUserData(String uid, {String name}) async {
+    getUserDocument(uid).set({'name': name}, SetOptions(merge: true));
+  }
   // static Stream<Account> getAccount(DocumentReference ref) {
   //   return ref.snapshots().map((event) => Account.fromFirestore(event));
   // }

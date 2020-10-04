@@ -35,6 +35,7 @@ class App extends StatelessWidget {
           create: (context) => context.read<AuthService>().userChanges,
         ),
       ],
+      //TODO：Userの変更がAccountに反映されない
       child: Consumer<User>(
         builder: (context, user, child) {
           return MultiProvider(

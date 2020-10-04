@@ -18,6 +18,7 @@ class AuthService {
         AuthService._isFirstTime = false;
         return false;
       }
+      print('DEBUG_PRINT UserChanges:${user != null}');
       return true;
     });
   }
@@ -34,14 +35,17 @@ class AuthService {
         .then((value) => value.user);
   }
 
-  Future<User> googleSignIn() async {
+  Future<Map<String, dynamic>> googleSignIn() async {
     return _googleSignIn
         .signIn()
         .then((googleUser) => googleUser.authentication)
         .then((googleAuth) => GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken, idToken: googleAuth.idToken))
         .then((credential) => _auth.signInWithCredential(credential))
-        .then((userCredential) => userCredential.user);
+        .then((userCredential) => {
+              'user': userCredential.user,
+              'isNewUser': userCredential.additionalUserInfo.isNewUser
+            });
   }
 
   void signOut() {

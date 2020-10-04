@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
+
 
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
@@ -181,11 +182,7 @@ class _SignUpState extends State<SignUp> {
                           if (user != null) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) {
-                                /* TODO
-                                    アカウント情報登録画面に遷移
-                                    アカウント情報登録後にRootへ遷移
-                                */
-                                return Root();
+                                return NewAccount();
                               }),
                               (route) => false,
                             );
