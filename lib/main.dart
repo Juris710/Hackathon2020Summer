@@ -35,23 +35,38 @@ class App extends StatelessWidget {
           create: (context) => context.read<AuthService>().userChanges,
         ),
       ],
-      //TODO：Userの変更がAccountに反映されない
-      child: Consumer<User>(
-        builder: (context, user, child) {
-          return MultiProvider(
-            providers: [
-              StreamProvider<Account>(
-                create: (context) =>
-                    context.read<DatabaseService>().getAccount(user?.uid),
-              ),
-            ],
-            child: MaterialApp(
-              title: appName,
-              home: (user != null) ? Root() : Authenticate(),
-            ),
-          );
-        },
-      ),
+      //TODO：Userの変更がEmailで登録した際Accountに反映されない
+      child: Wrapper(),
+    );
+  }
+}
+
+class Wrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user = context.watch<User>();
+    print('DEBUG_PRINT: USER ${user != null}');
+    return MultiProvider(
+      providers: [
+        StreamProvider<Account>(
+          //key: ValueKey(user?.uid ?? ''),
+          create: (context) =>
+              context.read<DatabaseService>().getAccount(user?.uid),
+        ),
+      ],
+      child: Wrapper2(),
+    );
+  }
+}
+
+class Wrapper2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user = context.watch<User>();
+    print('DEBUG_PRINT: USER2 ${user != null}');
+    return MaterialApp(
+      title: appName,
+      home: (user != null) ? Root() : Authenticate(),
     );
   }
 }
