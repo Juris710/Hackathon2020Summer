@@ -181,7 +181,33 @@ class _SignInState extends State<SignIn> {
                     Text(
                       error ?? '',
                       style: TextStyle(color: Theme.of(context).errorColor),
-                    )
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        try {
+                          final user =
+                              context.read<AuthService>().googleSignIn();
+                          if (user != null) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) {
+                                return Root();
+                              }),
+                              (route) => false,
+                            );
+                          }
+                        } catch (e) {
+                          handleAuthError(e);
+                        }
+                      },
+                      child: Text(
+                        'Googleでログイン',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.red,
+                    ),
                   ],
                 ),
               ),
