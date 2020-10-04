@@ -22,14 +22,12 @@ class _SignUpState extends State<SignUp> {
   String email = '';
   String password = '';
   String passwordConfirm = '';
-  String userName = '';
 
   //error state
   String error;
   String errorEmail;
   String errorPassword;
   String errorPasswordConfirm;
-  String errorUniversity;
 
   void handleAuthError(Object e) {
     String newErrorEmail;

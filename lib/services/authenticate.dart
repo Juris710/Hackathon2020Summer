@@ -35,12 +35,13 @@ class AuthService {
   }
 
   Future<User> googleSignIn() async {
-    final googleUser = await _googleSignIn.signIn();
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-    final userCredential = await _auth.signInWithCredential(credential);
-    return userCredential.user;
+    return _googleSignIn
+        .signIn()
+        .then((googleUser) => googleUser.authentication)
+        .then((googleAuth) => GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken))
+        .then((credential) => _auth.signInWithCredential(credential))
+        .then((userCredential) => userCredential.user);
   }
 
   void signOut() {
