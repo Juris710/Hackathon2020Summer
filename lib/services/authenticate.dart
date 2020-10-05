@@ -10,12 +10,11 @@ class AuthService {
   final FirebaseFirestore _db =
       FirebaseFirestore.instance; //Database for account
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  Stream<User> _user;
-  Stream<Account> account;
+  Stream<Account> account; //TODO：BehaviorSubjectかPublishSubjectにする
   final PublishSubject<bool> loading = PublishSubject<bool>();
 
   AuthService() {
-    _user = _auth.userChanges().where((user) {
+    account = _auth.userChanges().where((user) {
       /*
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
       1回目だけ無視する
@@ -25,8 +24,7 @@ class AuthService {
         return false;
       }
       return true;
-    }).asBroadcastStream();
-    account = _user.switchMap((u) {
+    }).switchMap((u) {
       if (u != null) {
         return _db
             .collection('users')
@@ -85,3 +83,5 @@ class AuthService {
     _auth.signOut();
   }
 }
+
+final authService = AuthService();

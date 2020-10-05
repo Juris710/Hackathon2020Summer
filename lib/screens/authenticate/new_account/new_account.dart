@@ -6,6 +6,8 @@ import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class NewAccount extends StatefulWidget {
+  final User user;
+  NewAccount({this.user});
   @override
   _NewAccountState createState() => _NewAccountState();
 }
@@ -16,7 +18,7 @@ class _NewAccountState extends State<NewAccount> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<User>();
+    final user = widget.user;
     return Scaffold(
       appBar: AppBar(
         title: Text('アカウント情報登録'),

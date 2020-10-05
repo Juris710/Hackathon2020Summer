@@ -10,7 +10,7 @@ class Account {
 
   Account._({
     this.reference,
-    this.dataExists,
+    this.dataExists = false,
     this.name,
     this.university,
     this.registered,

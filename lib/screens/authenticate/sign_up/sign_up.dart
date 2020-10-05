@@ -6,7 +6,6 @@ import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
-
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
 
@@ -182,7 +181,9 @@ class _SignUpState extends State<SignUp> {
                           if (user != null) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) {
-                                return NewAccount();
+                                return NewAccount(
+                                  user: user,
+                                );
                               }),
                               (route) => false,
                             );
