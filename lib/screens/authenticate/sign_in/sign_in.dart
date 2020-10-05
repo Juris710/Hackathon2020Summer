@@ -194,7 +194,7 @@ class _SignInState extends State<SignIn> {
                           if (result != null) {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) {
-                                if (result['isNewUser']) {
+                                if (result.additionalUserInfo.isNewUser) {
                                   return NewAccount();
                                 }
                                 return Root();

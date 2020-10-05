@@ -10,11 +10,12 @@ class AuthService {
   final FirebaseFirestore _db =
       FirebaseFirestore.instance; //Database for account
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  Stream<User> user;
+  Stream<User> _user;
   Stream<Account> account;
+  final PublishSubject<bool> loading = PublishSubject<bool>();
 
   AuthService() {
-    user = _auth.userChanges().where((user) {
+    _user = _auth.userChanges().where((user) {
       /*
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
       1回目だけ無視する
@@ -24,8 +25,8 @@ class AuthService {
         return false;
       }
       return true;
-    });
-    account = user.switchMap((u) {
+    }).asBroadcastStream();
+    account = _user.switchMap((u) {
       if (u != null) {
         return _db
             .collection('users')
@@ -33,49 +34,51 @@ class AuthService {
             .snapshots()
             .map((doc) => Account.fromFirestore(doc));
       } else {
-        return Stream.value(null);
+        return Stream.value(Account.noUser());
       }
-    });
+    }).asBroadcastStream();
   }
 
-  Stream<User> get userChanges {
-    return _auth.userChanges().where((user) {
-      /*
-      起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
-      1回目だけ無視する
-      */
-      if (_isFirstTime) {
-        _isFirstTime = false;
-        return false;
-      }
-      print('DEBUG_PRINT UserChanges:${user != null}');
-      return true;
-    });
+  void dispose() {
+    loading.close();
   }
 
-  Future<User> signUp({String email, String password}) {
-    return _auth
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) => value.user);
+  Future<User> signUp({String email, String password}) async {
+    loading.add(true);
+    UserCredential credential;
+    try {
+      credential = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } catch (e) {
+      print(e);
+    }
+    loading.add(false);
+    return credential?.user;
   }
 
-  Future<User> signIn({String email, String password}) {
-    return _auth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) => value.user);
+  Future<User> signIn({String email, String password}) async {
+    loading.add(true);
+    UserCredential credential;
+    try {
+      credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } catch (e) {
+      print(e);
+    }
+    loading.add(false);
+    return credential?.user;
   }
 
-  Future<Map<String, dynamic>> googleSignIn() async {
-    return _googleSignIn
-        .signIn()
-        .then((googleUser) => googleUser.authentication)
-        .then((googleAuth) => GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken))
-        .then((credential) => _auth.signInWithCredential(credential))
-        .then((userCredential) => {
-              'user': userCredential.user,
-              'isNewUser': userCredential.additionalUserInfo.isNewUser
-            });
+  Future<UserCredential> googleSignIn() async {
+    loading.add(true);
+    UserCredential credential;
+    final googleUser = await _googleSignIn.signIn();
+    final googleAuth = await googleUser.authentication;
+    final googleCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    credential = await _auth.signInWithCredential(googleCredential);
+    loading.add(false);
+    return credential;
   }
 
   void signOut() {

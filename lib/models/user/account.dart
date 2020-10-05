@@ -17,9 +17,17 @@ class Account {
     this.configs,
   });
 
+  bool get isNoUser {
+    return (reference != null);
+  }
+
+  factory Account.noUser() {
+    return Account._();
+  }
+
   factory Account.fromFirestore(DocumentSnapshot doc) {
-    final data = doc?.data();
-    if (!doc.exists || data == null) {
+    final data = doc?.data() ?? {};
+    if (data.isEmpty) {
       return Account._(
         reference: doc.reference,
         dataExists: false,
