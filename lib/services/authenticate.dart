@@ -1,12 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthService {
-  static bool _isFirstTime = true;
-  final FirebaseAuth _auth;
+  bool _isFirstTime = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db =
+      FirebaseFirestore.instance; //Database for account
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  Stream<User> user;
+  Stream<Account> account;
 
-  AuthService(this._auth);
+  AuthService() {
+    user = _auth.userChanges().where((user) {
+      /*
+      起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
+      1回目だけ無視する
+      */
+      if (_isFirstTime) {
+        _isFirstTime = false;
+        return false;
+      }
+      return true;
+    });
+    account = user.switchMap((u) {
+      if (u != null) {
+        return _db
+            .collection('users')
+            .doc(u.uid)
+            .snapshots()
+            .map((doc) => Account.fromFirestore(doc));
+      } else {
+        return Stream.value(null);
+      }
+    });
+  }
 
   Stream<User> get userChanges {
     return _auth.userChanges().where((user) {
@@ -14,8 +44,8 @@ class AuthService {
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
       1回目だけ無視する
       */
-      if (AuthService._isFirstTime) {
-        AuthService._isFirstTime = false;
+      if (_isFirstTime) {
+        _isFirstTime = false;
         return false;
       }
       print('DEBUG_PRINT UserChanges:${user != null}');

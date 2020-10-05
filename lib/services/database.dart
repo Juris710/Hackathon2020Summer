@@ -4,16 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 
 class DatabaseService {
-  final FirebaseFirestore firestore;
-
-  DatabaseService(this.firestore);
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   CollectionReference get universities {
-    return firestore.collection('universities');
+    return _db.collection('universities');
   }
 
   DocumentReference getUserDocument(String uid) {
-    return firestore.collection('users').doc(uid);
+    return _db.collection('users').doc(uid);
   }
 
   // static void createNewUser(
@@ -29,7 +27,7 @@ class DatabaseService {
       print("DEBUG_PRINT Account Empty");
       return Stream.empty();
     }
-    return firestore.collection('users').doc(uid).snapshots().map((event) {
+    return _db.collection('users').doc(uid).snapshots().map((event) {
       print("DEBUG_PRINT Account");
       return Account.fromFirestore(event);
     });

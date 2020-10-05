@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +25,10 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(
-          create: (_) => AuthService(FirebaseAuth.instance),
+          create: (_) => AuthService(),
         ),
         Provider<DatabaseService>(
-          create: (_) => DatabaseService(FirebaseFirestore.instance),
-        ),
-        StreamProvider<User>(
-          create: (context) => context.read<AuthService>().userChanges,
+          create: (_) => DatabaseService(),
         ),
       ],
       //TODO：Userの変更がEmailで登録した際Accountに反映されない
