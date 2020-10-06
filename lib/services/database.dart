@@ -35,6 +35,7 @@ class DatabaseService {
   Future<void> updateUserData(String uid, {String name}) async {
     getUserDocument(uid).set({'name': name}, SetOptions(merge: true));
   }
+
   // static Stream<Account> getAccount(DocumentReference ref) {
   //   return ref.snapshots().map((event) => Account.fromFirestore(event));
   // }

@@ -149,20 +149,10 @@ class _SignInState extends State<SignIn> {
                           return;
                         }
                         try {
-                          /*final user =*/ await context
-                              .read<AuthService>()
-                              .signIn(
+                          await context.read<AuthService>().signIn(
                                 email: email,
                                 password: password,
                               );
-                          // if (user != null) {
-                          //   Navigator.of(context).pushAndRemoveUntil(
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return Root();
-                          //     }),
-                          //     (route) => false,
-                          //   );
-                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }
@@ -204,21 +194,7 @@ class _SignInState extends State<SignIn> {
                     RaisedButton(
                       onPressed: () async {
                         try {
-                          //final result =
                           await context.read<AuthService>().googleSignIn();
-                          // if (result != null) {
-                          //   Navigator.of(context).pushAndRemoveUntil(
-                          //     MaterialPageRoute(builder: (context) {
-                          //       if (result.additionalUserInfo.isNewUser) {
-                          //         return NewAccount(
-                          //           user: result.user,
-                          //         );
-                          //       }
-                          //       return Root();
-                          //     }),
-                          //     (route) => false,
-                          //   );
-                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }

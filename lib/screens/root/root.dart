@@ -22,12 +22,6 @@ class Root extends StatelessWidget {
           FlatButton.icon(
             onPressed: () {
               context.read<AuthService>().signOut();
-              // Navigator.of(context).pushAndRemoveUntil(
-              //   MaterialPageRoute(builder: (context) {
-              //     return Authenticate();
-              //   }),
-              //   (route) => false,
-              // );
             },
             icon: Icon(Icons.logout),
             label: Text('ログアウト'),

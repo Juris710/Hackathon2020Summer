@@ -55,14 +55,9 @@ class _NewAccountState extends State<NewAccount> {
                       await user.updateProfile(displayName: name);
                     }
                     await context.read<DatabaseService>().updateUserData(
-                        user.uid,
-                        name: name ?? user.displayName);
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //   MaterialPageRoute(builder: (context) {
-                    //     return Root();
-                    //   }),
-                    //   (route) => false,
-                    // );
+                          user.uid,
+                          name: name ?? user.displayName,
+                        );
                   },
                   child: Text(
                     '登録',

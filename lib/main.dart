@@ -21,8 +21,6 @@ void main() async {
   runApp(App());
 }
 
-//final _navigatorKey = GlobalKey<NavigatorState>();
-
 class App extends StatelessWidget {
   App({Key key}) : super(key: key);
 
@@ -31,8 +29,10 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(
-          create: (_) =>
-              AuthService(FirebaseAuth.instance, FirebaseFirestore.instance),
+          create: (_) => AuthService(
+            FirebaseAuth.instance,
+            FirebaseFirestore.instance,
+          ),
           dispose: (_, auth) => auth.dispose(),
         ),
         Provider<DatabaseService>(

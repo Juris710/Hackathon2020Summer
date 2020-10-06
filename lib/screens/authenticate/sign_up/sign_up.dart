@@ -179,22 +179,10 @@ class _SignUpState extends State<SignUp> {
                           return;
                         }
                         try {
-                          /*final user =*/ await context
-                              .read<AuthService>()
-                              .signUp(
+                          await context.read<AuthService>().signUp(
                                 email: email,
                                 password: password,
                               );
-                          // if (user != null) {
-                          //   Navigator.of(context).pushAndRemoveUntil(
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return NewAccount(
-                          //         user: user,
-                          //       );
-                          //     }),
-                          //     (route) => false,
-                          //   );
-                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }
