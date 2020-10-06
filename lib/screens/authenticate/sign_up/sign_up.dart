@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -174,20 +173,22 @@ class _SignUpState extends State<SignUp> {
                           loading = true;
                         });
                         try {
-                          final user = await context.read<AuthService>().signUp(
+                          /*final user =*/ await context
+                              .read<AuthService>()
+                              .signUp(
                                 email: email,
                                 password: password,
                               );
-                          if (user != null) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) {
-                                return NewAccount(
-                                  user: user,
-                                );
-                              }),
-                              (route) => false,
-                            );
-                          }
+                          // if (user != null) {
+                          //   Navigator.of(context).pushAndRemoveUntil(
+                          //     MaterialPageRoute(builder: (context) {
+                          //       return NewAccount(
+                          //         user: user,
+                          //       );
+                          //     }),
+                          //     (route) => false,
+                          //   );
+                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hackathon_2020_summer/models/user/account.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -22,16 +21,16 @@ class DatabaseService {
   //   });
   // }
 
-  Stream<Account> getAccount(String uid) {
-    if (uid == null) {
-      print("DEBUG_PRINT Account Empty");
-      return Stream.empty();
-    }
-    return _db.collection('users').doc(uid).snapshots().map((event) {
-      print("DEBUG_PRINT Account");
-      return Account.fromFirestore(event);
-    });
-  }
+  // Stream<Account> getAccount(String uid) {
+  //   if (uid == null) {
+  //     print("DEBUG_PRINT Account Empty");
+  //     return Stream.empty();
+  //   }
+  //   return _db.collection('users').doc(uid).snapshots().map((event) {
+  //     print("DEBUG_PRINT Account");
+  //     return Account.fromFirestore(event);
+  //   });
+  // }
 
   Future<void> updateUserData(String uid, {String name}) async {
     getUserDocument(uid).set({'name': name}, SetOptions(merge: true));

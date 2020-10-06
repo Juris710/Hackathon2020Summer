@@ -29,7 +29,7 @@ class AuthService {
             .collection('users')
             .doc(u.uid)
             .snapshots()
-            .map((doc) => Account.fromFirestore(doc));
+            .map((doc) => Account.fromFirestore(doc, u));
       } else {
         return Stream.value(Account.noUser());
       }

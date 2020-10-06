@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
-import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -136,18 +134,20 @@ class _SignInState extends State<SignIn> {
                           loading = true;
                         });
                         try {
-                          final user = await context.read<AuthService>().signIn(
+                          /*final user =*/ await context
+                              .read<AuthService>()
+                              .signIn(
                                 email: email,
                                 password: password,
                               );
-                          if (user != null) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) {
-                                return Root();
-                              }),
-                              (route) => false,
-                            );
-                          }
+                          // if (user != null) {
+                          //   Navigator.of(context).pushAndRemoveUntil(
+                          //     MaterialPageRoute(builder: (context) {
+                          //       return Root();
+                          //     }),
+                          //     (route) => false,
+                          //   );
+                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }
@@ -189,21 +189,21 @@ class _SignInState extends State<SignIn> {
                     RaisedButton(
                       onPressed: () async {
                         try {
-                          final result =
-                              await context.read<AuthService>().googleSignIn();
-                          if (result != null) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) {
-                                if (result.additionalUserInfo.isNewUser) {
-                                  return NewAccount(
-                                    user: result.user,
-                                  );
-                                }
-                                return Root();
-                              }),
-                              (route) => false,
-                            );
-                          }
+                          //final result =
+                          await context.read<AuthService>().googleSignIn();
+                          // if (result != null) {
+                          //   Navigator.of(context).pushAndRemoveUntil(
+                          //     MaterialPageRoute(builder: (context) {
+                          //       if (result.additionalUserInfo.isNewUser) {
+                          //         return NewAccount(
+                          //           user: result.user,
+                          //         );
+                          //       }
+                          //       return Root();
+                          //     }),
+                          //     (route) => false,
+                          //   );
+                          // }
                         } catch (e) {
                           handleAuthError(e);
                         }

@@ -1,13 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/screens/root/root.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class NewAccount extends StatefulWidget {
-  final User user;
-  NewAccount({this.user});
   @override
   _NewAccountState createState() => _NewAccountState();
 }
@@ -18,7 +15,8 @@ class _NewAccountState extends State<NewAccount> {
 
   @override
   Widget build(BuildContext context) {
-    final user = widget.user;
+    final account = context.watch<Account>();
+    final user = account.user;
     return Scaffold(
       appBar: AppBar(
         title: Text('アカウント情報登録'),
@@ -59,12 +57,12 @@ class _NewAccountState extends State<NewAccount> {
                     await context.read<DatabaseService>().updateUserData(
                         user.uid,
                         name: name ?? user.displayName);
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                        return Root();
-                      }),
-                      (route) => false,
-                    );
+                    // Navigator.of(context).pushAndRemoveUntil(
+                    //   MaterialPageRoute(builder: (context) {
+                    //     return Root();
+                    //   }),
+                    //   (route) => false,
+                    // );
                   },
                   child: Text(
                     '登録',

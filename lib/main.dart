@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
+import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
@@ -20,6 +21,8 @@ void main() async {
   runApp(App());
 }
 
+//final _navigatorKey = GlobalKey<NavigatorState>();
+
 class App extends StatelessWidget {
   App({Key key}) : super(key: key);
 
@@ -35,61 +38,73 @@ class App extends StatelessWidget {
         Provider<DatabaseService>(
           create: (_) => DatabaseService(),
         ),
-      ],
-      //TODO：Userの変更がEmailで登録した際Accountに反映されない
-      child: StreamProvider<Account>.value(
-        value: context.read<AuthService>().account,
-        child: MaterialApp(
-          title: appName,
-          home: Consumer<Account>(
-            //TODO：ここでNavigator遷移を担当するように
-            builder: (context, account, _) {
-              if (account == null) {
-                return LoadingScaffold();
-              }
-              if (account.isNoUser) {
-                return Authenticate();
-              }
-              return Root();
-            },
-          ),
+        StreamProvider<Account>(
+          create: (context) => context.read<AuthService>().account,
         ),
-      ),
+      ],
+      child: Wrapper(),
     );
   }
 }
 
-// class Wrapper extends StatefulWidget {
-//   @override
-//   _WrapperState createState() => _WrapperState();
-// }
-//
-// class _WrapperState extends State<Wrapper> {
-//   final _navigatorKey = GlobalKey<NavigatorState>();
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     context.read<AuthService>().account.listen((account) {
-//       _navigatorKey.currentState.pushAndRemoveUntil(
-//         MaterialPageRoute(builder: (context) {
-//           if (account.isNoUser) {
-//             return Authenticate();
-//           } else {
-//             return Root();
-//           }
-//         }),
-//         (route) => false,
-//       );
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: appName,
-//       home: LoadingScaffold(),
-//       navigatorKey: _navigatorKey,
-//     );
-//   }
-// }
+enum AuthStatus { NO_USER, NEW_USER, USER }
+
+AuthStatus getAuthStatus(Account account) {
+  if (account == null) {
+    return null;
+  }
+  if (account.isNoUser) {
+    return AuthStatus.NO_USER;
+  }
+  if (!account.dataExists) {
+    return AuthStatus.NEW_USER;
+  }
+  return AuthStatus.USER;
+}
+
+class Wrapper extends StatefulWidget {
+  @override
+  _WrapperState createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  AuthStatus authStatus;
+
+  void switchPage(BuildContext context) {
+    final account = context.watch<Account>();
+    final currentAuthStatus = getAuthStatus(account);
+    if (authStatus == currentAuthStatus) {
+      return;
+    }
+    setState(() {
+      authStatus = currentAuthStatus;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigatorKey.currentState.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+          if (account == null) {
+            return LoadingScaffold();
+          }
+          if (account.isNoUser) {
+            return Authenticate();
+          } else if (!account.dataExists) {
+            return NewAccount();
+          }
+          return Root();
+        }),
+        (route) => false,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switchPage(context);
+    return MaterialApp(
+      title: appName,
+      home: LoadingScaffold(),
+      navigatorKey: _navigatorKey,
+    );
+  }
+}
