@@ -18,7 +18,7 @@ class Account {
   });
 
   bool get isNoUser {
-    return (reference != null);
+    return (reference == null);
   }
 
   factory Account.noUser() {
