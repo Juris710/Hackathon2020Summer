@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/sign_up/sign_up.dart';
@@ -14,6 +16,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  StreamSubscription _subscription;
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
   bool _obscureText = true;
@@ -50,11 +53,26 @@ class _SignInState extends State<SignIn> {
     }
     print(e);
     setState(() {
-      loading = false;
       errorEmail = newErrorEmail;
       errorPassword = newErrorPassword;
       error = newError;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = context.read<AuthService>().loading.listen((value) {
+      setState(() {
+        loading = value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription?.cancel();
   }
 
   @override
@@ -130,9 +148,6 @@ class _SignInState extends State<SignIn> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        setState(() {
-                          loading = true;
-                        });
                         try {
                           /*final user =*/ await context
                               .read<AuthService>()

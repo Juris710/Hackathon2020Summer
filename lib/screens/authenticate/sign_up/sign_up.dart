@@ -52,10 +52,19 @@ class _SignUpState extends State<SignUp> {
     }
     print(e);
     setState(() {
-      loading = false;
       errorEmail = newErrorEmail;
       errorPassword = newErrorPassword;
       error = newError;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthService>().loading.listen((value) {
+      setState(() {
+        loading = value;
+      });
     });
   }
 
@@ -169,9 +178,6 @@ class _SignUpState extends State<SignUp> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        setState(() {
-                          loading = true;
-                        });
                         try {
                           /*final user =*/ await context
                               .read<AuthService>()

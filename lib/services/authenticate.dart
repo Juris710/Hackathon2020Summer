@@ -9,7 +9,7 @@ class AuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _db; //Database for account
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  Stream<Account> account; //TODO：BehaviorSubjectかPublishSubjectにする
+  Stream<Account> account;
   final PublishSubject<bool> loading = PublishSubject<bool>();
 
   AuthService(this._auth, this._db) {
