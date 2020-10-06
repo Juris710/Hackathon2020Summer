@@ -6,14 +6,13 @@ import 'package:rxdart/rxdart.dart';
 
 class AuthService {
   bool _isFirstTime = true;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _db =
-      FirebaseFirestore.instance; //Database for account
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _db; //Database for account
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   Stream<Account> account; //TODO：BehaviorSubjectかPublishSubjectにする
   final PublishSubject<bool> loading = PublishSubject<bool>();
 
-  AuthService() {
+  AuthService(this._auth, this._db) {
     account = _auth.userChanges().where((user) {
       /*
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
@@ -34,7 +33,7 @@ class AuthService {
       } else {
         return Stream.value(Account.noUser());
       }
-    }).asBroadcastStream();
+    });
   }
 
   void dispose() {
@@ -83,5 +82,3 @@ class AuthService {
     _auth.signOut();
   }
 }
-
-final authService = AuthService();

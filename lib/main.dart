@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
@@ -26,32 +28,31 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(
-          //TODO：削除
-          create: (_) => authService,
+          create: (_) =>
+              AuthService(FirebaseAuth.instance, FirebaseFirestore.instance),
           dispose: (_, auth) => auth.dispose(),
         ),
         Provider<DatabaseService>(
-          //TODO：削除
           create: (_) => DatabaseService(),
-        ),
-        StreamProvider<Account>.value(
-          value: authService.account,
         ),
       ],
       //TODO：Userの変更がEmailで登録した際Accountに反映されない
-      child: MaterialApp(
-        title: appName,
-        home: Consumer<Account>(
-          //TODO：ここでNavigator遷移を担当するように
-          builder: (context, account, _) {
-            if (account == null) {
-              return LoadingScaffold();
-            }
-            if (account.isNoUser) {
-              return Authenticate();
-            }
-            return Root();
-          },
+      child: StreamProvider<Account>.value(
+        value: context.read<AuthService>().account,
+        child: MaterialApp(
+          title: appName,
+          home: Consumer<Account>(
+            //TODO：ここでNavigator遷移を担当するように
+            builder: (context, account, _) {
+              if (account == null) {
+                return LoadingScaffold();
+              }
+              if (account.isNoUser) {
+                return Authenticate();
+              }
+              return Root();
+            },
+          ),
         ),
       ),
     );
