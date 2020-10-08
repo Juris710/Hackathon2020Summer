@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_ui/animated_firestore_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/root/edit_account.dart';
@@ -81,32 +79,6 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
                 child: Text('設定する'),
               )
             ],
-            FirestoreAnimatedList(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              query: FirebaseFirestore.instance.collection('test'),
-              itemBuilder: (
-                BuildContext context,
-                DocumentSnapshot snapshot,
-                Animation<double> animation,
-                int index,
-              ) {
-                return SizeTransition(
-                  sizeFactor: animation,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Card(
-                      key: ValueKey(snapshot.reference.path),
-                      color: Colors.red,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text(snapshot.data()['name'])),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ],
         ),
       ),
