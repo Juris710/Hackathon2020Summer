@@ -22,37 +22,39 @@ class AuthService {
   final PublishSubject<bool> loading = PublishSubject<bool>();
 
   AuthService(this._auth, this._db) {
-    _userChangesSubscription = _auth.userChanges().listen((user) {
+    _userChangesSubscription = _auth.userChanges().where((user) {
       /*
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
       1回目だけ無視する
       */
       if (_isFirstTime) {
         _isFirstTime = false;
-        return;
+        return false;
       }
+      return true;
+    }).listen((user) {
       _userSnapshotSubscription?.cancel();
-      if (user == null) {
+      if (user != null) {
+        _userSnapshotSubscription = _db
+            .collection('users')
+            .doc(user.uid)
+            .snapshots()
+            .map((doc) => Account.fromFirestore(doc, user))
+            .listen((account) {
+          final authStatus = getAuthStatus(account);
+          if (authStatus != AuthStatus.NO_USER) {
+            this.account.sink.add(account);
+          }
+          if (_previousAuthStatus != authStatus) {
+            this.authStatus.sink.add(authStatus);
+          }
+          _previousAuthStatus = authStatus;
+        });
+      } else {
         _userSnapshotSubscription = null;
         this.authStatus.sink.add(AuthStatus.NO_USER);
         _previousAuthStatus = AuthStatus.NO_USER;
-        return;
       }
-      _userSnapshotSubscription = _db
-          .collection('users')
-          .doc(user.uid)
-          .snapshots()
-          .map((doc) => Account.fromFirestore(doc, user))
-          .listen((account) {
-        final authStatus = getAuthStatus(account);
-        if (authStatus != AuthStatus.NO_USER) {
-          this.account.sink.add(account);
-        }
-        if (_previousAuthStatus != authStatus) {
-          this.authStatus.sink.add(authStatus);
-        }
-        _previousAuthStatus = authStatus;
-      });
     });
   }
 
