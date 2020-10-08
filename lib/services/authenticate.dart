@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hackathon_2020_summer/authenticate_status.dart';
 import 'package:hackathon_2020_summer/main.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/shared/authenticate_status.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {

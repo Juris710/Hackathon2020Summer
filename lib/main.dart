@@ -14,7 +14,7 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
-import 'authenticate_status.dart';
+import 'shared/authenticate_status.dart';
 import 'models/user/account.dart';
 
 void main() async {
