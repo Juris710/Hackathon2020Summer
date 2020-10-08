@@ -7,6 +7,8 @@ import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
+import '../../authenticate_status.dart';
+
 class Root extends StatefulWidget {
   Root({Key key}) : super(key: key);
   @override

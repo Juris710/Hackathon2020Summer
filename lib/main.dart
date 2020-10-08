@@ -12,6 +12,7 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
+import 'authenticate_status.dart';
 import 'models/user/account.dart';
 
 void main() async {
@@ -46,8 +47,6 @@ class App extends StatelessWidget {
     );
   }
 }
-
-enum AuthStatus { NO_USER, NEW_USER, USER }
 
 AuthStatus getAuthStatus(Account account) {
   if (account == null) {
