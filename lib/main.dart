@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,7 +42,7 @@ class App extends StatelessWidget {
           create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         StreamProvider<Account>(
-          create: (context) => context.read<AuthService>().account,
+          create: (context) => context.read<AuthService>().account.stream,
         ),
       ],
       child: Wrapper(),
@@ -68,38 +70,42 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  AuthStatus authStatus;
 
-  void switchPage(BuildContext context) {
-    final account = context.watch<Account>();
-    final currentAuthStatus = getAuthStatus(account);
-    if (authStatus == currentAuthStatus) {
-      return;
-    }
-    setState(() {
-      authStatus = currentAuthStatus;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _navigatorKey.currentState.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) {
-          if (account == null) {
-            return LoadingScaffold();
-          }
-          if (account.isNoUser) {
-            return Authenticate();
-          } else if (!account.dataExists) {
-            return NewAccount();
-          }
-          return Root();
-        }),
-        (route) => false,
-      );
+  StreamSubscription _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription =
+        context.read<AuthService>().authStatus.stream.listen((event) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigatorKey.currentState.pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+            switch (event) {
+              case AuthStatus.NO_USER:
+                return Authenticate();
+              case AuthStatus.NEW_USER:
+                return NewAccount();
+              case AuthStatus.USER:
+                return Root();
+              default:
+                return LoadingScaffold();
+            }
+          }),
+          (route) => false,
+        );
+      });
     });
   }
 
   @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    switchPage(context);
     return MaterialApp(
       title: appName,
       home: LoadingScaffold(),

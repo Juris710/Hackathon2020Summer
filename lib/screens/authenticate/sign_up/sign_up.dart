@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
@@ -58,14 +60,22 @@ class _SignUpState extends State<SignUp> {
     });
   }
 
+  StreamSubscription _subscription;
+
   @override
   void initState() {
     super.initState();
-    context.read<AuthService>().loading.listen((value) {
+    _subscription = context.read<AuthService>().loading.listen((value) {
       setState(() {
         loading = value;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override
