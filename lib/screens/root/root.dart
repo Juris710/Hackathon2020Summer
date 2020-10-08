@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firestore_ui/animated_firestore_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/root/edit_account.dart';
@@ -13,7 +15,19 @@ class Root extends StatefulWidget {
   _RootState createState() => _RootState();
 }
 
-class _RootState extends State<Root> {
+class _RootState extends State<Root> with TickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     final account = context.watch<Account>();
@@ -47,25 +61,54 @@ class _RootState extends State<Root> {
             ),
         ],
       ),
-      body: Column(
-        children: [
-          if (account.dataExists) Text(account.name),
-          if (!account.dataExists) ...[
-            Text('No Data'),
-            RaisedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return EditAccount(account: account);
-                    },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            if (account.dataExists) Text(account.name),
+            if (!account.dataExists) ...[
+              Text('No Data'),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return EditAccount(account: account);
+                      },
+                    ),
+                  );
+                },
+                child: Text('設定する'),
+              )
+            ],
+            FirestoreAnimatedList(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              query: FirebaseFirestore.instance.collection('test'),
+              itemBuilder: (
+                BuildContext context,
+                DocumentSnapshot snapshot,
+                Animation<double> animation,
+                int index,
+              ) {
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      key: ValueKey(snapshot.reference.path),
+                      color: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text(snapshot.data()['name'])),
+                      ),
+                    ),
                   ),
                 );
               },
-              child: Text('設定する'),
-            )
+            ),
           ],
-        ],
+        ),
       ),
     );
   }
