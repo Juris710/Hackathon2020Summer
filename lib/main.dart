@@ -14,8 +14,8 @@ import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
-import 'shared/authenticate_status.dart';
 import 'models/user/account.dart';
+import 'shared/authenticate_status.dart';
 
 void main() async {
   await initializeDateFormatting('ja_JP');
@@ -42,7 +42,11 @@ class App extends StatelessWidget {
           create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         StreamProvider<Account>(
-          create: (context) => context.read<AuthService>().account.stream,
+          create: (context) => context
+              .read<AuthService>()
+              .account
+              .stream
+              .where((account) => getAuthStatus(account) != AuthStatus.NO_USER),
         ),
       ],
       child: Wrapper(),
@@ -76,8 +80,12 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
-    _subscription =
-        context.read<AuthService>().authStatus.stream.listen((event) {
+    _subscription = context
+        .read<AuthService>()
+        .authStatus
+        .stream
+        .distinct()
+        .listen((event) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _navigatorKey.currentState.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {

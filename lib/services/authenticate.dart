@@ -16,7 +16,6 @@ class AuthService {
   StreamSubscription _userSnapshotSubscription;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final StreamController<Account> account = StreamController<Account>();
-  AuthStatus _previousAuthStatus;
   final StreamController<AuthStatus> authStatus =
       StreamController<AuthStatus>();
   final PublishSubject<bool> loading = PublishSubject<bool>();
@@ -41,19 +40,12 @@ class AuthService {
             .snapshots()
             .map((doc) => Account.fromFirestore(doc, user))
             .listen((account) {
-          final authStatus = getAuthStatus(account);
-          if (authStatus != AuthStatus.NO_USER) {
-            this.account.sink.add(account);
-          }
-          if (_previousAuthStatus != authStatus) {
-            this.authStatus.sink.add(authStatus);
-          }
-          _previousAuthStatus = authStatus;
+          this.account.sink.add(account);
+          this.authStatus.sink.add(getAuthStatus(account));
         });
       } else {
         _userSnapshotSubscription = null;
         this.authStatus.sink.add(AuthStatus.NO_USER);
-        _previousAuthStatus = AuthStatus.NO_USER;
       }
     });
   }
