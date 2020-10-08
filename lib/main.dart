@@ -37,7 +37,7 @@ class App extends StatelessWidget {
           dispose: (_, auth) => auth.dispose(),
         ),
         Provider<DatabaseService>(
-          create: (_) => DatabaseService(),
+          create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         StreamProvider<Account>(
           create: (context) => context.read<AuthService>().account,
