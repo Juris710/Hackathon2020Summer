@@ -42,11 +42,7 @@ class App extends StatelessWidget {
           create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         StreamProvider<Account>(
-          create: (context) => context
-              .read<AuthService>()
-              .account
-              .stream
-              .where((account) => getAuthStatus(account) != AuthStatus.NO_USER),
+          create: (context) => context.read<AuthService>().account,
         ),
       ],
       child: Wrapper(),
@@ -80,12 +76,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
-    _subscription = context
-        .read<AuthService>()
-        .authStatus
-        .stream
-        .distinct()
-        .listen((event) {
+    _subscription = context.read<AuthService>().authStatus.listen((event) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _navigatorKey.currentState.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
