@@ -20,10 +20,10 @@ class AuthService {
   final ReplaySubject<AuthStatus> _authStatusSubject =
       ReplaySubject<AuthStatus>();
 
-  Stream<Account> get account => _accountSubject.stream
+  Stream<Account> get account => _accountSubject
       .where((event) => getAuthStatus(event) != AuthStatus.NO_USER);
 
-  Stream<AuthStatus> get authStatus => _authStatusSubject.stream.distinct();
+  Stream<AuthStatus> get authStatus => _authStatusSubject.distinct();
 
   AuthService(this._auth, this._db) {
     _userChangesSubject.addStream(_auth.userChanges().where((user) {
