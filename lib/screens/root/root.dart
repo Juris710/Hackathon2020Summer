@@ -13,19 +13,7 @@ class Root extends StatefulWidget {
   _RootState createState() => _RootState();
 }
 
-class _RootState extends State<Root> with TickerProviderStateMixin {
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _controller.forward();
-  }
-
+class _RootState extends State<Root> {
   @override
   Widget build(BuildContext context) {
     final account = context.watch<Account>();
