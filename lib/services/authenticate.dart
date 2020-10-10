@@ -16,9 +16,10 @@ class AuthService {
 
   final PublishSubject<bool> loading = PublishSubject<bool>();
   final PublishSubject<User> _userChangesSubject = PublishSubject<User>();
-  final ReplaySubject<Account> _accountSubject = ReplaySubject<Account>();
+  final ReplaySubject<Account> _accountSubject =
+      ReplaySubject<Account>(maxSize: 1);
   final ReplaySubject<AuthStatus> _authStatusSubject =
-      ReplaySubject<AuthStatus>();
+      ReplaySubject<AuthStatus>(maxSize: 1);
 
   Stream<Account> get account => _accountSubject
       .where((event) => getAuthStatus(event) != AuthStatus.NO_USER);
