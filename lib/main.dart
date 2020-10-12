@@ -34,7 +34,7 @@ class App extends StatelessWidget {
           create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         Provider<AuthService>(
-          create: (_) => AuthService(
+          create: (context) => AuthService(
             FirebaseAuth.instance,
             context.read<DatabaseService>(),
           ),
