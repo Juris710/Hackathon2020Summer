@@ -4,18 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/authenticate.dart';
 import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_account.dart';
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
+import 'package:hackathon_2020_summer/shared/authenticate_status.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
-
-import 'models/user/account.dart';
-import 'shared/authenticate_status.dart';
 
 void main() async {
   await initializeDateFormatting('ja_JP');
@@ -31,15 +30,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<DatabaseService>(
+          create: (_) => DatabaseService(FirebaseFirestore.instance),
+        ),
         Provider<AuthService>(
           create: (_) => AuthService(
             FirebaseAuth.instance,
-            FirebaseFirestore.instance,
+            context.read<DatabaseService>(),
           ),
           dispose: (_, auth) => auth.dispose(),
-        ),
-        Provider<DatabaseService>(
-          create: (_) => DatabaseService(FirebaseFirestore.instance),
         ),
         StreamProvider<Account>(
           create: (context) => context.read<AuthService>().account,
@@ -48,19 +47,6 @@ class App extends StatelessWidget {
       child: Wrapper(),
     );
   }
-}
-
-AuthStatus getAuthStatus(Account account) {
-  if (account == null) {
-    return null;
-  }
-  if (account.isNoUser) {
-    return AuthStatus.NO_USER;
-  }
-  if (!account.dataExists) {
-    return AuthStatus.NEW_USER;
-  }
-  return AuthStatus.USER;
 }
 
 class Wrapper extends StatefulWidget {

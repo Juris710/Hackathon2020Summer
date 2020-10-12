@@ -1,8 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
-import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class NewAccount extends StatefulWidget {
@@ -16,11 +15,7 @@ class _NewAccountState extends State<NewAccount> {
 
   @override
   Widget build(BuildContext context) {
-    final account = context.watch<Account>();
-    if (account == null) {
-      return LoadingScaffold();
-    }
-    final user = account.user;
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         title: Text('アカウント情報登録'),

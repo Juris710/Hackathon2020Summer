@@ -1,17 +1,16 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hackathon_2020_summer/main.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
 import 'package:hackathon_2020_summer/shared/authenticate_status.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
   bool _isFirstTime = true;
   final FirebaseAuth _auth;
-  final FirebaseFirestore _db; //Database for account
+  final DatabaseService _databaseService;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final PublishSubject<bool> loading = PublishSubject<bool>();
@@ -26,7 +25,7 @@ class AuthService {
 
   Stream<AuthStatus> get authStatus => _authStatusSubject.distinct();
 
-  AuthService(this._auth, this._db) {
+  AuthService(this._auth, this._databaseService) {
     _userChangesSubject.addStream(_auth.userChanges().where((user) {
       /*
       起動時にuserChanges() (authStateChanges(), idTokenChanges()も同様)が2回呼ばれる問題の対策
@@ -40,11 +39,7 @@ class AuthService {
     }));
     _accountSubject.addStream(_userChangesSubject.switchMap((u) {
       if (u != null) {
-        return _db
-            .collection('users')
-            .doc(u.uid)
-            .snapshots()
-            .map((doc) => Account.fromFirestore(doc, u));
+        return _databaseService.getAccount(u.uid);
       } else {
         return Stream.value(Account.noUser());
       }
