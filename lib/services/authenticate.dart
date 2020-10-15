@@ -18,7 +18,7 @@ class AuthService {
       ReplaySubject<Account>(maxSize: 1);
 
   Stream<Account> get account =>
-      accountSubject.where((event) => !event.isNoUser && event.dataExists);
+      accountSubject.where((event) => !event.isNoUser && !event.isNewUser);
 
   AuthService(this._auth, this._databaseService) {
     _userChangesSubject.addStream(_auth.userChanges().where((user) {

@@ -31,7 +31,7 @@ class _RootState extends State<Root> {
             icon: Icon(Icons.logout),
             label: Text('ログアウト'),
           ),
-          if (account.dataExists)
+          if (!account.isNewUser)
             FlatButton.icon(
               onPressed: () {
                 Navigator.of(context).push(
@@ -51,8 +51,8 @@ class _RootState extends State<Root> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            if (account.dataExists) Text(account.name),
-            if (!account.dataExists) ...[
+            if (!account.isNewUser) Text(account.name),
+            if (account.isNewUser) ...[
               Text('No Data'),
               RaisedButton(
                 onPressed: () {

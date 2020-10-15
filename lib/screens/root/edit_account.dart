@@ -21,7 +21,7 @@ class _EditAccountState extends State<EditAccount> {
   @override
   void initState() {
     super.initState();
-    if (widget.account.dataExists) {
+    if (!widget.account.isNewUser) {
       setState(() {
         name = widget.account.name;
       });
@@ -70,10 +70,10 @@ class _EditAccountState extends State<EditAccount> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        if (widget.account.dataExists) {
-                          widget.account.reference.update({'name': name});
-                        } else {
+                        if (widget.account.isNewUser) {
                           widget.account.reference.set({'name': name});
+                        } else {
+                          widget.account.reference.update({'name': name});
                         }
                         Navigator.of(context).pop();
                       },

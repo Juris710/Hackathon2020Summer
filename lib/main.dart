@@ -64,7 +64,7 @@ class _WrapperState extends State<Wrapper> {
         if (account.isNoUser) {
           return Authenticate();
         }
-        if (!account.dataExists) {
+        if (account.isNewUser) {
           return NewAccount();
         }
         return Root();
