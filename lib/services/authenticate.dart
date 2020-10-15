@@ -30,9 +30,6 @@ class AuthService {
         _isFirstTime = false;
         return false;
       }
-      if (user != null) {
-        print('${user.metadata.creationTime} ${user.metadata.lastSignInTime}');
-      }
       return true;
     }));
     accountSubject.addStream(_userChangesSubject.switchMap((u) {
