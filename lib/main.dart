@@ -68,16 +68,6 @@ class _WrapperState extends State<Wrapper> {
           return NewAccount();
         }
         return Root();
-        // switch (event) {
-        //   case AuthStatus.NO_USER:
-        //     return Authenticate();
-        //   case AuthStatus.NEW_USER:
-        //     return NewAccount();
-        //   case AuthStatus.USER:
-        //     return Root();
-        //   default:
-        //     return LoadingScaffold();
-        //}
       }),
       (route) => false,
     );
