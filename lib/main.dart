@@ -10,7 +10,6 @@ import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_accou
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/authenticate_status.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -59,28 +58,45 @@ class _WrapperState extends State<Wrapper> {
 
   StreamSubscription _subscription;
 
+  void navigate(Account account) {
+    _navigatorKey.currentState.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) {
+        if (account.isNoUser) {
+          return Authenticate();
+        }
+        if (!account.dataExists) {
+          return NewAccount();
+        }
+        return Root();
+        // switch (event) {
+        //   case AuthStatus.NO_USER:
+        //     return Authenticate();
+        //   case AuthStatus.NEW_USER:
+        //     return NewAccount();
+        //   case AuthStatus.USER:
+        //     return Root();
+        //   default:
+        //     return LoadingScaffold();
+        //}
+      }),
+      (route) => false,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    _subscription = context.read<AuthService>().authStatus.listen((event) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _navigatorKey.currentState.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-            switch (event) {
-              case AuthStatus.NO_USER:
-                return Authenticate();
-              case AuthStatus.NEW_USER:
-                return NewAccount();
-              case AuthStatus.USER:
-                return Root();
-              default:
-                return LoadingScaffold();
-            }
-          }),
-          (route) => false,
-        );
-      });
-    });
+    _subscription = context.read<AuthService>().accountSubject.listen(
+      (account) {
+        if (_navigatorKey.currentState == null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            navigate(account);
+          });
+        } else {
+          navigate(account);
+        }
+      },
+    );
   }
 
   @override

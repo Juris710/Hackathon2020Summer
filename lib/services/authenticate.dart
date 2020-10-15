@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/authenticate_status.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
@@ -15,15 +14,11 @@ class AuthService {
 
   final PublishSubject<bool> loading = PublishSubject<bool>();
   final PublishSubject<User> _userChangesSubject = PublishSubject<User>();
-  final ReplaySubject<Account> _accountSubject =
+  final ReplaySubject<Account> accountSubject =
       ReplaySubject<Account>(maxSize: 1);
-  final ReplaySubject<AuthStatus> _authStatusSubject =
-      ReplaySubject<AuthStatus>(maxSize: 1);
 
-  Stream<Account> get account => _accountSubject
-      .where((event) => getAuthStatus(event) != AuthStatus.NO_USER);
-
-  Stream<AuthStatus> get authStatus => _authStatusSubject.distinct();
+  Stream<Account> get account =>
+      accountSubject.where((event) => !event.isNoUser && event.dataExists);
 
   AuthService(this._auth, this._databaseService) {
     _userChangesSubject.addStream(_auth.userChanges().where((user) {
@@ -35,24 +30,24 @@ class AuthService {
         _isFirstTime = false;
         return false;
       }
+      if (user != null) {
+        print('${user.metadata.creationTime} ${user.metadata.lastSignInTime}');
+      }
       return true;
     }));
-    _accountSubject.addStream(_userChangesSubject.switchMap((u) {
+    accountSubject.addStream(_userChangesSubject.switchMap((u) {
       if (u != null) {
         return _databaseService.getAccount(u.uid);
       } else {
         return Stream.value(Account.noUser());
       }
     }));
-    _authStatusSubject
-        .addStream(_accountSubject.map((event) => getAuthStatus(event)));
   }
 
   void dispose() {
     loading.close();
     _userChangesSubject.close();
-    _accountSubject.close();
-    _authStatusSubject.close();
+    accountSubject.close();
   }
 
   Future<User> signUp({String email, String password}) async {
