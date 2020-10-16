@@ -86,7 +86,7 @@ class _SignUpState extends State<SignUp> {
         elevation: 0.0,
         title: Text('新しいアカウントの登録'),
         actions: [
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Row(
               children: [
@@ -182,7 +182,7 @@ class _SignUpState extends State<SignUp> {
                         });
                       },
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (!_formKey.currentState.validate()) {
@@ -199,7 +199,6 @@ class _SignUpState extends State<SignUp> {
                       },
                       child: Text(
                         '登録',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(

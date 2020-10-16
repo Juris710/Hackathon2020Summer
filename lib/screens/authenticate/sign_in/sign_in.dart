@@ -142,7 +142,7 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (!_formKey.currentState.validate()) {
@@ -159,7 +159,6 @@ class _SignInState extends State<SignIn> {
                       },
                       child: Text(
                         'ログイン',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(
@@ -191,7 +190,7 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () async {
                         try {
                           await context.read<AuthService>().googleSignIn();
@@ -201,9 +200,11 @@ class _SignInState extends State<SignIn> {
                       },
                       child: Text(
                         'Googleでログイン',
-                        style: TextStyle(color: Colors.white),
+                        //style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.red,
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
                     ),
                   ],
                 ),

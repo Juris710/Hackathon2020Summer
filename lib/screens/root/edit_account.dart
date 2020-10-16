@@ -64,7 +64,7 @@ class _EditAccountState extends State<EditAccount> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (!_formKey.currentState.validate()) {
@@ -79,7 +79,6 @@ class _EditAccountState extends State<EditAccount> {
                       },
                       child: Text(
                         '設定する',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(

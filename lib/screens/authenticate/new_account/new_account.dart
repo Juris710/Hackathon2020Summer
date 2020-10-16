@@ -44,7 +44,7 @@ class _NewAccountState extends State<NewAccount> {
                 SizedBox(
                   height: 10.0,
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
                     if (!_formKey.currentState.validate()) {
@@ -60,7 +60,7 @@ class _NewAccountState extends State<NewAccount> {
                   },
                   child: Text(
                     '登録',
-                    style: TextStyle(color: Colors.white),
+                    //style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

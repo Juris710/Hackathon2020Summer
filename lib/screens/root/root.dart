@@ -24,15 +24,21 @@ class _RootState extends State<Root> {
       appBar: AppBar(
         title: Text(appName),
         actions: [
-          FlatButton.icon(
+          TextButton.icon(
             onPressed: () {
               context.read<AuthService>().signOut();
             },
-            icon: Icon(Icons.logout),
-            label: Text('ログアウト'),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            label: Text(
+              'ログアウト',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
           if (!account.isNewUser)
-            FlatButton.icon(
+            TextButton.icon(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -42,8 +48,14 @@ class _RootState extends State<Root> {
                   ),
                 );
               },
-              icon: Icon(Icons.edit),
-              label: Text('編集'),
+              icon: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              label: Text(
+                '編集',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
         ],
       ),
@@ -54,7 +66,7 @@ class _RootState extends State<Root> {
             if (!account.isNewUser) Text(account.name),
             if (account.isNewUser) ...[
               Text('No Data'),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
