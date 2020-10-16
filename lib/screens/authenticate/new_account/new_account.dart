@@ -60,7 +60,6 @@ class _NewAccountState extends State<NewAccount> {
                   },
                   child: Text(
                     '登録',
-                    //style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

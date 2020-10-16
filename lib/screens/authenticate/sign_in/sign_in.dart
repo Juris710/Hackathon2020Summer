@@ -200,7 +200,6 @@ class _SignInState extends State<SignIn> {
                       },
                       child: Text(
                         'Googleでログイン',
-                        //style: TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red,
