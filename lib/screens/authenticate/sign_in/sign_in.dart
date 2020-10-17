@@ -60,16 +60,6 @@ class _SignInState extends State<SignIn> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _subscription = context.read<AuthService>().loading.listen((value) {
-      setState(() {
-        loading = value;
-      });
-    });
-  }
-
-  @override
   void dispose() {
     super.dispose();
     _subscription?.cancel();
@@ -148,6 +138,9 @@ class _SignInState extends State<SignIn> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
+                        setState(() {
+                          loading = true;
+                        });
                         try {
                           await context.read<AuthService>().signIn(
                                 email: email,
@@ -155,6 +148,9 @@ class _SignInState extends State<SignIn> {
                               );
                         } catch (e) {
                           handleAuthError(e);
+                          setState(() {
+                            loading = false;
+                          });
                         }
                       },
                       child: Text(
@@ -192,10 +188,16 @@ class _SignInState extends State<SignIn> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        setState(() {
+                          loading = true;
+                        });
                         try {
                           await context.read<AuthService>().googleSignIn();
                         } catch (e) {
                           handleAuthError(e);
+                          setState(() {
+                            loading = false;
+                          });
                         }
                       },
                       child: Text(

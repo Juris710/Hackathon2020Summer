@@ -63,16 +63,6 @@ class _SignUpState extends State<SignUp> {
   StreamSubscription _subscription;
 
   @override
-  void initState() {
-    super.initState();
-    _subscription = context.read<AuthService>().loading.listen((value) {
-      setState(() {
-        loading = value;
-      });
-    });
-  }
-
-  @override
   void dispose() {
     _subscription?.cancel();
     super.dispose();
@@ -188,6 +178,9 @@ class _SignUpState extends State<SignUp> {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
+                        setState(() {
+                          loading = true;
+                        });
                         try {
                           await context.read<AuthService>().signUp(
                                 email: email,
@@ -195,6 +188,9 @@ class _SignUpState extends State<SignUp> {
                               );
                         } catch (e) {
                           handleAuthError(e);
+                          setState(() {
+                            loading = false;
+                          });
                         }
                       },
                       child: Text(

@@ -12,7 +12,6 @@ class AuthService {
   final DatabaseService _databaseService;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  final PublishSubject<bool> loading = PublishSubject<bool>();
   final PublishSubject<User> _userChangesSubject = PublishSubject<User>();
   final ReplaySubject<Account> accountSubject =
       ReplaySubject<Account>(maxSize: 1);
@@ -42,46 +41,29 @@ class AuthService {
   }
 
   void dispose() {
-    loading.close();
     _userChangesSubject.close();
     accountSubject.close();
   }
 
   Future<User> signUp({String email, String password}) async {
-    loading.add(true);
-    UserCredential credential;
-    try {
-      credential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    } catch (e) {
-      print(e);
-    }
-    loading.add(false);
+    final credential = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
     return credential?.user;
   }
 
   Future<User> signIn({String email, String password}) async {
-    loading.add(true);
-    UserCredential credential;
-    try {
-      credential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-    } catch (e) {
-      print(e);
-    }
-    loading.add(false);
+    final credential = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
     return credential?.user;
   }
 
   Future<UserCredential> googleSignIn() async {
-    loading.add(true);
     UserCredential credential;
     final googleUser = await _googleSignIn.signIn();
     final googleAuth = await googleUser.authentication;
     final googleCredential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
     credential = await _auth.signInWithCredential(googleCredential);
-    loading.add(false);
     return credential;
   }
 
