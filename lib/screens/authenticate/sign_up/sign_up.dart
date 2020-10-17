@@ -75,23 +75,6 @@ class _SignUpState extends State<SignUp> {
         automaticallyImplyLeading: false,
         elevation: 0.0,
         title: Text('新しいアカウントの登録'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Row(
-              children: [
-                Text(
-                  'ログイン',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          )
-        ],
       ),
       body: Stack(
         children: [
@@ -195,6 +178,23 @@ class _SignUpState extends State<SignUp> {
                       },
                       child: Text(
                         '登録',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'アカウントを既に持っている場合',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              .copyWith(color: Colors.blue),
+                        ),
                       ),
                     ),
                     SizedBox(
