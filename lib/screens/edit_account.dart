@@ -1,19 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackathon_2020_summer/screens/edit_account.dart';
+import 'package:hackathon_2020_summer/services/database.dart';
+import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:provider/provider.dart';
 
-class NewAccount extends StatelessWidget {
+class EditAccount extends StatefulWidget {
+  final String name;
+  final PreferredSizeWidget appBar;
+  final String submitButtonText;
+
+  const EditAccount({Key key, this.name, this.appBar, this.submitButtonText})
+      : super(key: key);
+
+  @override
+  _EditAccountState createState() => _EditAccountState();
+}
+
+class _EditAccountState extends State<EditAccount> {
+  final _formKey = GlobalKey<FormState>();
+  String name;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      name = widget.name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    return EditAccount(
-      appBar: AppBar(
-        title: Text('アカウント情報登録'),
-      ),
-      name: user.displayName,
-      submitButtonText: '登録',
-    );
-/*
     return Scaffold(
       appBar: AppBar(
         title: Text('アカウント情報登録'),
@@ -27,7 +43,7 @@ class NewAccount extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
-                  initialValue: user.displayName,
+                  initialValue: name,
                   decoration: textFieldDecoration.copyWith(
                     labelText: 'ユーザー名',
                     prefixIcon: Icon(Icons.person),
@@ -48,6 +64,7 @@ class NewAccount extends StatelessWidget {
                     if (!_formKey.currentState.validate()) {
                       return;
                     }
+                    final user = FirebaseAuth.instance.currentUser;
                     if (name != null) {
                       await user.updateProfile(displayName: name);
                     }
@@ -56,9 +73,7 @@ class NewAccount extends StatelessWidget {
                           name: name ?? user.displayName,
                         );
                   },
-                  child: Text(
-                    '登録',
-                  ),
+                  child: Text(widget.submitButtonText ?? ''),
                 ),
               ],
             ),
@@ -66,6 +81,5 @@ class NewAccount extends StatelessWidget {
         ),
       ),
     );
-*/
   }
 }

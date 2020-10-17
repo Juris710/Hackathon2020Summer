@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
-import 'package:hackathon_2020_summer/screens/root/edit_account.dart';
+import 'package:hackathon_2020_summer/screens/edit_account.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/shared/constants.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
@@ -14,6 +14,22 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
+  void navigateToEditAccountScreen(BuildContext context, Account account) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditAccount(
+            appBar: AppBar(
+              title: Text('ユーザー情報の設定'),
+            ),
+            name: account.name,
+            submitButtonText: '設定',
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final account = context.watch<Account>();
@@ -42,15 +58,7 @@ class _RootState extends State<Root> {
                 leading: Icon(
                   Icons.edit,
                 ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditAccount(account: account);
-                      },
-                    ),
-                  );
-                },
+                onTap: () => navigateToEditAccountScreen(context, account),
               ),
             ListTile(
               title: Text('ログアウト'),
@@ -81,15 +89,7 @@ class _RootState extends State<Root> {
             if (account.isNewUser) ...[
               Text('No Data'),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditAccount(account: account);
-                      },
-                    ),
-                  );
-                },
+                onPressed: () => navigateToEditAccountScreen(context, account),
                 child: Text('設定する'),
               )
             ],
