@@ -23,41 +23,55 @@ class _RootState extends State<Root> {
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              context.read<AuthService>().signOut();
-            },
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-            label: Text(
-              'ログアウト',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          if (!account.isNewUser)
-            TextButton.icon(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return EditAccount(account: account);
-                    },
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-              label: Text(
-                '編集',
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Text(
+                appName,
                 style: TextStyle(color: Colors.white),
               ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
             ),
-        ],
+            if (!account.isNewUser)
+              ListTile(
+                title: Text('アカウントの編集'),
+                leading: Icon(
+                  Icons.edit,
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return EditAccount(account: account);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ListTile(
+              title: Text('ログアウト'),
+              leading: Icon(
+                Icons.logout,
+                //color: Colors.white,
+              ),
+              onTap: () => context.read<AuthService>().signOut(),
+            ),
+            ListTile(
+              title: Text('このアプリについて'),
+              onTap: () {
+                Navigator.pop(context);
+                showAboutDialog(
+                  context: context,
+                  applicationVersion: appVersion,
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
