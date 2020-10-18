@@ -64,6 +64,7 @@ class _EditAccountState extends State<EditAccount> {
                     if (!_formKey.currentState.validate()) {
                       return;
                     }
+                    //TODO：Loadingウィジェット表示
                     final user = FirebaseAuth.instance.currentUser;
                     if (name != null) {
                       await user.updateProfile(displayName: name);
