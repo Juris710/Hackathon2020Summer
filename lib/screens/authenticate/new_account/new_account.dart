@@ -13,59 +13,5 @@ class NewAccount extends StatelessWidget {
       name: user.displayName,
       submitButtonText: '登録',
     );
-/*
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('アカウント情報登録'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  initialValue: user.displayName,
-                  decoration: textFieldDecoration.copyWith(
-                    labelText: 'ユーザー名',
-                    prefixIcon: Icon(Icons.person),
-                  ),
-                  validator: (val) => val.isEmpty ? '必須項目です' : null,
-                  onChanged: (val) {
-                    setState(() {
-                      name = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    FocusScope.of(context).unfocus();
-                    if (!_formKey.currentState.validate()) {
-                      return;
-                    }
-                    if (name != null) {
-                      await user.updateProfile(displayName: name);
-                    }
-                    await context.read<DatabaseService>().updateUserData(
-                          user.uid,
-                          name: name ?? user.displayName,
-                        );
-                  },
-                  child: Text(
-                    '登録',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-*/
   }
 }
