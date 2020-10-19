@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/edit_account.dart';
@@ -93,6 +94,20 @@ class _RootState extends State<Root> {
                 child: Text('設定する'),
               )
             ],
+            FutureBuilder(
+              future: FirebaseStorage.instance
+                  .ref()
+                  .child('users')
+                  .child('boy_01.png')
+                  .getDownloadURL(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return LoadingSmall();
+                }
+                final String url = snapshot.data;
+                return Image.network(url);
+              },
+            ),
           ],
         ),
       ),
