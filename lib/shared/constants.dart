@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-const appName = 'Nior(ニアー)';
-const appVersion = '1.0.0';
-
 final textFieldDecoration = InputDecoration(
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(25.0),

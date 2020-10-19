@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:hackathon_2020_summer/shared/app_info.dart';
 
 class Loading extends StatelessWidget {
   Loading({Key key}) : super(key: key);
@@ -21,13 +21,13 @@ class Loading extends StatelessWidget {
 class LoadingScaffold extends StatelessWidget {
   final String title;
 
-  LoadingScaffold({Key key, this.title = appName}) : super(key: key);
+  LoadingScaffold({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title ?? AppInfo.name),
       ),
       body: Loading(),
     );

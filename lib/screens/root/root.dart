@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_2020_summer/models/user/account.dart';
 import 'package:hackathon_2020_summer/screens/edit_account.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
-import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:hackathon_2020_summer/shared/app_info.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -38,14 +38,14 @@ class _RootState extends State<Root> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(appName),
+        title: Text(AppInfo.name),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
             DrawerHeader(
               child: Text(
-                appName,
+                AppInfo.name,
                 style: TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
@@ -74,7 +74,7 @@ class _RootState extends State<Root> {
                 Navigator.pop(context);
                 showAboutDialog(
                   context: context,
-                  applicationVersion: appVersion,
+                  applicationVersion: AppInfo.version,
                 );
               },
             ),

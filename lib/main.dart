@@ -10,7 +10,7 @@ import 'package:hackathon_2020_summer/screens/authenticate/new_account/new_accou
 import 'package:hackathon_2020_summer/screens/root/root.dart';
 import 'package:hackathon_2020_summer/services/authenticate.dart';
 import 'package:hackathon_2020_summer/services/database.dart';
-import 'package:hackathon_2020_summer/shared/constants.dart';
+import 'package:hackathon_2020_summer/shared/app_info.dart';
 import 'package:hackathon_2020_summer/shared/widgets/loading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 void main() async {
   await initializeDateFormatting('ja_JP');
   WidgetsFlutterBinding.ensureInitialized();
+  await AppInfo.initialize();
   await Firebase.initializeApp();
   runApp(App());
 }
@@ -98,7 +99,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appName,
+      title: AppInfo.name,
       home: LoadingScaffold(),
       navigatorKey: _navigatorKey,
     );
